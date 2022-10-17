@@ -1,0 +1,3 @@
+[submodule "TeamCode/src/main/java/org/firstinspires/ftc/teamcode/common"]
+	path = TeamCode/src/main/java/org/firstinspires/ftc/teamcode/common
+	url = https://github.com/rh-robotics/common
