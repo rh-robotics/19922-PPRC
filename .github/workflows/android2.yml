@@ -41,11 +41,3 @@ jobs:
         restore-keys: ${{ runner.os }}-gradle-
     - name: Build with Gradle
       run: ./gradlew build
-    - name: Create status
-      uses: Sibz/github-status-action@v1
-      with:
-        authToken: ${{secrets.GITHUB_TOKEN}}
-        context: 'Android Build'
-        description: 'Passed'
-        state: 'success'
-        sha: ${{github.event.pull_request.head.sha || github.sha}}
