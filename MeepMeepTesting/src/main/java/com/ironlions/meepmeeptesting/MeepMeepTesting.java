@@ -32,6 +32,8 @@ public class MeepMeepTesting {
                                 .build()
                 );
 
+        bronto.setLooping(false);
+        
         meepMeep.setBackground(MeepMeep.Background.FIELD_POWERPLAY_KAI_DARK)
                 .setDarkMode(true)
                 .setBackgroundAlpha(0.95f)
