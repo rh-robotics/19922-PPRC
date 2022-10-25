@@ -52,7 +52,7 @@ jobs:
     - name: Build with Gradle
       run: ./gradlew build
     - name: Create status
-      uses: Sibz/github-status-action@v1
+      uses: Sibz/github-status-action@v1.1.6
       with:
         authToken: ${{ secrets.GITHUB_TOKEN }}
         context: 'Android Build'
