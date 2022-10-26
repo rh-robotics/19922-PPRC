@@ -2,15 +2,16 @@ package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.Range;
 
 
 
-@TeleOp(name="Basic TeleOp", group="Iterative Opmode")
+@TeleOp(name="Bronto's Steps", group="Iterative Opmode")
 
 // @Disabled
-public class hBot extends OpMode
+public class BrontoTeleOP extends OpMode
 {
     /** Declare OpMode members. */
 
@@ -18,6 +19,10 @@ public class hBot extends OpMode
     private DcMotor frontR = null;
     private DcMotor backL = null;
     private DcMotor backR = null;
+    private DcMotor frontArm = null;
+    private CRServo frontIntakeL = null;
+    private CRServo frontIntakeR = null;
+    
     @Override
     public void init() {
         telemetry.addData("Status", "Initializing");
@@ -26,24 +31,48 @@ public class hBot extends OpMode
         frontR = hardwareMap.get(DcMotor.class, "rightFront");
         backL  = hardwareMap.get(DcMotor.class, "leftRear");
         backR = hardwareMap.get(DcMotor.class, "rightRear");
+        frontArm = hardwareMap.get(DcMotor.class,"frontArm");
+        frontIntakeL = hardwareMap.get(CRServo.class, "intakeL");
+        frontIntakeR = hardwareMap.get(CRServo.class, "intakeR");
 
         frontL.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         frontR.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         backL.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         backR.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        frontArm.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
 
         frontR.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         frontL.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         backL.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         backR.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        frontArm.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
 
         frontL.setDirection(DcMotor.Direction.FORWARD);
         backL.setDirection(DcMotor.Direction.FORWARD);
         frontR.setDirection(DcMotor.Direction.REVERSE);
         backR.setDirection(DcMotor.Direction.REVERSE);
+        frontIntakeL.setDirection(DcMotor.Direction.FORWARD);
+        frontIntakeR.setDirection(DcMotor.Direction.REVERSE);
+
+
+
+
 
         telemetry.addData("Status", "Initialized");
+    }
+
+    public void move_arm(double power, int distance){
+        frontArm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        frontArm.setTargetPosition(distance);
+        frontArm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        frontArm.setPower(power);
+    while (frontArm.isBusy()){
+
+    }
+    frontArm.setPower(0);
+
     }
 
 
@@ -55,7 +84,9 @@ public class hBot extends OpMode
 
     /** Code to run ONCE when the driver hits PLAY. */
     @Override
-    public void start(){}
+    public void start(){
+
+    }
 
     @Override
     public void loop() {
@@ -64,10 +95,28 @@ public class hBot extends OpMode
         double rightFPower;
         double leftBPower ;
         double rightBPower;
+        double frontArmPow;
+        double intakePow;
+
+
 
         double drive = gamepad1.left_stick_y;
         double turn  =  -gamepad1.left_stick_x ;
         double strafe = gamepad1.right_stick_x;
+        double frontArmUp = gamepad1.left_trigger;
+        double frontArmDown = -gamepad1.right_trigger * 5;
+
+
+        if (gamepad1.a) { intakePow = 1;}
+        else if (gamepad1.b) {intakePow = -1;}
+        else {intakePow = 0;}
+
+
+        if (frontArmDown < 0 && frontArmUp > 0 ){ frontArmPow = 0;}
+        else if (frontArmUp > 0){frontArmPow = frontArmUp;}
+        else if (frontArmDown < 0){frontArmPow = frontArmDown;}
+        else{frontArmPow=0;}
+
 
 
         if (drive != 0 || turn != 0) {
@@ -92,12 +141,24 @@ public class hBot extends OpMode
             rightBPower = 0;
         }
 
+
+        if(gamepad1.dpad_up){
+            move_arm(.3,800);
+        }
+        else if (gamepad1.dpad_down){
+            move_arm(-.3,800);
+        }
+
+
         frontL.setPower(leftFPower);
         backL.setPower(leftBPower);
         frontR.setPower(rightFPower);
         backR.setPower(rightBPower);
+        frontArm.setPower(frontArmPow * 0.5);
+        frontIntakeL.setPower(intakePow);
+        frontIntakeR.setPower(intakePow);
 
-        telemetry.addData("Motors", "front left (%.2f), front right (%.2f), back left (%.2f), back right (%.2f)", leftFPower, rightFPower,leftBPower, rightBPower);
+        telemetry.addData("Motors", "front left (%.2f), front right (%.2f), back left (%.2f), back right (%.2f), front arm (%.2f)", leftFPower, rightFPower,leftBPower, rightBPower, frontArmPow);
 
     }
 
