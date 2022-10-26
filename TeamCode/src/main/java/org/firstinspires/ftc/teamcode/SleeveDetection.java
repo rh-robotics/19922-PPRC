@@ -11,9 +11,9 @@ import org.openftc.easyopencv.OpenCvPipeline;
 
 public class SleeveDetection extends OpenCvPipeline {
     /*
-    YELLOW  = Parking Left
-    CYAN    = Parking Middle
-    MAGENTA = Parking Right
+    white  = Parking Left
+    black    = Parking Middle
+    green = Parking Right
      */
 
     public enum ParkingPosition {
@@ -31,22 +31,22 @@ public class SleeveDetection extends OpenCvPipeline {
 
     // Lower and upper boundaries for colors
     private static final Scalar
-            lower_yellow_bounds  = new Scalar(200, 200, 200, 255), //white
-            upper_yellow_bounds  = new Scalar(255, 255, 255, 255), //white
-            lower_cyan_bounds    = new Scalar(0, 0, 0, 0),//black
-            upper_cyan_bounds    = new Scalar(100, 100, 100, 255),
-            lower_magenta_bounds = new Scalar(0, 70, 0, 255),//green
-            upper_magenta_bounds = new Scalar(60, 255, 60, 255);
+            lower_white_bounds  = new Scalar(200, 200, 200, 255),
+            upper_white_bounds  = new Scalar(255, 255, 255, 255),
+            lower_black_bounds    = new Scalar(0, 0, 0, 0),
+            upper_black_bounds    = new Scalar(100, 100, 100, 255),
+            lower_green_bounds = new Scalar(0, 70, 0, 255),
+            upper_green_bounds = new Scalar(60, 255, 60, 255);
 
     // Color definitions
     private final Scalar
-            YELLOW  = new Scalar(255, 255, 255),//white
-            CYAN    = new Scalar(0, 0, 0), //black
-            MAGENTA = new Scalar(0, 255, 0);//green
+            WHITE  = new Scalar(255, 255, 255),
+            BLACK    = new Scalar(0, 0, 0),
+            GREEN = new Scalar(0, 255, 0);
 
     // Percent and mat definitions
-    private double yelPercent, cyaPercent, magPercent;
-    private Mat yelMat = new Mat(), cyaMat = new Mat(), magMat = new Mat(), blurredMat = new Mat();
+    private double whiPercent, blaPercent, grePercent;
+    private Mat whiMat = new Mat(), blaMat = new Mat(), greMat = new Mat(), blurredMat = new Mat();
 
     // Anchor point definitions
     Point sleeve_pointA = new Point(
@@ -70,54 +70,54 @@ public class SleeveDetection extends OpenCvPipeline {
         Imgproc.morphologyEx(blurredMat, blurredMat, Imgproc.MORPH_CLOSE, kernel);
 
         // Gets channels from given source mat
-        Core.inRange(blurredMat, lower_yellow_bounds, upper_yellow_bounds, yelMat);
-        Core.inRange(blurredMat, lower_cyan_bounds, upper_cyan_bounds, cyaMat);
-        Core.inRange(blurredMat, lower_magenta_bounds, upper_magenta_bounds, magMat);
+        Core.inRange(blurredMat, lower_white_bounds, upper_white_bounds, whiMat);
+        Core.inRange(blurredMat, lower_black_bounds, upper_black_bounds, blaMat);
+        Core.inRange(blurredMat, lower_green_bounds, upper_green_bounds, greMat);
 
         // Gets color specific values
-        yelPercent = Core.countNonZero(yelMat);
-        cyaPercent = Core.countNonZero(cyaMat);
-        magPercent = Core.countNonZero(magMat);
+        whiPercent = Core.countNonZero(whiMat);
+        blaPercent = Core.countNonZero(blaMat);
+        grePercent = Core.countNonZero(greMat);
 
         // Calculates the highest amount of pixels being covered on each side
-        double maxPercent = Math.max(yelPercent, Math.max(cyaPercent, magPercent));
+        double maxPercent = Math.max(whiPercent, Math.max(blaPercent, grePercent));
 
         // Checks all percentages, will highlight bounding box in camera preview
         // based on what color is being detected
-        if (maxPercent == yelPercent) {
+        if (maxPercent == whiPercent) {
             position = ParkingPosition.LEFT;
             Imgproc.rectangle(
                     input,
                     sleeve_pointA,
                     sleeve_pointB,
-                    YELLOW,
+                    WHITE,
                     2
             );
-        } else if (maxPercent == cyaPercent) {
+        } else if (maxPercent == blaPercent) {
             position = ParkingPosition.CENTER;
             Imgproc.rectangle(
                     input,
                     sleeve_pointA,
                     sleeve_pointB,
-                    CYAN,
+                    BLACK,
                     2
             );
-        } else if (maxPercent == magPercent) {
+        } else if (maxPercent == grePercent) {
             position = ParkingPosition.RIGHT;
             Imgproc.rectangle(
                     input,
                     sleeve_pointA,
                     sleeve_pointB,
-                    MAGENTA,
+                    GREEN,
                     2
             );
         }
 
         // Memory cleanup
         blurredMat.release();
-        yelMat.release();
-        cyaMat.release();
-        magMat.release();
+        whiMat.release();
+        blaMat.release();
+        greMat.release();
 
         return input;
     }
