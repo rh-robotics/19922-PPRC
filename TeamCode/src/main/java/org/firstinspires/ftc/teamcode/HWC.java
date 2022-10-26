@@ -12,13 +12,12 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
-import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 
 public class HWC {
     // Robot variables
-    public DcMotorEx frontL, frontR, backL, backR;
+    public DcMotorEx leftFront, rightFront, leftRear, rightRear;
     Telemetry telemetry;
-    ElapsedTime waitTime = new ElapsedTime();
+    ElapsedTime time = new ElapsedTime();
 
     // Code variables
     public static final double ONE_CM_IN_PPR = 7.9;
@@ -28,22 +27,23 @@ public class HWC {
         this.telemetry = telemetry;
 
         // Declare all our motors and servos
-        frontL = hardwareMap.get(DcMotorEx.class, "frontL");
-        frontR = hardwareMap.get(DcMotorEx.class, "frontR");
-        backL = hardwareMap.get(DcMotorEx.class, "backL");
-        backR = hardwareMap.get(DcMotorEx.class, "backR");
+        rightFront = hardwareMap.get(DcMotorEx.class, "rightFront");
+        rightRear = hardwareMap.get(DcMotorEx.class, "rightRear");
+        leftFront = hardwareMap.get(DcMotorEx.class, "leftFront");
+        leftRear = hardwareMap.get(DcMotorEx.class, "leftRear");
 
-        // Set the direction of all our motors and servos
-        frontL.setDirection(DcMotorEx.Direction.FORWARD);
-        backL.setDirection(DcMotorEx.Direction.FORWARD);
-        frontR.setDirection(DcMotorEx.Direction.REVERSE);
-        backR.setDirection(DcMotorEx.Direction.REVERSE);
+
+        // Set the direction of all our motors
+        leftFront.setDirection(DcMotorEx.Direction.FORWARD);
+        leftRear.setDirection(DcMotorEx.Direction.FORWARD);
+        rightFront.setDirection(DcMotorEx.Direction.REVERSE);
+        rightRear.setDirection(DcMotorEx.Direction.REVERSE);
 
         // Run motors using encoder, so that we can move accurately. If motor doesn't have, run without encoder
-        frontL.setMode(RUN_USING_ENCODER);
-        frontR.setMode(RUN_USING_ENCODER);
-        backL.setMode(RUN_USING_ENCODER);
-        backR.setMode(RUN_USING_ENCODER);
+        leftFront.setMode(RUN_USING_ENCODER);
+        rightFront.setMode(RUN_USING_ENCODER);
+        leftRear.setMode(RUN_USING_ENCODER);
+        rightRear.setMode(RUN_USING_ENCODER);
     }
 
     // Declare all methods used for moving all parts of our robot.
@@ -51,72 +51,71 @@ public class HWC {
         int wheelCounts = 0;
         double wCounts = distanceInCm * ONE_CM_IN_PPR;
 
-        frontL.setMode(STOP_AND_RESET_ENCODER);
-        frontR.setMode(STOP_AND_RESET_ENCODER);
-        backL.setMode(STOP_AND_RESET_ENCODER);
-        backR.setMode(STOP_AND_RESET_ENCODER);
+        leftFront.setMode(STOP_AND_RESET_ENCODER);
+        rightFront.setMode(STOP_AND_RESET_ENCODER);
+        leftRear.setMode(STOP_AND_RESET_ENCODER);
+        rightRear.setMode(STOP_AND_RESET_ENCODER);
 
-        frontL.setMode(RUN_WITHOUT_ENCODER);
-        frontR.setMode(RUN_WITHOUT_ENCODER);
-        backL.setMode(RUN_WITHOUT_ENCODER);
-        backR.setMode(RUN_WITHOUT_ENCODER);
+        leftFront.setMode(RUN_WITHOUT_ENCODER);
+        rightFront.setMode(RUN_WITHOUT_ENCODER);
+        leftRear.setMode(RUN_WITHOUT_ENCODER);
+        rightRear.setMode(RUN_WITHOUT_ENCODER);
 
-        waitTime.reset();
+        time.reset();
 
         while(Math.abs(wheelCounts) < wCounts) {
-            wheelCounts = frontL.getCurrentPosition();
+            wheelCounts = leftFront.getCurrentPosition();
 
             if(Math.abs(wheelCounts) < wCounts){
-                frontL.setPower(wheelLPower);
-                backL.setPower(wheelLPower);
-                frontR.setPower(wheelRPower);
-                backR.setPower(wheelRPower);
+                leftFront.setPower(wheelLPower);
+                leftRear.setPower(wheelLPower);
+                rightFront.setPower(wheelRPower);
+                rightRear.setPower(wheelRPower);
 
             }
             else {
-                frontL.setPower(0);
-                backL.setPower(0);
-                frontR.setPower(0);
-                backR.setPower(0);
+                leftFront.setPower(0);
+                leftRear.setPower(0);
+                rightFront.setPower(0);
+                rightRear.setPower(0);
             }
         }
 
-        frontL.setPower(0);
-        backL.setPower(0);
-        frontR.setPower(0);
-        backR.setPower(0);
+        leftFront.setPower(0);
+        leftRear.setPower(0);
+        rightFront.setPower(0);
+        rightRear.setPower(0);
     }
 
     public void turn(double directionInDegrees, double wheelVelocity) {
 //      384.5(PPR) = ~50cm = ~20in
 //      7.9(PPR) = 1cm
 //      4.27(PPR) = 1 Degree
-        final double oneDegreeInPPR = 4.27;
-        double pprTurn = directionInDegrees * oneDegreeInPPR;
+        double pprTurn = directionInDegrees * ONE_DEGREE_IN_PPR;
 
         if(directionInDegrees != 0) {
             if (directionInDegrees < 0) {
-                frontL.setTargetPosition(-(int) pprTurn + frontL.getCurrentPosition());
-                frontR.setTargetPosition((int) pprTurn + frontR.getCurrentPosition());
-                backL.setTargetPosition(-(int) pprTurn + backL.getCurrentPosition());
-                backR.setTargetPosition((int) pprTurn + backR.getCurrentPosition());
+                leftFront.setTargetPosition(-(int) pprTurn + leftFront.getCurrentPosition());
+                rightFront.setTargetPosition((int) pprTurn + rightFront.getCurrentPosition());
+                leftRear.setTargetPosition(-(int) pprTurn + leftRear.getCurrentPosition());
+                rightRear.setTargetPosition((int) pprTurn + rightRear.getCurrentPosition());
 
             } else if (directionInDegrees > 0) {
-                frontL.setTargetPosition((int) pprTurn + frontL.getCurrentPosition());
-                frontR.setTargetPosition(-(int) pprTurn + frontR.getCurrentPosition());
-                backL.setTargetPosition((int) pprTurn + backL.getCurrentPosition());
-                backR.setTargetPosition(-(int) pprTurn + backR.getCurrentPosition());
+                leftFront.setTargetPosition((int) pprTurn + leftFront.getCurrentPosition());
+                rightFront.setTargetPosition(-(int) pprTurn + rightFront.getCurrentPosition());
+                leftRear.setTargetPosition((int) pprTurn + leftRear.getCurrentPosition());
+                rightRear.setTargetPosition(-(int) pprTurn + rightRear.getCurrentPosition());
             }
 
-            frontL.setMode(RUN_TO_POSITION);
-            frontR.setMode(RUN_TO_POSITION);
-            backL.setMode(RUN_TO_POSITION);
-            backR.setMode(RUN_TO_POSITION);
+            leftFront.setMode(RUN_TO_POSITION);
+            rightFront.setMode(RUN_TO_POSITION);
+            leftRear.setMode(RUN_TO_POSITION);
+            rightRear.setMode(RUN_TO_POSITION);
 
-            frontL.setVelocity(wheelVelocity);
-            frontR.setVelocity(wheelVelocity);
-            backR.setVelocity(wheelVelocity);
-            backL.setVelocity(wheelVelocity);
+            leftFront.setVelocity(wheelVelocity);
+            rightFront.setVelocity(wheelVelocity);
+            rightRear.setVelocity(wheelVelocity);
+            leftRear.setVelocity(wheelVelocity);
         }
     }
 }
