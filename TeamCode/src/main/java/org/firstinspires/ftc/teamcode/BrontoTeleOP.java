@@ -4,13 +4,15 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.util.Range;
+import com.qualcomm.robotcore.util.ElapsedTime;
+import org.firstinspires.ftc.teamcode.HWC;
 
 
 
 @TeleOp(name="Bronto's Steps", group="Iterative Opmode")
 
-// @Disabled
 public class BrontoTeleOP extends OpMode
 {
     /** Declare OpMode members. */
@@ -26,7 +28,6 @@ public class BrontoTeleOP extends OpMode
     @Override
     public void init() {
         telemetry.addData("Status", "Initializing");
-
         frontL  = hardwareMap.get(DcMotor.class, "leftFront");
         frontR = hardwareMap.get(DcMotor.class, "rightFront");
         backL  = hardwareMap.get(DcMotor.class, "leftRear");
@@ -50,7 +51,7 @@ public class BrontoTeleOP extends OpMode
 
 
         frontL.setDirection(DcMotor.Direction.FORWARD);
-        backL.setDirection(DcMotor.Direction.FORWARD);
+        backL.setDirection(DcMotor.Direction.REVERSE);
         frontR.setDirection(DcMotor.Direction.REVERSE);
         backR.setDirection(DcMotor.Direction.REVERSE);
         frontIntakeL.setDirection(DcMotor.Direction.FORWARD);
@@ -148,7 +149,6 @@ public class BrontoTeleOP extends OpMode
         else if (gamepad1.dpad_down){
             move_arm(-.3,800);
         }
-
 
         frontL.setPower(leftFPower);
         backL.setPower(leftBPower);
