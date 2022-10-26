@@ -67,6 +67,8 @@ public class auton extends LinearOpMode {
       if (state == enumStates.MOVING_TO_POLE) {
         telemetry.addData("State", "Moving to Pole");
         telemetry.update();
+
+
       } else if (state == enumStates.DELIVERING_CONE) {
         telemetry.addData("State", "Delivering Cone");
         telemetry.update();
