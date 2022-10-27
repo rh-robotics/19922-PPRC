@@ -17,6 +17,16 @@ public class BrontoTeleOP extends OpMode
 {
     /** Declare OpMode members. */
 
+
+    public enum TeleOpStates {
+        RESTING,
+        INTAKE,
+        LOW_POLE,
+        MED_POLE,
+        HIGH_POLE,
+        TRANSFER,
+        UNKNOWN
+    }
     private DcMotor frontL = null;
     private DcMotor frontR = null;
     private DcMotor backL = null;
@@ -24,7 +34,8 @@ public class BrontoTeleOP extends OpMode
     private DcMotor frontArm = null;
     private CRServo frontIntakeL = null;
     private CRServo frontIntakeR = null;
-    
+    TeleOpStates state = TeleOpStates.RESTING;
+
     @Override
     public void init() {
         telemetry.addData("Status", "Initializing");
@@ -69,10 +80,10 @@ public class BrontoTeleOP extends OpMode
         frontArm.setTargetPosition(distance);
         frontArm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         frontArm.setPower(power);
-    while (frontArm.isBusy()){
+        while (frontArm.isBusy()){
 
-    }
-    frontArm.setPower(0);
+        }
+        frontArm.setPower(0);
 
     }
 
@@ -149,6 +160,42 @@ public class BrontoTeleOP extends OpMode
         else if (gamepad1.dpad_down){
             move_arm(-.3,800);
         }
+
+        switch(state){
+            case RESTING:
+                telemetry.addData("Arm Position", "Resting");
+                telemetry.update();
+                break;
+            case LOW_POLE:
+                telemetry.addData("Arm Position", "Low Pole");
+                telemetry.update();
+                break;
+            case MED_POLE:
+                telemetry.addData("Arm Position", "Medium Pole");
+                telemetry.update();
+                break;
+            case HIGH_POLE:
+                telemetry.addData("Arm Position", "High Pole");
+                telemetry.update();
+                break;
+            case INTAKE:
+                telemetry.addData("Arm Position", "Intake");
+                telemetry.update();
+                break;
+            case TRANSFER:
+                telemetry.addData("Arm Position", "Transfer");
+                telemetry.update();
+                break;
+            case UNKNOWN:
+                telemetry.addData("Arm Position", "Unknown");
+                telemetry.update();
+                break;
+            default:
+                state = TeleOpStates.UNKNOWN;
+                telemetry.addData("Arm Position", "Unknown");
+                telemetry.update();
+        }
+
 
         frontL.setPower(leftFPower);
         backL.setPower(leftBPower);
