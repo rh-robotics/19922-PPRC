@@ -18,7 +18,7 @@ public class auton extends LinearOpMode {
 
   // Variables for CV
   // TODO: Move to bronto HWC
-  SleeveDetection sleeveDetection = new SleeveDetection();
+  SleeveDetection sleeveDetection = new SleeveDetection(145,168,30,50);
   OpenCvCamera camera;
   String webcamName = "Webcam 1";
 
@@ -40,7 +40,7 @@ public class auton extends LinearOpMode {
     // Vision Code Implement - Jack Might need to modify
     int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
     camera = OpenCvCameraFactory.getInstance().createWebcam(hardwareMap.get(WebcamName.class, webcamName), cameraMonitorViewId);
-    sleeveDetection = new SleeveDetection();
+    sleeveDetection = new SleeveDetection(145,168,30,50);
     camera.setPipeline(sleeveDetection);
 
     camera.openCameraDeviceAsync(new OpenCvCamera.AsyncCameraOpenListener()

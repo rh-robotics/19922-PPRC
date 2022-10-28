@@ -35,6 +35,8 @@ public class BrontoTeleOP extends OpMode
     private CRServo frontIntakeL = null;
     private CRServo frontIntakeR = null;
 
+    private ElapsedTime runtime = new ElapsedTime();
+
     TeleOpStates state = TeleOpStates.RESTING;
 
     @Override
@@ -98,7 +100,7 @@ public class BrontoTeleOP extends OpMode
     /** Code to run ONCE when the driver hits PLAY. */
     @Override
     public void start(){
-
+    runtime.reset();
     }
 
     @Override
