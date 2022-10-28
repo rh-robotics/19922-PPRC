@@ -7,6 +7,8 @@ import static com.qualcomm.robotcore.hardware.DcMotor.RunMode.RUN_TO_POSITION;
 
 import androidx.annotation.NonNull;
 
+import com.qualcomm.robotcore.hardware.CRServo;
+import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.util.ElapsedTime;
@@ -14,8 +16,11 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 
 public class HWC {
-    // Robot variables
-    public DcMotorEx leftFront, rightFront, leftRear, rightRear;
+    // Declare empty variables for robot hardware
+    public DcMotorEx leftFront, rightFront, leftRear, rightRear, frontArm;
+    public CRServo frontIntakeL, frontIntakeR;
+
+    // Declare other variables to be used here
     Telemetry telemetry;
     ElapsedTime time = new ElapsedTime();
 
@@ -37,18 +42,23 @@ public class HWC {
     // armPositions Enum
     public enum armPositions {
         HANDOFF,
-        CYCLE
+        CYCLE,
+        INIT
     }
 
     public HWC(@NonNull HardwareMap hardwareMap, Telemetry telemetry) {
         this.telemetry = telemetry;
 
-        // Declare all our motors and servos
+        // Declare all our motors
         rightFront = hardwareMap.get(DcMotorEx.class, "rightFront");
         rightRear = hardwareMap.get(DcMotorEx.class, "rightRear");
         leftFront = hardwareMap.get(DcMotorEx.class, "leftFront");
         leftRear = hardwareMap.get(DcMotorEx.class, "leftRear");
+        frontArm = hardwareMap.get(DcMotorEx.class,"frontArm");
 
+        // Declare servos
+        frontIntakeL = hardwareMap.get(CRServo.class, "intakeL");
+        frontIntakeR = hardwareMap.get(CRServo.class, "intakeR");
 
         // Set the direction of all our motors
         leftFront.setDirection(DcMotorEx.Direction.FORWARD);
@@ -56,42 +66,18 @@ public class HWC {
         rightFront.setDirection(DcMotorEx.Direction.REVERSE);
         rightRear.setDirection(DcMotorEx.Direction.REVERSE);
 
+        // Set CRServo Directions
+        frontIntakeL.setDirection(CRServo.Direction.FORWARD);
+        frontIntakeR.setDirection(CRServo.Direction.REVERSE);
+
         // Run motors using encoder, so that we can move accurately. If motor doesn't have, run without encoder
         leftFront.setMode(RUN_USING_ENCODER);
         rightFront.setMode(RUN_USING_ENCODER);
         leftRear.setMode(RUN_USING_ENCODER);
         rightRear.setMode(RUN_USING_ENCODER);
-    }
+        frontArm.setMode(RUN_USING_ENCODER);
 
-    public void turn(double directionInDegrees, double wheelVelocity) {
-//      384.5(PPR) = ~50cm = ~20in
-//      7.9(PPR) = 1cm
-//      4.27(PPR) = 1 Degree
-        double pprTurn = directionInDegrees * ONE_DEGREE_IN_PPR;
-
-        if(directionInDegrees != 0) {
-            if (directionInDegrees < 0) {
-                leftFront.setTargetPosition(-(int) pprTurn + leftFront.getCurrentPosition());
-                rightFront.setTargetPosition((int) pprTurn + rightFront.getCurrentPosition());
-                leftRear.setTargetPosition(-(int) pprTurn + leftRear.getCurrentPosition());
-                rightRear.setTargetPosition((int) pprTurn + rightRear.getCurrentPosition());
-
-            } else if (directionInDegrees > 0) {
-                leftFront.setTargetPosition((int) pprTurn + leftFront.getCurrentPosition());
-                rightFront.setTargetPosition(-(int) pprTurn + rightFront.getCurrentPosition());
-                leftRear.setTargetPosition((int) pprTurn + leftRear.getCurrentPosition());
-                rightRear.setTargetPosition(-(int) pprTurn + rightRear.getCurrentPosition());
-            }
-
-            leftFront.setMode(RUN_TO_POSITION);
-            rightFront.setMode(RUN_TO_POSITION);
-            leftRear.setMode(RUN_TO_POSITION);
-            rightRear.setMode(RUN_TO_POSITION);
-
-            leftFront.setVelocity(wheelVelocity);
-            rightFront.setVelocity(wheelVelocity);
-            rightRear.setVelocity(wheelVelocity);
-            leftRear.setVelocity(wheelVelocity);
-        }
+        // Stop and Reset encoders
+        frontArm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
     }
 }

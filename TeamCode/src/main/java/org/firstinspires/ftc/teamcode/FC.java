@@ -1,7 +1,10 @@
 package org.firstinspires.ftc.teamcode;
 
+import static com.qualcomm.robotcore.hardware.DcMotor.RunMode.RUN_TO_POSITION;
 import static com.qualcomm.robotcore.hardware.DcMotor.RunMode.RUN_WITHOUT_ENCODER;
 import static com.qualcomm.robotcore.hardware.DcMotor.RunMode.STOP_AND_RESET_ENCODER;
+
+import com.qualcomm.robotcore.hardware.DcMotor;
 
 public class FC {
     HWC brontoscorus;
@@ -45,14 +48,62 @@ public class FC {
                 brontoscorus.rightRear.setPower(0);
             }
         }
-
         brontoscorus.leftFront.setPower(0);
         brontoscorus.leftRear.setPower(0);
         brontoscorus.rightFront.setPower(0);
         brontoscorus.rightRear.setPower(0);
     }
 
-    // TODO: Finish Function and replace runToPosition in auton file
+    // Function used to move the arm to different levels will probably be deprecated for auton(eventually).
+    public void move_arm(double power, int position){
+        brontoscorus.frontArm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        brontoscorus.frontArm.setTargetPosition(position);
+        brontoscorus.frontArm.setPower(power);
+        while (brontoscorus.frontArm.isBusy()){
+            brontoscorus.telemetry.addData("Arm Moving", "TRUE");
+            brontoscorus.telemetry.update();
+        }
+    }
+
+    // Function used to intake cones
+    public static void runIntakeServo(double power) {
+        brontoscorus.frontIntakeL.setPower(power);
+        brontoscorus.frontIntakeR.setPower(power);
+    }
+
+    public void turn(double directionInDegrees, double wheelVelocity) {
+//      384.5(PPR) = ~50cm = ~20in
+//      7.9(PPR) = 1cm
+//      4.27(PPR) = 1 Degree
+        double pprTurn = directionInDegrees * HWC.ONE_DEGREE_IN_PPR;
+
+        if(directionInDegrees != 0) {
+            if (directionInDegrees < 0) {
+                brontoscorus.leftFront.setTargetPosition(-(int) pprTurn + leftFront.getCurrentPosition());
+                brontoscorus.rightFront.setTargetPosition((int) pprTurn + rightFront.getCurrentPosition());
+                brontoscorus.leftRear.setTargetPosition(-(int) pprTurn + leftRear.getCurrentPosition());
+                brontoscorus.rightRear.setTargetPosition((int) pprTurn + rightRear.getCurrentPosition());
+
+            } else if (directionInDegrees > 0) {
+                brontoscorus.leftFront.setTargetPosition((int) pprTurn + leftFront.getCurrentPosition());
+                brontoscorus.rightFront.setTargetPosition(-(int) pprTurn + rightFront.getCurrentPosition());
+                brontoscorus.leftRear.setTargetPosition((int) pprTurn + leftRear.getCurrentPosition());
+                brontoscorus.rightRear.setTargetPosition(-(int) pprTurn + rightRear.getCurrentPosition());
+            }
+
+            brontoscorus.leftFront.setMode(RUN_TO_POSITION);
+            brontoscorus.rightFront.setMode(RUN_TO_POSITION);
+            brontoscorus.leftRear.setMode(RUN_TO_POSITION);
+            brontoscorus.rightRear.setMode(RUN_TO_POSITION);
+
+            brontoscorus.leftFront.setVelocity(wheelVelocity);
+            brontoscorus.rightFront.setVelocity(wheelVelocity);
+            brontoscorus.rightRear.setVelocity(wheelVelocity);
+            brontoscorus.leftRear.setVelocity(wheelVelocity);
+        }
+    }
+
+    // TODO: Finish Function and replace runToPosition (used above)
 //    public void moveArm(HWC.armPositions state) {
 //        int wheelCounts = 0;
 //        int targetPos = 0;
