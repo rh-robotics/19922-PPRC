@@ -64,26 +64,25 @@ public class auton extends LinearOpMode {
     waitForStart();
     while (opModeIsActive()) {
       // State Machine
-      if (state == enumStates.MOVING_TO_POLE) {
-        telemetry.addData("State", "Moving to Pole");
-        telemetry.update();
-
-
-      } else if (state == enumStates.DELIVERING_CONE) {
-        telemetry.addData("State", "Delivering Cone");
-        telemetry.update();
-      } else if (state == enumStates.MOVING_TO_STACK) {
-        telemetry.addData("State", "Moving to Stack");
-        telemetry.update();
-      } else if (state == enumStates.PICKING_UP_CONE) {
-        telemetry.addData("State", "Picking up Cone");
-        telemetry.update();
-      } else if (state == enumStates.PARKING_NO_VALUE) {
-        telemetry.addData("State", "Parking no Value");
-        telemetry.update();
-      } else if (state == enumStates.PARKING_VALUE) {
-        telemetry.addData("State", "Parking with Value");
-        telemetry.update();
+      switch(state) {
+        case MOVING_TO_POLE:
+          telemetry.addData("State", "Moving to Pole");
+          telemetry.update();
+        case DELIVERING_CONE:
+          telemetry.addData("State", "Delivering Cone");
+          telemetry.update();
+        case MOVING_TO_STACK:
+          telemetry.addData("State", "Moving to Stack");
+          telemetry.update();
+        case PICKING_UP_CONE:
+          telemetry.addData("State", "Picking up Cone");
+          telemetry.update();
+        case PARKING_NO_VALUE:
+          telemetry.addData("State", "Parking no Value");
+          telemetry.update();
+        case PARKING_VALUE:
+          telemetry.addData("State", "Parking with Value");
+          telemetry.update();
       }
     }
   }
