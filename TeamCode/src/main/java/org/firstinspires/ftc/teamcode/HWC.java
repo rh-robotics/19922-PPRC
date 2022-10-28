@@ -23,6 +23,23 @@ public class HWC {
     public static final double ONE_CM_IN_PPR = 7.9;
     public static final double ONE_DEGREE_IN_PPR = 4.27;
 
+    // autonStates Enum
+    public enum autonStates {
+        SCANNING_FOR_SIGNAL,
+        MOVING_TO_POLE,
+        DELIVERING_CONE,
+        MOVING_TO_STACK,
+        PICKING_UP_CONE,
+        PARKING_NO_VALUE,
+        PARKING_VALUE
+    }
+
+    // armPositions Enum
+    public enum armPositions {
+        HANDOFF,
+        CYCLE
+    }
+
     public HWC(@NonNull HardwareMap hardwareMap, Telemetry telemetry) {
         this.telemetry = telemetry;
 
@@ -44,47 +61,6 @@ public class HWC {
         rightFront.setMode(RUN_USING_ENCODER);
         leftRear.setMode(RUN_USING_ENCODER);
         rightRear.setMode(RUN_USING_ENCODER);
-    }
-
-    // Declare all methods used for moving all parts of our robot.
-    public void driveAndArm(double distanceInCm, double wheelRPower, double wheelLPower) {
-        int wheelCounts = 0;
-        double wCounts = distanceInCm * ONE_CM_IN_PPR;
-
-        leftFront.setMode(STOP_AND_RESET_ENCODER);
-        rightFront.setMode(STOP_AND_RESET_ENCODER);
-        leftRear.setMode(STOP_AND_RESET_ENCODER);
-        rightRear.setMode(STOP_AND_RESET_ENCODER);
-
-        leftFront.setMode(RUN_WITHOUT_ENCODER);
-        rightFront.setMode(RUN_WITHOUT_ENCODER);
-        leftRear.setMode(RUN_WITHOUT_ENCODER);
-        rightRear.setMode(RUN_WITHOUT_ENCODER);
-
-        time.reset();
-
-        while(Math.abs(wheelCounts) < wCounts) {
-            wheelCounts = leftFront.getCurrentPosition();
-
-            if(Math.abs(wheelCounts) < wCounts){
-                leftFront.setPower(wheelLPower);
-                leftRear.setPower(wheelLPower);
-                rightFront.setPower(wheelRPower);
-                rightRear.setPower(wheelRPower);
-
-            }
-            else {
-                leftFront.setPower(0);
-                leftRear.setPower(0);
-                rightFront.setPower(0);
-                rightRear.setPower(0);
-            }
-        }
-
-        leftFront.setPower(0);
-        leftRear.setPower(0);
-        rightFront.setPower(0);
-        rightRear.setPower(0);
     }
 
     public void turn(double directionInDegrees, double wheelVelocity) {

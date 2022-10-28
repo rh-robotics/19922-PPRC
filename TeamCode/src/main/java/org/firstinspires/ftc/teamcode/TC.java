@@ -5,7 +5,7 @@ import com.acmerobotics.roadrunner.trajectory.Trajectory;
 
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 
-public class TF {
+public class TC {
     public Trajectory autonDelPreloadCone(SampleMecanumDrive drive) {
         return drive.trajectoryBuilder(new Pose2d(35, -60, Math.toRadians(90)))
                 .forward(45)
