@@ -10,6 +10,18 @@ import org.opencv.imgproc.Imgproc;
 import org.openftc.easyopencv.OpenCvPipeline;
 
 public class SleeveDetection extends OpenCvPipeline {
+  static int X; //145
+  static int Y; //168
+  static  int W; //30
+  static  int H; //50
+
+public SleeveDetection(int boundX,int boundY, int width, int height ){
+   this.X = boundX;
+   this.Y = boundY;
+   this.W = width;
+   this.H = height;
+}
+
     /*
     white  = Parking Left
     black    = Parking Middle
@@ -23,25 +35,25 @@ public class SleeveDetection extends OpenCvPipeline {
     }
 
     // TOPLEFT anchor point for the bounding box
-    private static Point SLEEVE_TOPLEFT_ANCHOR_POINT = new Point(145, 168);
+    private static Point SLEEVE_TOPLEFT_ANCHOR_POINT = new Point(X,Y);
 
     // Width and height for the bounding box
-    public static int REGION_WIDTH = 30;
-    public static int REGION_HEIGHT = 50;
+    public static int REGION_WIDTH = W;
+    public static int REGION_HEIGHT = H;
 
     // Lower and upper boundaries for colors
     private static final Scalar
-            lower_white_bounds  = new Scalar(200, 200, 200, 255),
-            upper_white_bounds  = new Scalar(255, 255, 255, 255),
-            lower_black_bounds    = new Scalar(0, 0, 0, 0),
-            upper_black_bounds    = new Scalar(100, 100, 100, 255),
+            lower_white_bounds = new Scalar(200, 200, 200, 255),
+            upper_white_bounds = new Scalar(255, 255, 255, 255),
+            lower_black_bounds = new Scalar(0, 0, 0, 0),
+            upper_black_bounds = new Scalar(100, 100, 100, 255),
             lower_green_bounds = new Scalar(0, 70, 0, 255),
             upper_green_bounds = new Scalar(60, 255, 60, 255);
 
     // Color definitions
     private final Scalar
-            WHITE  = new Scalar(255, 255, 255),
-            BLACK    = new Scalar(0, 0, 0),
+            WHITE = new Scalar(255, 255, 255),
+            BLACK = new Scalar(0, 0, 0),
             GREEN = new Scalar(0, 255, 0);
 
     // Percent and mat definitions
@@ -122,8 +134,10 @@ public class SleeveDetection extends OpenCvPipeline {
         return input;
     }
 
+
     // Returns an enum being the current position where the robot will park
     public ParkingPosition getPosition() {
         return position;
     }
 }
+
