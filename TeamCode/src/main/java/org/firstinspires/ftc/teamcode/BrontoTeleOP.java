@@ -83,12 +83,16 @@ public class BrontoTeleOP extends OpMode
         frontArm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         frontArm.setTargetPosition(position);
         frontArm.setPower(power);
+        runtime.reset();
+        busyLoop: {
         while (frontArm.isBusy()){
-        telemetry.addData("Arm Moving", "TRUE");
-        telemetry.update();
+            while (runtime.milliseconds() < 8000){telemetry.addData("Arm Moving", "TRUE");
+                telemetry.update();}
+            break busyLoop;}}
+        telemetry.addData("Arm Moving", "FALSE");
         }
 
-    }
+
 
 
     /** Code to run REPEATEDLY after the driver hits INIT, but before they hit PLAY. */
