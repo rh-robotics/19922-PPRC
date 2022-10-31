@@ -11,7 +11,7 @@ import org.firstinspires.ftc.teamcode.HWC;
 
 
 
-@TeleOp(name="Bronto's Steps", group="Iterative Opmode")
+@TeleOp(name="Bronto's TeleOp", group="Iterative Opmode")
 
 public class BrontoTeleOP extends OpMode
 {
