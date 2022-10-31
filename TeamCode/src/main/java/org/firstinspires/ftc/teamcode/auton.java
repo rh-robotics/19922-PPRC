@@ -30,7 +30,6 @@ public class auton extends LinearOpMode {
   public void runOpMode() throws InterruptedException {
     // Call outside classes for HWC and FC
     HWC bronto = new HWC(hardwareMap, telemetry);
-    FC functions = new FC(bronto);
 
     // Tell driver bronto is initializing
     telemetry.addData("Status", "Initializing");
@@ -79,7 +78,7 @@ public class auton extends LinearOpMode {
 
           // Move arms to cycle pos & update telemetry
           double highPos = 2786 * 0.75;
-          functions.move_arm(.3, (int)highPos);
+          bronto.move_arm(.3, (int)highPos);
           telemetry.addData("Arm Position", "Cycle");
           telemetry.update();
 
@@ -87,12 +86,16 @@ public class auton extends LinearOpMode {
           drive.followTrajectory(TC.startToCyclePole(this.drive));
           drive.turn(Math.toRadians(90));
 
-          // Run Gecko Wheel Servos to deposit cone
-          FC.runIntakeServo(-.3);
+          state = HWC.autonStates.DELIVERING_CONE;
         case DELIVERING_CONE:
           // Update State Telemetry
           telemetry.addData("State", "Delivering Cone");
           telemetry.update();
+
+          // Run Gecko Wheel Servos to deposit cone
+          bronto.runIntakeServo(-.3);
+
+          state = HWC.autonStates.MOVING_TO_STACK;
         case MOVING_TO_STACK:
           // Update State Telemetry
           telemetry.addData("State", "Moving to Stack");
