@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode;
 
+import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
@@ -12,13 +13,14 @@ import org.openftc.easyopencv.OpenCvCameraRotation;
 
 @Autonomous
 public class auton extends LinearOpMode {
-  // Declare enums
+  // Variables
   HWC.autonStates state = HWC.autonStates.SCANNING_FOR_SIGNAL;
   HWC.armPositions armPosition = HWC.armPositions.INIT;
-
-  // Timer & Road Runner Drive
   ElapsedTime timer = new ElapsedTime();
   SampleMecanumDrive drive = new SampleMecanumDrive(hardwareMap);
+  Pose2d startPos = new Pose2d(35, -60, Math.toRadians(90));
+  int cycleCount = 0;
+
 
   // Variables for CV
   // TODO: Move to bronto HWC
@@ -72,9 +74,13 @@ public class auton extends LinearOpMode {
       // State Machine
       switch(state) {
         case MOVING_TO_POLE:
-          // Update State Telemetry
+          // Update cycle count & telemetry
           telemetry.addData("State", "Moving to Pole");
+          telemetry.addData("Cycle Count", cycleCount);
           telemetry.update();
+          cycleCount++;
+
+          drive.setPoseEstimate(startPos);
 
           // Move arms to cycle pos & update telemetry
           double highPos = 2786 * 0.75;
@@ -83,10 +89,13 @@ public class auton extends LinearOpMode {
           telemetry.update();
 
           // Drive to pole, then rotate
-          drive.followTrajectory(TC.startToCyclePole(this.drive));
+          drive.followTrajectory(TC.startToCyclePole(this.drive, startPos));
           drive.turn(Math.toRadians(90));
 
-          state = HWC.autonStates.DELIVERING_CONE;
+          // Make sure roadrunner isnt still running, then change states
+          if(!drive.isBusy()){
+            state = HWC.autonStates.DELIVERING_CONE;
+          }
         case DELIVERING_CONE:
           // Update State Telemetry
           telemetry.addData("State", "Delivering Cone");
@@ -95,7 +104,9 @@ public class auton extends LinearOpMode {
           // Run Gecko Wheel Servos to deposit cone
           bronto.runIntakeServo(-.3);
 
-          state = HWC.autonStates.MOVING_TO_STACK;
+          if (cycleCount <= 3) {
+            state = HWC.autonStates.MOVING_TO_STACK;
+          }
         case MOVING_TO_STACK:
           // Update State Telemetry
           telemetry.addData("State", "Moving to Stack");

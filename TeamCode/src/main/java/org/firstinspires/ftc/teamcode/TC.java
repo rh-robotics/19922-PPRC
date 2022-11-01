@@ -6,8 +6,8 @@ import com.acmerobotics.roadrunner.trajectory.Trajectory;
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 
 public class TC {
-    public static Trajectory startToCyclePole(SampleMecanumDrive drive) {
-        return drive.trajectoryBuilder(new Pose2d(35, -60, Math.toRadians(90)))
+    public static Trajectory startToCyclePole(SampleMecanumDrive drive, Pose2d pos) {
+        return drive.trajectoryBuilder(pos)
                 .forward(60)
                 .build();
     }
