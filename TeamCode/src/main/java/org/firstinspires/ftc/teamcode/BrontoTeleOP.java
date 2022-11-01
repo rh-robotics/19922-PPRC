@@ -11,7 +11,7 @@ import org.firstinspires.ftc.teamcode.HWC;
 
 
 
-@TeleOp(name="Bronto's Steps", group="Iterative Opmode")
+@TeleOp(name="Bronto's TeleOp", group="Iterative Opmode")
 
 public class BrontoTeleOP extends OpMode
 {
@@ -80,17 +80,17 @@ public class BrontoTeleOP extends OpMode
     }
 
     public void move_arm(double power, int position){
-        frontArm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         frontArm.setTargetPosition(position);
+        frontArm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         frontArm.setPower(power);
         runtime.reset();
-        busyLoop: {
+       /* busyLoop: {
         while (frontArm.isBusy()){
             while (runtime.milliseconds() < 8000){telemetry.addData("Arm Moving", "TRUE");
                 telemetry.update();}
             break busyLoop;}}
         telemetry.addData("Arm Moving", "FALSE");
-        }
+      */  }
 
 
 
@@ -132,10 +132,15 @@ public class BrontoTeleOP extends OpMode
         else {intakePow = 0;}
 
 
-        if (frontArmDown < 0 && frontArmUp > 0 ){ frontArmPow = 0;}
-        else if (frontArmUp > 0){frontArmPow = frontArmUp * 0.5;}
-        else if (frontArmDown < 0){frontArmPow = frontArmDown;}
-        else{frontArmPow=0;}
+        if (frontArmDown < 0 && frontArmUp > 0 ){ frontArmPow = 0;
+        frontArm.setMode(DcMotor.RunMode.RUN_TO_POSITION);}
+        else if (frontArmUp > 0){frontArmPow = frontArmUp * 0.5;
+        frontArm.setMode(DcMotor.RunMode.RUN_USING_ENCODER);}
+        else if (frontArmDown < 0){frontArmPow = frontArmDown;
+            frontArm.setMode(DcMotor.RunMode.RUN_USING_ENCODER);}
+        else{frontArmPow=0;
+            frontArm.setMode(DcMotor.RunMode.RUN_TO_POSITION);}
+
 
 
 
@@ -163,16 +168,16 @@ public class BrontoTeleOP extends OpMode
 
 
         if(gamepad1.y){
-            move_arm(.3,motorTickCount/2);
+            move_arm(.3,1000);
             state = TeleOpStates.TRANSFER;
         }
         else if (gamepad1.x){
-            double highPos =motorTickCount *0.75;
-            move_arm(.3, (int)highPos);
+
+            move_arm(.3, 800);
             state = TeleOpStates.HIGH_POLE;
         }
         else if (gamepad1.b){
-            move_arm(.3, motorTickCount/2);
+            move_arm(.3, 600);
         }
 
         switch(state){
