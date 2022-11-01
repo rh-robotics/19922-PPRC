@@ -17,7 +17,7 @@ public class BrontoTeleOP extends OpMode
 {
     /** Declare OpMode members. */
 
- static final int motorTickCount = 2786;
+ //static final int motorTickCount = 2786;
     public enum TeleOpStates {
         RESTING,
         INTAKE,
@@ -75,7 +75,6 @@ public class BrontoTeleOP extends OpMode
 
 
 
-
         telemetry.addData("Status", "Initialized");
     }
 
@@ -83,7 +82,11 @@ public class BrontoTeleOP extends OpMode
         frontArm.setTargetPosition(position);
         frontArm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         frontArm.setPower(power);
-        runtime.reset();
+         while (frontArm.isBusy()){
+            telemetry.addData("Arm Moving", "TRUE");
+            telemetry.update();
+        }
+      //  runtime.reset();
        /* busyLoop: {
         while (frontArm.isBusy()){
             while (runtime.milliseconds() < 8000){telemetry.addData("Arm Moving", "TRUE");
@@ -105,6 +108,7 @@ public class BrontoTeleOP extends OpMode
     @Override
     public void start(){
     runtime.reset();
+    ;
     }
 
     @Override
@@ -131,15 +135,11 @@ public class BrontoTeleOP extends OpMode
         else if (gamepad1.right_trigger > 0) {intakePow = -gamepad1.right_trigger;}
         else {intakePow = 0;}
 
-
-        if (frontArmDown < 0 && frontArmUp > 0 ){ frontArmPow = 0;
-        frontArm.setMode(DcMotor.RunMode.RUN_TO_POSITION);}
-        else if (frontArmUp > 0){frontArmPow = frontArmUp * 0.5;
+         if (frontArmUp > 0){frontArmPow = frontArmUp * 0.5;
         frontArm.setMode(DcMotor.RunMode.RUN_USING_ENCODER);}
         else if (frontArmDown < 0){frontArmPow = frontArmDown;
             frontArm.setMode(DcMotor.RunMode.RUN_USING_ENCODER);}
-        else{frontArmPow=0;
-            frontArm.setMode(DcMotor.RunMode.RUN_TO_POSITION);}
+        else{frontArmPow=0;}
 
 
 
@@ -168,16 +168,16 @@ public class BrontoTeleOP extends OpMode
 
 
         if(gamepad1.y){
-            move_arm(.3,1000);
+            move_arm(.8,1000);
             state = TeleOpStates.TRANSFER;
         }
         else if (gamepad1.x){
 
-            move_arm(.3, 800);
+            move_arm(.8, 800);
             state = TeleOpStates.HIGH_POLE;
         }
         else if (gamepad1.b){
-            move_arm(.3, 600);
+            move_arm(.8, 600);
         }
 
         switch(state){
