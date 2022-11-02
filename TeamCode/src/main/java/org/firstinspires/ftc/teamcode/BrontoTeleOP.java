@@ -84,7 +84,7 @@ public class BrontoTeleOP extends OpMode
         frontArm.setPower(power);
          while (frontArm.isBusy()){
             telemetry.addData("Arm Moving", "TRUE");
-            telemetry.update();
+            
 
 
         }
@@ -92,7 +92,7 @@ public class BrontoTeleOP extends OpMode
        /* busyLoop: {
         while (frontArm.isBusy()){
             while (runtime.milliseconds() < 8000){telemetry.addData("Arm Moving", "TRUE");
-                telemetry.update();}
+                }
             break busyLoop;}}
         telemetry.addData("Arm Moving", "FALSE");
       */  }
@@ -193,36 +193,36 @@ public class BrontoTeleOP extends OpMode
         switch(state){
             case RESTING:
                 telemetry.addData("Arm Position", "Resting");
-                telemetry.update();
+                
                 break;
             case LOW_POLE:
                 telemetry.addData("Arm Position", "Low Pole");
-                telemetry.update();
+                
                 break;
             case MED_POLE:
                 telemetry.addData("Arm Position", "Medium Pole");
-                telemetry.update();
+                
                 break;
             case HIGH_POLE:
                 telemetry.addData("Arm Position", "High Pole");
-                telemetry.update();
+                
                 break;
             case INTAKE:
                 telemetry.addData("Arm Position", "Intake");
-                telemetry.update();
+                
                 break;
             case TRANSFER:
                 telemetry.addData("Arm Position", "Transfer");
-                telemetry.update();
+                
                 break;
             case UNKNOWN:
                 telemetry.addData("Arm Position", "Unknown");
-                telemetry.update();
+                
                 break;
             default:
                 state = TeleOpStates.UNKNOWN;
                 telemetry.addData("Arm Position", "Unknown");
-                telemetry.update();
+                
         }
 
 
@@ -235,7 +235,7 @@ public class BrontoTeleOP extends OpMode
         frontIntakeR.setPower(intakePow);
 
         telemetry.addData("Motors", "front left (%.2f), front right (%.2f), back left (%.2f), back right (%.2f), front arm (%.2f)", leftFPower, rightFPower,leftBPower, rightBPower, frontArmPow);
-
+        telemetry.update();
 
     }
 
