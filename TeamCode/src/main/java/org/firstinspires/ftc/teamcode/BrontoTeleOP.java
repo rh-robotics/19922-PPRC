@@ -17,7 +17,7 @@ public class BrontoTeleOP extends OpMode
 {
     /** Declare OpMode members. */
 
- static final int motorTickCount = 2786;
+
     public enum TeleOpStates {
         RESTING,
         INTAKE,
@@ -73,24 +73,29 @@ public class BrontoTeleOP extends OpMode
         frontIntakeR.setDirection(DcMotor.Direction.REVERSE);
 
 
-
-
+        frontArm.setTargetPosition(0);
 
         telemetry.addData("Status", "Initialized");
     }
 
     public void move_arm(double power, int position){
-        frontArm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         frontArm.setTargetPosition(position);
+        frontArm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         frontArm.setPower(power);
-        runtime.reset();
-        busyLoop: {
+         while (frontArm.isBusy()){
+            telemetry.addData("Arm Moving", "TRUE");
+            telemetry.update();
+
+
+        }
+      //  runtime.reset();
+       /* busyLoop: {
         while (frontArm.isBusy()){
             while (runtime.milliseconds() < 8000){telemetry.addData("Arm Moving", "TRUE");
                 telemetry.update();}
             break busyLoop;}}
         telemetry.addData("Arm Moving", "FALSE");
-        }
+      */  }
 
 
 
@@ -105,6 +110,7 @@ public class BrontoTeleOP extends OpMode
     @Override
     public void start(){
     runtime.reset();
+    ;
     }
 
     @Override
@@ -119,24 +125,33 @@ public class BrontoTeleOP extends OpMode
 
 
 
-        double drive = gamepad1.left_stick_y;
-        double turn  =  -gamepad1.left_stick_x ;
-        double strafe = gamepad1.right_stick_x;
+        double drive = -gamepad1.left_stick_y *0.8;
+        double turn  =  gamepad1.left_stick_x * 0.6;
+        double strafe = gamepad1.right_stick_x * 0.8;
         double frontArmUp = gamepad2.left_trigger;
         double frontArmDown = -gamepad2.right_trigger * 5;
 
 
 
+        if (gamepad1.left_bumper && gamepad1.right_bumper && gamepad1.left_stick_button){
+            frontArm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        }
+
         if (gamepad1.left_trigger > 0) { intakePow = gamepad1.left_trigger;}
         else if (gamepad1.right_trigger > 0) {intakePow = -gamepad1.right_trigger;}
         else {intakePow = 0;}
 
-
-        if (frontArmDown < 0 && frontArmUp > 0 ){ frontArmPow = 0;}
-        else if (frontArmUp > 0){frontArmPow = frontArmUp * 0.5;}
-        else if (frontArmDown < 0){frontArmPow = frontArmDown;}
-        else{frontArmPow=0;}
-
+         if (frontArmUp > 0){
+             frontArm.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+                     frontArmPow = frontArmUp * 0.5;
+        ;}
+        else if (frontArmDown < 0){frontArm.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            frontArmPow = frontArmDown;
+            }
+        else{
+            frontArm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            frontArmPow=.3;
+        }
 
 
         if (drive != 0 || turn != 0) {
@@ -163,16 +178,16 @@ public class BrontoTeleOP extends OpMode
 
 
         if(gamepad1.y){
-            move_arm(.3,motorTickCount/2);
+            move_arm(.8,1000);
             state = TeleOpStates.TRANSFER;
         }
         else if (gamepad1.x){
-            double highPos =motorTickCount *0.75;
-            move_arm(.3, (int)highPos);
+
+            move_arm(.8, 800);
             state = TeleOpStates.HIGH_POLE;
         }
         else if (gamepad1.b){
-            move_arm(.3, motorTickCount/2);
+            move_arm(.8, 600);
         }
 
         switch(state){
@@ -220,6 +235,7 @@ public class BrontoTeleOP extends OpMode
         frontIntakeR.setPower(intakePow);
 
         telemetry.addData("Motors", "front left (%.2f), front right (%.2f), back left (%.2f), back right (%.2f), front arm (%.2f)", leftFPower, rightFPower,leftBPower, rightBPower, frontArmPow);
+
 
     }
 
