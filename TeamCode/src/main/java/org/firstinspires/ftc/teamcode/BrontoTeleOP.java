@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.CRServo;
+import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.util.Range;
@@ -10,13 +11,11 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 import org.firstinspires.ftc.teamcode.HWC;
 
 
-
 @TeleOp(name="Bronto's TeleOp", group="Iterative Opmode")
 
 public class BrontoTeleOP extends OpMode
 {
     /** Declare OpMode members. */
-
 
     public enum TeleOpStates {
         RESTING,
@@ -32,6 +31,7 @@ public class BrontoTeleOP extends OpMode
     private DcMotor backL = null;
     private DcMotor backR = null;
     private DcMotor frontArm = null;
+    private ColorSensor colorSensor = null;
     private CRServo frontIntakeL = null;
     private CRServo frontIntakeR = null;
 
@@ -49,6 +49,7 @@ public class BrontoTeleOP extends OpMode
         frontArm = hardwareMap.get(DcMotor.class,"frontArm");
         frontIntakeL = hardwareMap.get(CRServo.class, "intakeL");
         frontIntakeR = hardwareMap.get(CRServo.class, "intakeR");
+        colorSensor = hardwareMap.colorSensor.get("color1");
 
         frontL.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         frontR.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
@@ -57,13 +58,11 @@ public class BrontoTeleOP extends OpMode
         frontArm.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         frontArm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
-
         frontR.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         frontL.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         backL.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         backR.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         frontArm.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-
 
         frontL.setDirection(DcMotor.Direction.FORWARD);
         backL.setDirection(DcMotor.Direction.REVERSE);
@@ -71,7 +70,6 @@ public class BrontoTeleOP extends OpMode
         backR.setDirection(DcMotor.Direction.REVERSE);
         frontIntakeL.setDirection(DcMotor.Direction.FORWARD);
         frontIntakeR.setDirection(DcMotor.Direction.REVERSE);
-
 
         frontArm.setTargetPosition(0);
 
@@ -84,10 +82,7 @@ public class BrontoTeleOP extends OpMode
         frontArm.setPower(power);
          while (frontArm.isBusy()){
             telemetry.addData("Arm Moving", "TRUE");
-            telemetry.update();
-
-
-        }
+            telemetry.update();}
       //  runtime.reset();
        /* busyLoop: {
         while (frontArm.isBusy()){
@@ -97,14 +92,10 @@ public class BrontoTeleOP extends OpMode
         telemetry.addData("Arm Moving", "FALSE");
       */  }
 
-
-
-
     /** Code to run REPEATEDLY after the driver hits INIT, but before they hit PLAY. */
     @Override
     public void init_loop() {
     }
-
 
     /** Code to run ONCE when the driver hits PLAY. */
     @Override
@@ -123,19 +114,14 @@ public class BrontoTeleOP extends OpMode
         double frontArmPow;
         double intakePow;
 
-
-
         double drive = -gamepad1.left_stick_y *0.8;
         double turn  =  gamepad1.left_stick_x * 0.6;
         double strafe = gamepad1.right_stick_x * 0.8;
         double frontArmUp = gamepad2.left_trigger;
         double frontArmDown = -gamepad2.right_trigger * 5;
 
-
-
         if (gamepad1.left_bumper && gamepad1.right_bumper && gamepad1.left_stick_button){
-            frontArm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        }
+            frontArm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);}
 
         if (gamepad1.left_trigger > 0) { intakePow = gamepad1.left_trigger;}
         else if (gamepad1.right_trigger > 0) {intakePow = -gamepad1.right_trigger;}
@@ -143,8 +129,7 @@ public class BrontoTeleOP extends OpMode
 
          if (frontArmUp > 0){
              frontArm.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-                     frontArmPow = frontArmUp * 0.5;
-        ;}
+                     frontArmPow = frontArmUp * 0.5;}
         else if (frontArmDown < 0){frontArm.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
             frontArmPow = frontArmDown;
             }
@@ -152,7 +137,6 @@ public class BrontoTeleOP extends OpMode
             frontArm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             frontArmPow=.3;
         }
-
 
         if (drive != 0 || turn != 0) {
             leftFPower = Range.clip(drive + turn, -1.0, 1.0);
@@ -176,7 +160,9 @@ public class BrontoTeleOP extends OpMode
             rightBPower = 0;
         }
 
-
+if(colorSensor.green() > 138 && colorSensor.red() > 138 && colorSensor.green() >colorSensor.red()){
+    telemetry.addData("color", "Yellow Detected!");
+}
         if(gamepad1.y){
             move_arm(.8,1000);
             state = TeleOpStates.TRANSFER;
@@ -235,13 +221,10 @@ public class BrontoTeleOP extends OpMode
         frontIntakeR.setPower(intakePow);
 
         telemetry.addData("Motors", "front left (%.2f), front right (%.2f), back left (%.2f), back right (%.2f), front arm (%.2f)", leftFPower, rightFPower,leftBPower, rightBPower, frontArmPow);
-
-
     }
 
     /** Code to run ONCE after the driver hits STOP. */
     @Override
     public void stop() {
-
     }
 }

@@ -48,7 +48,7 @@ public SleeveDetection(int boundX,int boundY, int width, int height ){
             lower_black_bounds = new Scalar(0, 0, 0, 0),
             upper_black_bounds = new Scalar(100, 100, 100, 255),
             lower_green_bounds = new Scalar(0, 70, 0, 255),
-            upper_green_bounds = new Scalar(60, 255, 60, 255);
+            upper_green_bounds = new Scalar(80, 255, 80, 255);
 
     // Color definitions
     private final Scalar
@@ -97,7 +97,7 @@ public SleeveDetection(int boundX,int boundY, int width, int height ){
         // Checks all percentages, will highlight bounding box in camera preview
         // based on what color is being detected
         if (maxPercent == whiPercent) {
-            position = ParkingPosition.LEFT;
+            position = ParkingPosition.CENTER;
             Imgproc.rectangle(
                     input,
                     sleeve_pointA,
@@ -106,7 +106,7 @@ public SleeveDetection(int boundX,int boundY, int width, int height ){
                     2
             );
         } else if (maxPercent == blaPercent) {
-            position = ParkingPosition.CENTER;
+            position = ParkingPosition.LEFT;
             Imgproc.rectangle(
                     input,
                     sleeve_pointA,
