@@ -82,14 +82,11 @@ public class BrontoTeleOP extends OpMode
         frontArm.setPower(power);
          while (frontArm.isBusy()){
             telemetry.addData("Arm Moving", "TRUE");
-<<<<<<< HEAD
             telemetry.update();}
-=======
-            
+
 
 
         }
->>>>>>> 1cba0a8cc0a754fe2222ba4ab4ff0fb2de6af428
       //  runtime.reset();
        /* busyLoop: {
         while (frontArm.isBusy()){
@@ -97,7 +94,7 @@ public class BrontoTeleOP extends OpMode
                 }
             break busyLoop;}}
         telemetry.addData("Arm Moving", "FALSE");
-      */  }
+      */
 
     /** Code to run REPEATEDLY after the driver hits INIT, but before they hit PLAY. */
     @Override
@@ -228,11 +225,8 @@ if(colorSensor.green() > 138 && colorSensor.red() > 138 && colorSensor.green() >
         frontIntakeR.setPower(intakePow);
 
         telemetry.addData("Motors", "front left (%.2f), front right (%.2f), back left (%.2f), back right (%.2f), front arm (%.2f)", leftFPower, rightFPower,leftBPower, rightBPower, frontArmPow);
-<<<<<<< HEAD
-=======
         telemetry.update();
 
->>>>>>> 1cba0a8cc0a754fe2222ba4ab4ff0fb2de6af428
     }
 
     /** Code to run ONCE after the driver hits STOP. */
