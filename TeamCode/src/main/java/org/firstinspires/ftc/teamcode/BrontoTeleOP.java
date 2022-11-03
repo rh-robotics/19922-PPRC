@@ -82,12 +82,19 @@ public class BrontoTeleOP extends OpMode
         frontArm.setPower(power);
          while (frontArm.isBusy()){
             telemetry.addData("Arm Moving", "TRUE");
+<<<<<<< HEAD
             telemetry.update();}
+=======
+            
+
+
+        }
+>>>>>>> 1cba0a8cc0a754fe2222ba4ab4ff0fb2de6af428
       //  runtime.reset();
        /* busyLoop: {
         while (frontArm.isBusy()){
             while (runtime.milliseconds() < 8000){telemetry.addData("Arm Moving", "TRUE");
-                telemetry.update();}
+                }
             break busyLoop;}}
         telemetry.addData("Arm Moving", "FALSE");
       */  }
@@ -179,36 +186,36 @@ if(colorSensor.green() > 138 && colorSensor.red() > 138 && colorSensor.green() >
         switch(state){
             case RESTING:
                 telemetry.addData("Arm Position", "Resting");
-                telemetry.update();
+                
                 break;
             case LOW_POLE:
                 telemetry.addData("Arm Position", "Low Pole");
-                telemetry.update();
+                
                 break;
             case MED_POLE:
                 telemetry.addData("Arm Position", "Medium Pole");
-                telemetry.update();
+                
                 break;
             case HIGH_POLE:
                 telemetry.addData("Arm Position", "High Pole");
-                telemetry.update();
+                
                 break;
             case INTAKE:
                 telemetry.addData("Arm Position", "Intake");
-                telemetry.update();
+                
                 break;
             case TRANSFER:
                 telemetry.addData("Arm Position", "Transfer");
-                telemetry.update();
+                
                 break;
             case UNKNOWN:
                 telemetry.addData("Arm Position", "Unknown");
-                telemetry.update();
+                
                 break;
             default:
                 state = TeleOpStates.UNKNOWN;
                 telemetry.addData("Arm Position", "Unknown");
-                telemetry.update();
+                
         }
 
 
@@ -221,6 +228,11 @@ if(colorSensor.green() > 138 && colorSensor.red() > 138 && colorSensor.green() >
         frontIntakeR.setPower(intakePow);
 
         telemetry.addData("Motors", "front left (%.2f), front right (%.2f), back left (%.2f), back right (%.2f), front arm (%.2f)", leftFPower, rightFPower,leftBPower, rightBPower, frontArmPow);
+<<<<<<< HEAD
+=======
+        telemetry.update();
+
+>>>>>>> 1cba0a8cc0a754fe2222ba4ab4ff0fb2de6af428
     }
 
     /** Code to run ONCE after the driver hits STOP. */
