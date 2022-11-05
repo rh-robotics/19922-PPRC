@@ -17,7 +17,6 @@ public class auton extends LinearOpMode {
   HWC.autonStates state = HWC.autonStates.SCANNING_FOR_SIGNAL;
   HWC.armPositions armPosition = HWC.armPositions.INIT;
   ElapsedTime timer = new ElapsedTime();
-  SampleMecanumDrive drive = new SampleMecanumDrive(hardwareMap);
   Pose2d startPos = new Pose2d(35, -60, Math.toRadians(90));
   int cycleCount = 0;
 
@@ -30,14 +29,13 @@ public class auton extends LinearOpMode {
 
   @Override
   public void runOpMode() throws InterruptedException {
-    // Call outside classes for HWC and FC
-    HWC bronto = new HWC(hardwareMap, telemetry);
-
     // Tell driver bronto is initializing
     telemetry.addData("Status", "Initializing");
     telemetry.update();
 
     // Run any initialization code necessary
+    HWC bronto = new HWC(hardwareMap, telemetry);
+    SampleMecanumDrive drive = new SampleMecanumDrive(hardwareMap);
 
     // Tell driver bronto is ready and waiting for start
     telemetry.addData("Status", "Initialized - Waiting for Start");
@@ -70,7 +68,12 @@ public class auton extends LinearOpMode {
 
     // Wait for Driver to press start
     waitForStart();
+    state = HWC.autonStates.MOVING_TO_POLE;
     while (opModeIsActive()) {
+      // Update State Telemetry
+      telemetry.addData("Status", "Running");
+      telemetry.update();
+
       // State Machine
       switch(state) {
         case MOVING_TO_POLE:
@@ -83,19 +86,17 @@ public class auton extends LinearOpMode {
           drive.setPoseEstimate(startPos);
 
           // Move arms to cycle pos & update telemetry
-          double highPos = 2786 * 0.75;
-          bronto.move_arm(.3, (int)highPos);
-          telemetry.addData("Arm Position", "Cycle");
-          telemetry.update();
+//          double highPos = 2786 * 0.75;
+//          bronto.move_arm(.3, (int)highPos);
+//          telemetry.addData("Arm Position", "Cycle");
+//          telemetry.update();
 
           // Drive to pole, then rotate
-          drive.followTrajectory(TC.startToCyclePole(this.drive, startPos));
+          drive.followTrajectory(TC.startToCyclePole(drive, startPos));
           drive.turn(Math.toRadians(90));
 
-          // Make sure roadrunner isnt still running, then change states
-          if(!drive.isBusy()){
-            state = HWC.autonStates.DELIVERING_CONE;
-          }
+          //Change state
+          state = HWC.autonStates.DELIVERING_CONE;
         case DELIVERING_CONE:
           // Update State Telemetry
           telemetry.addData("State", "Delivering Cone");
@@ -111,6 +112,11 @@ public class auton extends LinearOpMode {
           // Update State Telemetry
           telemetry.addData("State", "Moving to Stack");
           telemetry.update();
+
+
+
+          // Run Move to Stack Trajectory
+//          TC.poleToStack(drive, );
         case PICKING_UP_CONE:
           // Update State Telemetry
           telemetry.addData("State", "Picking up Cone");

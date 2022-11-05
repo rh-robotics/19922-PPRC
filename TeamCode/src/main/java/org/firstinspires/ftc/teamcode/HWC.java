@@ -91,8 +91,8 @@ public class HWC {
 
     // Function used to move the arm to different levels will probably be deprecated for auton(eventually).
     public void move_arm(double power, int position){
-        frontArm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         frontArm.setTargetPosition(position);
+        frontArm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         frontArm.setPower(power);
         while (frontArm.isBusy()){
             telemetry.addData("Arm Moving", "TRUE");
