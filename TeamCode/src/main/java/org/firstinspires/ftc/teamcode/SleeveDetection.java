@@ -10,16 +10,16 @@ import org.opencv.imgproc.Imgproc;
 import org.openftc.easyopencv.OpenCvPipeline;
 
 public class SleeveDetection extends OpenCvPipeline {
-  static int X = 145; //145
-  static int Y = 168; //168
-  static int W = 30; //30
-  static int H = 50;//50
+  static int X; //145
+  static int Y; //168
+  static int W; //30
+  static int H;//50
 
 public SleeveDetection(int boundX,int boundY, int width, int height ){
-   this.X = boundX;
-   this.Y = boundY;
-   this.W = width;
-   this.H = height;
+   X = boundX;
+   Y = boundY;
+   W = width;
+   H = height;
 }
 
     /*

@@ -31,11 +31,13 @@ public class BrontoTeleOP extends OpMode
     private DcMotor backL = null;
     private DcMotor backR = null;
     private DcMotor frontArm = null;
-    private ColorSensor colorSensor = null;
+  //  private ColorSensor colorSensor = null;
     private CRServo frontIntakeL = null;
     private CRServo frontIntakeR = null;
 
     private ElapsedTime runtime = new ElapsedTime();
+
+    boolean manualMode = false;
 
     TeleOpStates state = TeleOpStates.RESTING;
 
@@ -49,7 +51,7 @@ public class BrontoTeleOP extends OpMode
         frontArm = hardwareMap.get(DcMotor.class,"frontArm");
         frontIntakeL = hardwareMap.get(CRServo.class, "intakeL");
         frontIntakeR = hardwareMap.get(CRServo.class, "intakeR");
-        colorSensor = hardwareMap.colorSensor.get("color1");
+        //colorSensor = hardwareMap.colorSensor.get("color1");
 
         frontL.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         frontR.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
@@ -131,15 +133,22 @@ public class BrontoTeleOP extends OpMode
         else if (gamepad1.right_trigger > 0) {intakePow = -gamepad1.right_trigger;}
         else {intakePow = 0;}
 
-         if (frontArmUp > 0){
-             frontArm.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-                     frontArmPow = frontArmUp * 0.5;}
-        else if (frontArmDown < 0){frontArm.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
+        if (gamepad2.right_stick_button){
+            manualMode = !manualMode;
+        }
+
+        if (frontArmUp > 0) {
+            frontArm.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            frontArmPow = frontArmUp * 0.5;
+        } else if (frontArmDown < 0) {
+            frontArm.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
             frontArmPow = frontArmDown;
-            }
+        }
         else{
-            frontArm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            frontArmPow=.3;
+
+            frontArm.setMode(manualMode? DcMotor.RunMode.RUN_USING_ENCODER:DcMotor.RunMode.RUN_TO_POSITION);
+            frontArmPow = manualMode? 0.1: 0.03;
         }
 
         if (drive != 0 || turn != 0) {
@@ -164,9 +173,9 @@ public class BrontoTeleOP extends OpMode
             rightBPower = 0;
         }
 
-if(colorSensor.green() > 138 && colorSensor.red() > 138 && colorSensor.green() >colorSensor.red()){
+/*if(colorSensor.green() > 138 && colorSensor.red() > 138 && colorSensor.green() >colorSensor.red()){
     telemetry.addData("color", "Yellow Detected!");
-}
+}*/
         if(gamepad1.y){
             move_arm(.8,1000);
             state = TeleOpStates.TRANSFER;
