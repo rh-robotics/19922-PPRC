@@ -15,7 +15,7 @@ import org.openftc.easyopencv.OpenCvCameraRotation;
 public class auton extends LinearOpMode {
   // Variables
   HWC.autonStates state = HWC.autonStates.SCANNING_FOR_SIGNAL;
-  HWC.armPositions armPosition = HWC.armPositions.INIT;
+  HWC.armPositions armPosition = HWC.armPositions.RESTING;
   ElapsedTime timer = new ElapsedTime();
   Pose2d startPos = new Pose2d(35, -60, Math.toRadians(90));
   int cycleCount = 0;
@@ -86,10 +86,12 @@ public class auton extends LinearOpMode {
           drive.setPoseEstimate(startPos);
 
           // Move arms to cycle pos & update telemetry
-//          double highPos = 2786 * 0.75;
-//          bronto.move_arm(.3, (int)highPos);
-//          telemetry.addData("Arm Position", "Cycle");
-//          telemetry.update();
+
+          double highPos = 2786 * 0.75;
+          bronto.move_to_position_and_hold(bronto.frontArm ,.3, (int)highPos);
+          telemetry.addData("Arm Position", "Cycle");
+          telemetry.update();
+
 
           // Drive to pole, then rotate
           drive.followTrajectory(TC.startToCyclePole(drive, startPos));
@@ -103,7 +105,7 @@ public class auton extends LinearOpMode {
           telemetry.update();
 
           // Run Gecko Wheel Servos to deposit cone
-          bronto.runIntakeServo(-.3);
+          bronto.runIntakeServo('R',-.3);
 
           if (cycleCount <= 3) {
             state = HWC.autonStates.MOVING_TO_STACK;

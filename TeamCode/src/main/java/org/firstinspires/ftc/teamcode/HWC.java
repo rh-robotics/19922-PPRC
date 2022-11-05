@@ -17,8 +17,8 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 
 public class HWC {
     // Declare empty variables for robot hardware
-    public DcMotorEx leftFront, rightFront, leftRear, rightRear, frontArm;
-    public CRServo frontIntakeL, frontIntakeR;
+    public DcMotorEx leftFront, rightFront, leftRear, rightRear, frontArm, frontElbow, backArm, backElbow;
+    public CRServo frontIntakeL, frontIntakeR, backIntakeR, backIntakeL;
 
     // Declare other variables to be used here
     Telemetry telemetry;
@@ -41,10 +41,32 @@ public class HWC {
 
     // armPositions Enum
     public enum armPositions {
-        HANDOFF,
-        CYCLE,
-        INIT
+        RESTING,
+        INTAKE,
+        LOW_POLE,
+        MED_POLE,
+        HIGH_POLE,
+        TRANSFER,
+        UNKNOWN
     }
+    //We should both be using these in all our code. Makes it much easier to tune as only one person has to
+    //BS numbers but I needed something
+    int armRestingPos = 0;
+    int intakePos = 200;
+    int lowPolePos = 400;
+    int medPolePos = 600;
+    int highPolePos = 900;
+    int transferPos = 1100;
+    int elbowRestingPos = 0;
+    int elbowIntakePos = 300;
+    int elbowTransferPos = elbowRestingPos;
+    int elbowDeliveryPos = 250;
+
+
+
+
+
+
 
     public HWC(@NonNull HardwareMap hardwareMap, Telemetry telemetry) {
         this.telemetry = telemetry;
@@ -55,10 +77,13 @@ public class HWC {
         leftFront = hardwareMap.get(DcMotorEx.class, "leftFront");
         leftRear = hardwareMap.get(DcMotorEx.class, "leftRear");
         frontArm = hardwareMap.get(DcMotorEx.class,"frontArm");
+        frontElbow = hardwareMap.get(DcMotorEx.class, "frontElbow");
 
         // Declare servos
         frontIntakeL = hardwareMap.get(CRServo.class, "intakeL");
         frontIntakeR = hardwareMap.get(CRServo.class, "intakeR");
+        backIntakeL = hardwareMap.get(CRServo.class, "BackIntakeL");
+        backIntakeR = hardwareMap.get(CRServo.class, "BackIntakeR");
 
         // Set the direction of all our motors
         leftFront.setDirection(DcMotorEx.Direction.FORWARD);
@@ -69,37 +94,48 @@ public class HWC {
         // Set CRServo Directions
         frontIntakeL.setDirection(CRServo.Direction.FORWARD);
         frontIntakeR.setDirection(CRServo.Direction.REVERSE);
+        backIntakeL.setDirection(CRServo.Direction.FORWARD);
+        backIntakeR.setDirection(CRServo.Direction.REVERSE);
 
         // Run motors using encoder, so that we can move accurately. If motor doesn't have, run without encoder
-        leftFront.setMode(RUN_USING_ENCODER);
-        rightFront.setMode(RUN_USING_ENCODER);
-        leftRear.setMode(RUN_USING_ENCODER);
-        rightRear.setMode(RUN_USING_ENCODER);
-        frontArm.setMode(RUN_USING_ENCODER);
+        leftFront.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
+        rightFront.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
+        leftRear.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
+        rightRear.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
+        frontArm.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
+        frontElbow.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
 
-        // Stop and Reset encoders
-        frontArm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        // Resets encoder position to zero
+        frontArm.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
+        frontElbow.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
     }
 
     // Functions Below Because Function Class is Hard and Annoying
 
     // Function to run intake set of servos to intake a cone/transfer to other arm
-    public void runIntakeServo(double power) {
-        frontIntakeL.setPower(power);
-        frontIntakeR.setPower(power);
-    }
-
-    // Function used to move the arm to different levels will probably be deprecated for auton(eventually).
-    public void move_arm(double power, int position){
-        frontArm.setTargetPosition(position);
-        frontArm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        frontArm.setPower(power);
-        while (frontArm.isBusy()){
-            telemetry.addData("Arm Moving", "TRUE");
-            telemetry.update();
+    public void runIntakeServo(char servo, double power) {
+        if (servo == 'F') {frontIntakeL.setPower(power);
+        frontIntakeR.setPower(power);}
+        else if (servo == 'R'){backIntakeL.setPower(power);
+            backIntakeR.setPower(power);}
+        else {
+            frontIntakeL.setPower(power);
+            frontIntakeR.setPower(power);
+            backIntakeL.setPower(-power);
+            backIntakeR.setPower(-power);
         }
     }
 
+
+    // Function used to move any motor to different positions and hold it.
+    public void move_to_position_and_hold(DcMotorEx motor, double power, int position){
+        motor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        motor.setTargetPosition(position);
+        motor.setPower(power);
+       /* while (motor.isBusy()){
+            telemetry.addData(motor +" Moving", "TRUE"); */
+
+       }
     // drive method is used to drive using encoder positions. This is currently deprecated
     // since it is last year's code and values. If RR usage goes ary I will use it however.
     public void drive(double distanceInCm, double wheelRPower, double wheelLPower) {
