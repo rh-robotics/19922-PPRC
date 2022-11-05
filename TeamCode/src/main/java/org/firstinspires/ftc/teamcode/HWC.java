@@ -126,17 +126,16 @@ public class HWC {
         }
     }
 
+
     // Function used to move any motor to different positions and hold it.
     public void move_to_position_and_hold(DcMotorEx motor, double power, int position){
         motor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         motor.setTargetPosition(position);
         motor.setPower(power);
        /* while (motor.isBusy()){
-            telemetry.addData(motor +" Moving", "TRUE");
-            telemetry.update();
-        }*/
-    }
+            telemetry.addData(motor +" Moving", "TRUE"); */
 
+       }
     // drive method is used to drive using encoder positions. This is currently deprecated
     // since it is last year's code and values. If RR usage goes ary I will use it however.
     public void drive(double distanceInCm, double wheelRPower, double wheelLPower) {
