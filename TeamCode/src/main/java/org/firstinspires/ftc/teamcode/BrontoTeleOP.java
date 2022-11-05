@@ -5,7 +5,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
+import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.util.Range;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import org.firstinspires.ftc.teamcode.HWC;
@@ -16,6 +16,7 @@ import org.firstinspires.ftc.teamcode.HWC;
 public class BrontoTeleOP extends OpMode
 {
     /** Declare OpMode members. */
+    HWC bronto = new HWC(hardwareMap, telemetry);
 
     public enum TeleOpStates {
         RESTING,
@@ -26,14 +27,6 @@ public class BrontoTeleOP extends OpMode
         TRANSFER,
         UNKNOWN
     }
-    private DcMotor frontL = null;
-    private DcMotor frontR = null;
-    private DcMotor backL = null;
-    private DcMotor backR = null;
-    private DcMotor frontArm = null;
-  //  private ColorSensor colorSensor = null;
-    private CRServo frontIntakeL = null;
-    private CRServo frontIntakeR = null;
 
     private ElapsedTime runtime = new ElapsedTime();
 
@@ -44,59 +37,19 @@ public class BrontoTeleOP extends OpMode
     @Override
     public void init() {
         telemetry.addData("Status", "Initializing");
-        frontL  = hardwareMap.get(DcMotor.class, "leftFront");
-        frontR = hardwareMap.get(DcMotor.class, "rightFront");
-        backL  = hardwareMap.get(DcMotor.class, "leftRear");
-        backR = hardwareMap.get(DcMotor.class, "rightRear");
-        frontArm = hardwareMap.get(DcMotor.class,"frontArm");
-        frontIntakeL = hardwareMap.get(CRServo.class, "intakeL");
-        frontIntakeR = hardwareMap.get(CRServo.class, "intakeR");
-        //colorSensor = hardwareMap.colorSensor.get("color1");
-
-        frontL.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        frontR.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        backL.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        backR.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        frontArm.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        frontArm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-
-        frontR.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        frontL.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        backL.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        backR.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        frontArm.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-
-        frontL.setDirection(DcMotor.Direction.FORWARD);
-        backL.setDirection(DcMotor.Direction.REVERSE);
-        frontR.setDirection(DcMotor.Direction.REVERSE);
-        backR.setDirection(DcMotor.Direction.REVERSE);
-        frontIntakeL.setDirection(DcMotor.Direction.FORWARD);
-        frontIntakeR.setDirection(DcMotor.Direction.REVERSE);
-
-        frontArm.setTargetPosition(0);
+        bronto.frontElbow.setTargetPosition(0);
+        bronto.frontArm.setTargetPosition(0);
+        bronto.backElbow.setTargetPosition(0);
+        bronto.backArm.setTargetPosition(0);
+        bronto.frontElbow.setPower(0.2);
+        bronto.frontArm.setPower(0.2);
+        bronto.backElbow.setPower(0.2);
+        bronto.backArm.setPower(0.2);
 
         telemetry.addData("Status", "Initialized");
     }
 
-    public void move_arm(double power, int position){
-        frontArm.setTargetPosition(position);
-        frontArm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        frontArm.setPower(power);
-         while (frontArm.isBusy()){
-            telemetry.addData("Arm Moving", "TRUE");
-            telemetry.update();}
 
-
-
-        }
-      //  runtime.reset();
-       /* busyLoop: {
-        while (frontArm.isBusy()){
-            while (runtime.milliseconds() < 8000){telemetry.addData("Arm Moving", "TRUE");
-                }
-            break busyLoop;}}
-        telemetry.addData("Arm Moving", "FALSE");
-      */
 
     /** Code to run REPEATEDLY after the driver hits INIT, but before they hit PLAY. */
     @Override
@@ -127,7 +80,7 @@ public class BrontoTeleOP extends OpMode
         double frontArmDown = -gamepad2.right_trigger * 5;
 
         if (gamepad1.left_bumper && gamepad1.right_bumper && gamepad1.left_stick_button){
-            frontArm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);}
+            bronto.frontArm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);}
 
         if (gamepad1.left_trigger > 0) { intakePow = gamepad1.left_trigger;}
         else if (gamepad1.right_trigger > 0) {intakePow = -gamepad1.right_trigger;}
@@ -139,15 +92,15 @@ public class BrontoTeleOP extends OpMode
         }
 
         if (frontArmUp > 0) {
-            frontArm.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            bronto.frontArm.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
             frontArmPow = frontArmUp * 0.5;
         } else if (frontArmDown < 0) {
-            frontArm.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            bronto.frontArm.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
             frontArmPow = frontArmDown;
         }
         else{
 
-            frontArm.setMode(manualMode? DcMotor.RunMode.RUN_USING_ENCODER:DcMotor.RunMode.RUN_TO_POSITION);
+            bronto.frontArm.setMode(manualMode? DcMotor.RunMode.RUN_USING_ENCODER:DcMotor.RunMode.RUN_TO_POSITION);
             frontArmPow = manualMode? 0.1: 0.03;
         }
 
@@ -177,16 +130,17 @@ public class BrontoTeleOP extends OpMode
     telemetry.addData("color", "Yellow Detected!");
 }*/
         if(gamepad1.y){
-            move_arm(.8,1000);
+            bronto.move_to_position_and_hold(bronto.frontArm, .8,bronto.transferPos);
             state = TeleOpStates.TRANSFER;
         }
         else if (gamepad1.x){
 
-            move_arm(.8, 800);
+            bronto.move_to_position_and_hold(bronto.frontArm, .8,bronto.highPolePos);
             state = TeleOpStates.HIGH_POLE;
         }
         else if (gamepad1.b){
-            move_arm(.8, 600);
+            bronto.move_to_position_and_hold(bronto.frontArm, .8,bronto.medPolePos);
+            state = TeleOpStates.MED_POLE;
         }
 
         switch(state){
@@ -225,13 +179,13 @@ public class BrontoTeleOP extends OpMode
         }
 
 
-        frontL.setPower(leftFPower);
-        backL.setPower(leftBPower);
-        frontR.setPower(rightFPower);
-        backR.setPower(rightBPower);
-        frontArm.setPower(frontArmPow);
-        frontIntakeL.setPower(intakePow);
-        frontIntakeR.setPower(intakePow);
+        bronto.leftFront.setPower(leftFPower);
+        bronto.leftRear.setPower(leftBPower);
+        bronto.rightFront.setPower(rightFPower);
+        bronto.rightRear.setPower(rightBPower);
+        bronto.frontArm.setPower(frontArmPow);
+        bronto.frontIntakeL.setPower(intakePow);
+        bronto.frontIntakeR.setPower(intakePow);
 
         telemetry.addData("Motors", "front left (%.2f), front right (%.2f), back left (%.2f), back right (%.2f), front arm (%.2f)", leftFPower, rightFPower,leftBPower, rightBPower, frontArmPow);
         telemetry.update();

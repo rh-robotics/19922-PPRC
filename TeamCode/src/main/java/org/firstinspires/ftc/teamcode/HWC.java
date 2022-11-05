@@ -49,14 +49,19 @@ public class HWC {
         TRANSFER,
         UNKNOWN
     }
-
-    //BS numbers
-    int restingPos = 0;
+    //We should both be using these in all our code. Makes it much easier to tune as only one person has to
+    //BS numbers but I needed something
+    int armRestingPos = 0;
     int intakePos = 200;
     int lowPolePos = 400;
     int medPolePos = 600;
     int highPolePos = 900;
     int transferPos = 1100;
+    int elbowRestingPos = 0;
+    int elbowIntakePos = 300;
+    int elbowTransferPos = elbowRestingPos;
+    int elbowDeliveryPos = 250;
+
 
 
 
@@ -72,7 +77,7 @@ public class HWC {
         leftFront = hardwareMap.get(DcMotorEx.class, "leftFront");
         leftRear = hardwareMap.get(DcMotorEx.class, "leftRear");
         frontArm = hardwareMap.get(DcMotorEx.class,"frontArm");
-        frontElbow = hardwareMap.get(DcMotorEx.class, "frontElbow")
+        frontElbow = hardwareMap.get(DcMotorEx.class, "frontElbow");
 
         // Declare servos
         frontIntakeL = hardwareMap.get(CRServo.class, "intakeL");
@@ -102,16 +107,16 @@ public class HWC {
 
         // Resets encoder position to zero
         frontArm.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
-        frontElbow.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER)
+        frontElbow.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
     }
 
     // Functions Below Because Function Class is Hard and Annoying
 
     // Function to run intake set of servos to intake a cone/transfer to other arm
     public void runIntakeServo(char servo, double power) {
-        if (servo = "F") {frontIntakeL.setPower(power);
+        if (servo == 'F') {frontIntakeL.setPower(power);
         frontIntakeR.setPower(power);}
-        else if (servo = "R"){backIntakeL.setPower(power);
+        else if (servo == 'R'){backIntakeL.setPower(power);
             backIntakeR.setPower(power);}
         else {
             frontIntakeL.setPower(power);
@@ -121,15 +126,15 @@ public class HWC {
         }
     }
 
-    // Function used to move the arm to different levels will probably be deprecated for auton(eventually).
+    // Function used to move any motor to different positions and hold it.
     public void move_to_position_and_hold(DcMotorEx motor, double power, int position){
         motor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         motor.setTargetPosition(position);
         motor.setPower(power);
-        while (motor.isBusy()){
+       /* while (motor.isBusy()){
             telemetry.addData(motor +" Moving", "TRUE");
             telemetry.update();
-        }
+        }*/
     }
 
     // drive method is used to drive using encoder positions. This is currently deprecated

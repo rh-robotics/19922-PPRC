@@ -1,16 +1,42 @@
 package org.firstinspires.ftc.teamcode;
 
+
+import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.hardwareMap;
+import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.telemetry;
+import com.qualcomm.robotcore.util.ElapsedTime;
+
 public class BrontoBrain {
+    HWC bronto = new HWC(hardwareMap, telemetry);
+
+    private ElapsedTime timer = new ElapsedTime();
 
     public void mainCycle(int cycles){
-        HWC.move_to_position_and_hold(HWC.frontArm, 0.3, HWC.intakePos);
-        HWC.move_to_position_and_hold(HWC.frontElbow, 0.3, HWC.transferPos);
-        HWC.runIntakeServo("F", 1);
-        HWC.move_to_position_and_hold(HWC.backArm, 0.3, HWC.transferPos);
-        HWC.runIntakeServo("L", 1);
-        HWC.move_to_position_and_hold(HWC.backArm, 0.3 HWC.highPolePos);
-        HWC.runIntakeServo("R", 1);
-        HWC.move_to_position_and_hold(HWC.backArm, 0.3, HWC.transferPos);
+        for (int i = 0; i < cycles; i++) {
+        bronto.move_to_position_and_hold(bronto.frontArm, 0.3, bronto.intakePos);
+            bronto.move_to_position_and_hold(bronto.frontElbow, 0.3, bronto.intakePos);
+        bronto.runIntakeServo('F', 1);
+        timer.reset();
+        while(timer.milliseconds() < 2000){
+            // no sleep functions in teleOp. Probably for the best
+        }
+        bronto.runIntakeServo('F', 0);
+        bronto.move_to_position_and_hold(bronto.frontElbow, 0.3, bronto.transferPos);
+        bronto.move_to_position_and_hold(bronto.backArm, 0.3, bronto.transferPos);
+        bronto.runIntakeServo('A', 1);
+        timer.reset();
+        while(timer.milliseconds() < 2000){
+            // no sleep functions in teleOp. Probably for the best
+        }
+        bronto.runIntakeServo('A', 0);
+        bronto.move_to_position_and_hold(bronto.backArm, 0.3, bronto.highPolePos);
+        bronto.runIntakeServo('R', 1);
+        timer.reset();
+        while(timer.milliseconds() < 2000){
+            // no sleep functions in teleOp. Probably for the best
+        }
+        bronto.runIntakeServo('R', 0);
+        bronto.move_to_position_and_hold(bronto.backArm, 0.3, bronto.transferPos);
+        }
         // Cycle over ground junction and  deliver to high pole for x number of times
         // inputs: number of cycles
         // assumption: robot must be start in team's terminal
