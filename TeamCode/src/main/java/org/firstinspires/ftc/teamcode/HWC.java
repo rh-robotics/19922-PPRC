@@ -78,6 +78,8 @@ public class HWC {
         leftRear = hardwareMap.get(DcMotorEx.class, "leftRear");
         frontArm = hardwareMap.get(DcMotorEx.class,"frontArm");
         frontElbow = hardwareMap.get(DcMotorEx.class, "frontElbow");
+        backArm = hardwareMap.get(DcMotorEx.class, "backArm");
+        backElbow = hardwareMap.get(DcMotorEx.class, "backElbow");
 
         // Declare servos
         frontIntakeL = hardwareMap.get(CRServo.class, "intakeL");
@@ -104,10 +106,13 @@ public class HWC {
         rightRear.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
         frontArm.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
         frontElbow.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
-
+        backArm.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        backElbow.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         // Resets encoder position to zero
         frontArm.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
         frontElbow.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
+        backArm.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
+        backElbow.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
     }
 
     // Functions Below Because Function Class is Hard and Annoying
@@ -129,8 +134,8 @@ public class HWC {
 
     // Function used to move any motor to different positions and hold it.
     public void move_to_position_and_hold(DcMotorEx motor, double power, int position){
-        motor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         motor.setTargetPosition(position);
+        motor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         motor.setPower(power);
        /* while (motor.isBusy()){
             telemetry.addData(motor +" Moving", "TRUE"); */
