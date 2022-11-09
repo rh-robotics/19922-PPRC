@@ -11,4 +11,10 @@ public class TC {
                 .forward(60)
                 .build();
     }
+
+    public static Trajectory poleToStack(SampleMecanumDrive drive, Pose2d pos) {
+        return drive.trajectoryBuilder(pos)
+                .forward(10)
+                .build();
+    }
 }

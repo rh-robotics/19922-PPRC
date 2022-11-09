@@ -19,6 +19,7 @@ public class auton extends LinearOpMode {
   ElapsedTime timer = new ElapsedTime();
   Pose2d startPos = new Pose2d(35, -60, Math.toRadians(90));
   int cycleCount = 0;
+  int parkingZone = 0;
 
 
   // Variables for CV
@@ -109,20 +110,39 @@ public class auton extends LinearOpMode {
 
           if (cycleCount <= 3) {
             state = HWC.autonStates.MOVING_TO_STACK;
+          } else {
+            if (parkingZone > 0) {
+              state = HWC.autonStates.PARKING_VALUE;
+            } else {
+              state = HWC.autonStates.PARKING_NO_VALUE;
+            }
           }
         case MOVING_TO_STACK:
           // Update State Telemetry
           telemetry.addData("State", "Moving to Stack");
           telemetry.update();
 
-
-
           // Run Move to Stack Trajectory
-//          TC.poleToStack(drive, );
+          TC.poleToStack(drive, TC.startToCyclePole(drive, startPos).end().plus(new Pose2d(0, 0, Math.toRadians(90))));
+
+          if (!drive.isBusy()) {
+            state = HWC.autonStates.PICKING_UP_CONE;
+          }
         case PICKING_UP_CONE:
           // Update State Telemetry
           telemetry.addData("State", "Picking up Cone");
           telemetry.update();
+
+          switch(cycleCount) {
+            case 0:
+              // Move arm to position of first cone
+            case 1:
+              // Move arm to position of second cone
+            case 2:
+              // Move arm to position of third cone
+            case 3:
+              // Move arm to position of fourth cone
+          }
         case PARKING_NO_VALUE:
           // Update State Telemetry
           telemetry.addData("State", "Parking no Value");
@@ -135,3 +155,4 @@ public class auton extends LinearOpMode {
     }
   }
 }
+// I teo cannot write good code without stealing it from the internet
