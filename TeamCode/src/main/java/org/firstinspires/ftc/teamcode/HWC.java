@@ -4,7 +4,7 @@ import static com.qualcomm.robotcore.hardware.DcMotor.RunMode.RUN_USING_ENCODER;
 import static com.qualcomm.robotcore.hardware.DcMotor.RunMode.RUN_WITHOUT_ENCODER;
 import static com.qualcomm.robotcore.hardware.DcMotor.RunMode.STOP_AND_RESET_ENCODER;
 import static com.qualcomm.robotcore.hardware.DcMotor.RunMode.RUN_TO_POSITION;
-
+import com.qualcomm.robotcore.hardware.ColorSensor;
 import androidx.annotation.NonNull;
 
 import com.qualcomm.robotcore.hardware.CRServo;
@@ -19,6 +19,7 @@ public class HWC {
     // Declare empty variables for robot hardware
     public DcMotorEx leftFront, rightFront, leftRear, rightRear, frontArm, frontElbow, backArm, backElbow;
     public CRServo frontIntakeL, frontIntakeR, backIntakeR, backIntakeL;
+    public ColorSensor colorSensor1;
 
     // Declare other variables to be used here
     Telemetry telemetry;
@@ -87,6 +88,9 @@ public class HWC {
         backIntakeL = hardwareMap.get(CRServo.class, "BackIntakeL");
         backIntakeR = hardwareMap.get(CRServo.class, "BackIntakeR");
 
+        //declare sensors
+        colorSensor1 = hardwareMap.get(ColorSensor.class, "CS1");
+
         // Set the direction of all our motors
         leftFront.setDirection(DcMotorEx.Direction.FORWARD);
         leftRear.setDirection(DcMotorEx.Direction.FORWARD);
@@ -129,6 +133,25 @@ public class HWC {
             backIntakeL.setPower(-power);
             backIntakeR.setPower(-power);
         }
+    }
+
+
+
+    public String returnColor() {
+        int red = colorSensor1.red();
+        int green = colorSensor1.green();
+        int blue = colorSensor1.blue();
+        String color;
+
+        if (red > green && red > blue && blue < 100 && green < 100) {
+            color = "red";
+        } else if (blue > green && red < blue && red < 100 && green < 100) {
+            color = "blue";
+        } else if (red < green && green > blue && blue < 100 && red < 100) {
+            color = "red";
+        } else {
+            color = "unknown";}
+        return color;
     }
 
 
