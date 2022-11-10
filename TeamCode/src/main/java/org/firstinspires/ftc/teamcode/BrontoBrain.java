@@ -3,16 +3,29 @@ package org.firstinspires.ftc.teamcode;
 
 import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.hardwareMap;
 import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.telemetry;
+
+import android.annotation.SuppressLint;
+
+import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import androidx.annotation.NonNull;
 
-public class BrontoBrain {
+import org.firstinspires.ftc.robotcore.external.Telemetry;
+import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
+import org.openftc.easyopencv.OpenCvCamera;
+import org.openftc.easyopencv.OpenCvCameraFactory;
+import org.openftc.easyopencv.OpenCvCameraRotation;
 
-    HWC bronto = new HWC(hardwareMap, telemetry);
+public class BrontoBrain {
+    HWC bronto;
+
+    public BrontoBrain(HWC hwc) {
+        bronto = hwc;
+    }
 
     private ElapsedTime timer = new ElapsedTime();
 
-    public void mainCycle(@NonNull int cycles){
+    public void mainCycle(int cycles){
         for (int i = 0; i < cycles; i++) {
         bronto.move_to_position_and_hold(bronto.frontArm, 0.4, bronto.intakePos);
             bronto.move_to_position_and_hold(bronto.frontElbow, 0.4, bronto.intakePos);
@@ -55,9 +68,18 @@ public class BrontoBrain {
 
     }
 
+    public void cv() {
+        bronto.camera = OpenCvCameraFactory.getInstance().createWebcam(hardwareMap.get(WebcamName.class, bronto.webcamName), bronto.cameraMonitorViewId);
+        bronto.camera.setPipeline(bronto.sleeveDetection);
 
+        bronto.camera.openCameraDeviceAsync(new OpenCvCamera.AsyncCameraOpenListener() {
+            @Override
+            public void onOpened() {
+                bronto.camera.startStreaming(320,240, OpenCvCameraRotation.SIDEWAYS_LEFT);
+            }
 
-
-
-
+            @Override
+            public void onError(int errorCode) {}
+        });
+    }
 }
