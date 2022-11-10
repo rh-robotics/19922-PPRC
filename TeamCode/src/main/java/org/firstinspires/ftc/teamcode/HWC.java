@@ -25,7 +25,6 @@ public class HWC {
     OpenCvCamera camera;
     String webcamName = "Webcam 1";
     SleeveDetection sleeveDetection = new SleeveDetection(145,168,30,50);
-    int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
 
     // Declare other variables to be used here
     Telemetry telemetry;
@@ -123,16 +122,20 @@ public class HWC {
         frontElbow.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
         backArm.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
         backElbow.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
+
+        int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
     }
 
     // Functions Below Because Function Class is Hard and Annoying
 
     // Function to run intake set of servos to intake a cone/transfer to other arm
     public void runIntakeServo(char servo, double power) {
-        if (servo == 'F') {frontIntakeL.setPower(power);
-        frontIntakeR.setPower(power);}
-        else if (servo == 'R'){backIntakeL.setPower(power);
-            backIntakeR.setPower(power);}
+        if (servo == 'F') {
+            frontIntakeL.setPower(power);
+            frontIntakeR.setPower(power);
+        } else if (servo == 'R'){backIntakeL.setPower(power);
+            backIntakeR.setPower(power);
+        }
         else {
             frontIntakeL.setPower(power);
             frontIntakeR.setPower(power);
@@ -140,8 +143,6 @@ public class HWC {
             backIntakeR.setPower(-power);
         }
     }
-
-
 
     public String returnColor() {
         int red = colorSensor1.red();
