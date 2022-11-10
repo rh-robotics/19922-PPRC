@@ -69,12 +69,6 @@ public class HWC {
     int elbowTransferPos = elbowRestingPos;
     int elbowDeliveryPos = 250;
 
-
-
-
-
-
-
     public HWC(@NonNull HardwareMap hardwareMap, Telemetry telemetry) {
         this.telemetry = telemetry;
 
