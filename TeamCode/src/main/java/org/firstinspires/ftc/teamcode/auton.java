@@ -5,11 +5,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
-import org.openftc.easyopencv.OpenCvCamera;
-import org.openftc.easyopencv.OpenCvCameraFactory;
-import org.openftc.easyopencv.OpenCvCameraRotation;
 
 @Autonomous
 public class auton extends LinearOpMode {
@@ -21,13 +17,6 @@ public class auton extends LinearOpMode {
   int cycleCount = 0;
   int parkingZone = 0;
 
-
-  // Variables for CV
-  // TODO: Move to bronto HWC
-  SleeveDetection sleeveDetection = new SleeveDetection(145,168,30,50);
-  OpenCvCamera camera;
-  String webcamName = "Webcam 1";
-
   @Override
   public void runOpMode() throws InterruptedException {
     // Tell driver bronto is initializing
@@ -36,6 +25,7 @@ public class auton extends LinearOpMode {
 
     // Run any initialization code necessary
     HWC bronto = new HWC(hardwareMap, telemetry);
+    BrontoBrain brain = new BrontoBrain(bronto);
     SampleMecanumDrive drive = new SampleMecanumDrive(hardwareMap);
 
     // Tell driver bronto is ready and waiting for start
@@ -44,30 +34,12 @@ public class auton extends LinearOpMode {
     telemetry.addData("Arm Position", "Init");
     telemetry.update();
 
-    // Vision Code (From Jack Revoy)
-    int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
-    camera = OpenCvCameraFactory.getInstance().createWebcam(hardwareMap.get(WebcamName.class, webcamName), cameraMonitorViewId);
-    sleeveDetection = new SleeveDetection(145,168,30,50);
-    camera.setPipeline(sleeveDetection);
-
-    camera.openCameraDeviceAsync(new OpenCvCamera.AsyncCameraOpenListener()
-    {
-      @Override
-      public void onOpened()
-      {
-        camera.startStreaming(320,240, OpenCvCameraRotation.SIDEWAYS_LEFT);
-      }
-
-      @Override
-      public void onError(int errorCode) {}
-    });
-
+    brain.cv();
     while (!isStarted()) {
-      telemetry.addData("ROTATION: ", sleeveDetection.getPosition());
+      telemetry.addData("ROTATION: ", bronto.sleeveDetection.getPosition());
       telemetry.update();
     }
 
-    // Wait for Driver to press start
     waitForStart();
     state = HWC.autonStates.MOVING_TO_POLE;
     while (opModeIsActive()) {
