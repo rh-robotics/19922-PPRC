@@ -20,12 +20,12 @@ public class HWC {
     public DcMotorEx leftFront, rightFront, leftRear, rightRear, frontArm, frontElbow, backArm, backElbow;
     public CRServo frontIntakeL, frontIntakeR, backIntakeR, backIntakeL;
     public ColorSensor colorSensor1;
+    public int cameraMonitorViewId;
 
     // CV vars
     OpenCvCamera camera;
     String webcamName = "Webcam 1";
     SleeveDetection sleeveDetection = new SleeveDetection(145,168,30,50);
-    int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
 
     // Declare other variables to be used here
     Telemetry telemetry;
@@ -69,6 +69,12 @@ public class HWC {
     int elbowTransferPos = elbowRestingPos;
     int elbowDeliveryPos = 250;
 
+
+
+
+
+
+
     public HWC(@NonNull HardwareMap hardwareMap, Telemetry telemetry) {
         this.telemetry = telemetry;
 
@@ -90,6 +96,9 @@ public class HWC {
 
         //declare sensors
         colorSensor1 = hardwareMap.get(ColorSensor.class, "CS1");
+
+        // Camera
+        cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
 
         // Set the direction of all our motors
         leftFront.setDirection(DcMotorEx.Direction.FORWARD);
@@ -124,7 +133,7 @@ public class HWC {
     // Function to run intake set of servos to intake a cone/transfer to other arm
     public void runIntakeServo(char servo, double power) {
         if (servo == 'F') {frontIntakeL.setPower(power);
-        frontIntakeR.setPower(power);}
+            frontIntakeR.setPower(power);}
         else if (servo == 'R'){backIntakeL.setPower(power);
             backIntakeR.setPower(power);}
         else {
@@ -163,7 +172,7 @@ public class HWC {
        /* while (motor.isBusy()){
             telemetry.addData(motor +" Moving", "TRUE"); */
 
-       }
+    }
     // drive method is used to drive using encoder positions. This is currently deprecated
     // since it is last year's code and values. If RR usage goes ary I will use it however.
     public void drive(double distanceInCm, double wheelRPower, double wheelLPower) {
