@@ -150,7 +150,7 @@ public class BrontoTeleOP extends OpMode
 
         }
         else if (gamepad1.b){
-            bronto.move_to_position_and_hold(bronto.frontArm, .8,bronto.medPolePos);
+            bronto.smartMove(HWC.armPositions.MED_POLE);
             state = TeleOpStates.MED_POLE;
         }
         else if (gamepad1.a){
