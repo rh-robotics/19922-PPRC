@@ -3,7 +3,7 @@ package org.firstinspires.ftc.teamcode;
 import static com.qualcomm.robotcore.hardware.DcMotor.RunMode.RUN_WITHOUT_ENCODER;
 import static com.qualcomm.robotcore.hardware.DcMotor.RunMode.STOP_AND_RESET_ENCODER;
 import static com.qualcomm.robotcore.hardware.DcMotor.RunMode.RUN_TO_POSITION;
-
+import com.qualcomm.robotcore.hardware.ColorSensor;
 import androidx.annotation.NonNull;
 
 import com.qualcomm.robotcore.hardware.CRServo;
@@ -13,11 +13,19 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
+import org.openftc.easyopencv.OpenCvCamera;
 
 public class HWC {
     // Declare empty variables for robot hardware
     public DcMotorEx leftFront, rightFront, leftRear, rightRear, frontArm, frontElbow, backArm, backElbow;
     public CRServo frontIntakeL, frontIntakeR, backIntakeR, backIntakeL;
+    public ColorSensor colorSensor1;
+
+    // CV vars
+    OpenCvCamera camera;
+    String webcamName = "Webcam 1";
+    SleeveDetection sleeveDetection = new SleeveDetection(145,168,30,50);
+
 
     // Declare other variables to be used here
     Telemetry telemetry;
@@ -61,6 +69,12 @@ public class HWC {
     int elbowTransferPos = elbowRestingPos;
     int elbowDeliveryPos = 250;
 
+
+
+
+
+
+
     public HWC(@NonNull HardwareMap hardwareMap, Telemetry telemetry) {
         this.telemetry = telemetry;
 
@@ -79,6 +93,12 @@ public class HWC {
         frontIntakeR = hardwareMap.get(CRServo.class, "intakeR");
         backIntakeL = hardwareMap.get(CRServo.class, "BackIntakeL");
         backIntakeR = hardwareMap.get(CRServo.class, "BackIntakeR");
+
+        //declare sensors
+        colorSensor1 = hardwareMap.get(ColorSensor.class, "CS1");
+
+        // Camera
+        int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
 
         // Set the direction of all our motors
         leftFront.setDirection(DcMotorEx.Direction.FORWARD);
@@ -113,7 +133,7 @@ public class HWC {
     // Function to run intake set of servos to intake a cone/transfer to other arm
     public void runIntakeServo(char servo, double power) {
         if (servo == 'F') {frontIntakeL.setPower(power);
-        frontIntakeR.setPower(power);}
+            frontIntakeR.setPower(power);}
         else if (servo == 'R'){backIntakeL.setPower(power);
             backIntakeR.setPower(power);}
         else {
@@ -125,6 +145,25 @@ public class HWC {
     }
 
 
+
+    public String returnColor() {
+        int red = colorSensor1.red();
+        int green = colorSensor1.green();
+        int blue = colorSensor1.blue();
+        String color;
+
+        if (red > green && red > blue && blue < 100 && green < 100) {
+            color = "red";
+        } else if (blue > green && red < blue && red < 100 && green < 100) {
+            color = "blue";
+        } else if (red < green && green > blue && blue < 100 && red < 100) {
+            color = "red";
+        } else {
+            color = "unknown";}
+        return color;
+    }
+
+
     // Function used to move any motor to different positions and hold it.
     public void move_to_position_and_hold(DcMotorEx motor, double power, int position){
         motor.setTargetPosition(position);
@@ -133,7 +172,7 @@ public class HWC {
        /* while (motor.isBusy()){
             telemetry.addData(motor +" Moving", "TRUE"); */
 
-       }
+    }
     // drive method is used to drive using encoder positions. This is currently deprecated
     // since it is last year's code and values. If RR usage goes ary I will use it however.
     public void drive(double distanceInCm, double wheelRPower, double wheelLPower) {
@@ -173,6 +212,40 @@ public class HWC {
         leftRear.setPower(0);
         rightFront.setPower(0);
         rightRear.setPower(0);
+    }
+
+
+    public void smartMove(armPositions pos){
+        switch (pos){
+            case INTAKE:
+                move_to_position_and_hold(frontArm,1, intakePos);
+                move_to_position_and_hold(frontElbow, 0.5 , elbowIntakePos);
+                break;
+            case RESTING:
+                move_to_position_and_hold(frontArm,1, armRestingPos);
+                move_to_position_and_hold(frontElbow,0.5, elbowRestingPos);
+                break;
+            case LOW_POLE:
+                move_to_position_and_hold(frontArm,1, lowPolePos);
+                move_to_position_and_hold(frontElbow,0.5, elbowDeliveryPos);
+                break;
+            case MED_POLE:
+                move_to_position_and_hold(frontArm,1, medPolePos);
+                move_to_position_and_hold(frontElbow,1, elbowTransferPos);
+                break;
+            case HIGH_POLE:
+                move_to_position_and_hold(frontArm,1, highPolePos);
+                move_to_position_and_hold(frontElbow,1, elbowTransferPos);
+                if (frontArm.getCurrentPosition() == highPolePos) move_to_position_and_hold(frontElbow, 0.5, elbowDeliveryPos);
+                break;
+            case TRANSFER:
+                move_to_position_and_hold(frontElbow,1, elbowTransferPos);
+                move_to_position_and_hold(frontArm,1, intakePos);
+                break;
+            default:
+                telemetry.addData("HELP!", "This isnt possible");
+                telemetry.update();
+        }
     }
 
     public void turn(double directionInDegrees, double wheelVelocity) {
