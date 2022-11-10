@@ -39,7 +39,7 @@ public class BrontoTeleOP extends OpMode
     @Override
     public void init() {
         bronto = new HWC(hardwareMap, telemetry);
-      //   brain = new BrontoBrain();
+         brain = new BrontoBrain(bronto);
         telemetry.addData("Status", "Initializing");
      //   bronto.frontElbow.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         bronto.frontElbow.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
@@ -150,7 +150,7 @@ public class BrontoTeleOP extends OpMode
 
         }
         else if (gamepad1.b){
-            bronto.move_to_position_and_hold(bronto.frontArm, .8,bronto.medPolePos);
+            bronto.smartMove(HWC.armPositions.MED_POLE);
             state = TeleOpStates.MED_POLE;
         }
         else if (gamepad1.a){

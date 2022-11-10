@@ -20,12 +20,12 @@ public class HWC {
     public DcMotorEx leftFront, rightFront, leftRear, rightRear, frontArm, frontElbow, backArm, backElbow;
     public CRServo frontIntakeL, frontIntakeR, backIntakeR, backIntakeL;
     public ColorSensor colorSensor1;
+    public int cameraMonitorViewId;
 
     // CV vars
     OpenCvCamera camera;
     String webcamName = "Webcam 1";
     SleeveDetection sleeveDetection = new SleeveDetection(145,168,30,50);
-
 
     // Declare other variables to be used here
     Telemetry telemetry;
@@ -98,7 +98,7 @@ public class HWC {
         colorSensor1 = hardwareMap.get(ColorSensor.class, "CS1");
 
         // Camera
-        int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
+        cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
 
         // Set the direction of all our motors
         leftFront.setDirection(DcMotorEx.Direction.FORWARD);
