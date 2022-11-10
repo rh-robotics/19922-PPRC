@@ -205,6 +205,40 @@ public class HWC {
         rightRear.setPower(0);
     }
 
+
+    public void smartMove(armPositions pos){
+        switch (pos){
+            case INTAKE:
+                move_to_position_and_hold(frontArm,1, intakePos);
+                move_to_position_and_hold(frontElbow, 0.5 , elbowIntakePos);
+                break;
+            case RESTING:
+                move_to_position_and_hold(frontArm,1, armRestingPos);
+                move_to_position_and_hold(frontElbow,0.5, elbowRestingPos);
+                break;
+            case LOW_POLE:
+                move_to_position_and_hold(frontArm,1, lowPolePos);
+                move_to_position_and_hold(frontElbow,0.5, elbowDeliveryPos);
+                break;
+            case MED_POLE:
+                move_to_position_and_hold(frontArm,1, medPolePos);
+                move_to_position_and_hold(frontElbow,1, elbowTransferPos);
+                break;
+            case HIGH_POLE:
+                move_to_position_and_hold(frontArm,1, highPolePos);
+                move_to_position_and_hold(frontElbow,1, elbowTransferPos);
+                if (frontArm.getCurrentPosition() == highPolePos) move_to_position_and_hold(frontElbow, 0.5, elbowDeliveryPos);
+                break;
+            case TRANSFER:
+                move_to_position_and_hold(frontElbow,1, elbowTransferPos);
+                move_to_position_and_hold(frontArm,1, intakePos);
+                break;
+            default:
+                telemetry.addData("HELP!", "This isnt possible");
+                telemetry.update();
+        }
+    }
+
     public void turn(double directionInDegrees, double wheelVelocity) {
 //      384.5(PPR) = ~50cm = ~20in
 //      7.9(PPR) = 1cm
