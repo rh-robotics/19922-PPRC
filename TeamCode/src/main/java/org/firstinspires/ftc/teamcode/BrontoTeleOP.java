@@ -79,7 +79,7 @@ public class BrontoTeleOP extends OpMode
 
         double drive = -gamepad1.left_stick_y *0.8;
         double turn  =  gamepad1.left_stick_x * 0.6;
-        double strafe = gamepad1.right_stick_x * 0.8;
+        double strafe = -gamepad1.right_stick_x * 0.8;
         double frontArmUp = gamepad2.left_trigger;
         double frontArmDown = -gamepad2.right_trigger * 5;
 
