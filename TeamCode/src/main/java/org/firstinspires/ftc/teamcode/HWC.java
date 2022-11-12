@@ -126,25 +126,26 @@ public class HWC {
         frontElbow.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
         backArm.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
         backElbow.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
+
+        int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
     }
 
     // Functions Below Because Function Class is Hard and Annoying
 
     // Function to run intake set of servos to intake a cone/transfer to other arm
     public void runIntakeServo(char servo, double power) {
-        if (servo == 'F') {frontIntakeL.setPower(power);
-            frontIntakeR.setPower(power);}
-        else if (servo == 'R'){backIntakeL.setPower(power);
-            backIntakeR.setPower(power);}
-        else {
+        if (servo == 'F') {
+            frontIntakeL.setPower(power);
+            frontIntakeR.setPower(power);
+        } else if (servo == 'R'){backIntakeL.setPower(power);
+            backIntakeR.setPower(power);
+        } else {
             frontIntakeL.setPower(power);
             frontIntakeR.setPower(power);
             backIntakeL.setPower(-power);
             backIntakeR.setPower(-power);
         }
     }
-
-
 
     public String returnColor() {
         int red = colorSensor1.red();
