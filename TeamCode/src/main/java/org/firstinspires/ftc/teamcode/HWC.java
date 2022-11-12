@@ -20,6 +20,7 @@ public class HWC {
     public DcMotorEx leftFront, rightFront, leftRear, rightRear, frontArm, frontElbow, backArm, backElbow;
     public CRServo frontIntakeL, frontIntakeR, backIntakeR, backIntakeL;
     public ColorSensor colorSensor1;
+    public int cameraMonitorViewId;
 
     // CV vars
     OpenCvCamera camera;
@@ -96,6 +97,9 @@ public class HWC {
         //declare sensors
         colorSensor1 = hardwareMap.get(ColorSensor.class, "CS1");
 
+        // Camera
+        cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
+
         // Set the direction of all our motors
         leftFront.setDirection(DcMotorEx.Direction.FORWARD);
         leftRear.setDirection(DcMotorEx.Direction.FORWARD);
@@ -135,8 +139,7 @@ public class HWC {
             frontIntakeR.setPower(power);
         } else if (servo == 'R'){backIntakeL.setPower(power);
             backIntakeR.setPower(power);
-        }
-        else {
+        } else {
             frontIntakeL.setPower(power);
             frontIntakeR.setPower(power);
             backIntakeL.setPower(-power);
@@ -170,7 +173,7 @@ public class HWC {
        /* while (motor.isBusy()){
             telemetry.addData(motor +" Moving", "TRUE"); */
 
-       }
+    }
     // drive method is used to drive using encoder positions. This is currently deprecated
     // since it is last year's code and values. If RR usage goes ary I will use it however.
     public void drive(double distanceInCm, double wheelRPower, double wheelLPower) {
