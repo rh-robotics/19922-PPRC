@@ -54,12 +54,15 @@ public class testingOp extends OpMode
     public void loop() {
     bronto.frontArm.setPower(-gamepad1.left_stick_y);
     bronto.frontElbow.setPower(-gamepad1.right_stick_y);
-  //  bronto.backArm.setPower(-gamepad1.left_stick_y);
-    //bronto.backElbow.setPower(-gamepad1.right_stick_y *.3);
+    bronto.backArm.setPower(-gamepad1.left_stick_y);
+    bronto.backElbow.setPower(-gamepad1.right_stick_y);
+
 
 
         telemetry.addData("frontArm", bronto.frontArm.getCurrentPosition());
         telemetry.addData("frontElbow", bronto.frontElbow.getCurrentPosition());
+        telemetry.addData("backArm", bronto.backArm.getCurrentPosition());
+        telemetry.addData("backElbow", bronto.backElbow.getCurrentPosition());
        telemetry.addData("Arms", "front Arm , front elbow " ,bronto.frontArm.getCurrentPosition(), bronto.frontElbow.getCurrentPosition());
         telemetry.update();
     }
