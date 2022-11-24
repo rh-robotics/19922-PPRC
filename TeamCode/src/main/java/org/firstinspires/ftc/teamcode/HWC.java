@@ -60,8 +60,8 @@ public class HWC {
     //We should both be using these in all our code. Makes it much easier to tune as only one person has to
     //BS numbers but I needed something
     int armRestingPos = 0;
-    int intakePos = 200;
-    int lowPolePos = 400;
+    int intakePos = 2346;
+    int lowPolePos = 2346;
     int medPolePos = 600;
     int highPolePos = 900;
     int transferPos = 1100;
@@ -69,11 +69,6 @@ public class HWC {
     int elbowIntakePos = 300;
     int elbowTransferPos = elbowRestingPos;
     int elbowDeliveryPos = 250;
-
-
-
-
-
 
 
     public HWC(@NonNull HardwareMap hardwareMap, Telemetry telemetry) {
@@ -107,6 +102,12 @@ public class HWC {
         rightFront.setDirection(DcMotorEx.Direction.REVERSE);
         rightRear.setDirection(DcMotorEx.Direction.REVERSE);
 
+        frontArm.setDirection(DcMotorEx.Direction.FORWARD);
+        frontElbow.setDirection(DcMotorEx.Direction.FORWARD);
+        backElbow.setDirection(DcMotorEx.Direction.REVERSE);
+        backArm.setDirection(DcMotorEx.Direction.REVERSE);
+
+        //Sets the wheels to break on zero power
         leftFront.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         leftRear.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         rightFront.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
