@@ -8,7 +8,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 
 @Autonomous
-public class auton extends LinearOpMode {
+public class autonRight extends LinearOpMode {
   // Variables
   HWC.autonStates state = HWC.autonStates.SCANNING_FOR_SIGNAL;
   HWC.armPositions armPosition = HWC.armPositions.RESTING;
@@ -16,6 +16,10 @@ public class auton extends LinearOpMode {
   Pose2d startPos = new Pose2d(35, -60, Math.toRadians(90));
   int cycleCount = 0;
   int parkingZone = 0;
+
+
+
+  // Variables for CV
 
   @Override
   public void runOpMode() throws InterruptedException {
@@ -60,14 +64,13 @@ public class auton extends LinearOpMode {
 
           // Move arms to cycle pos & update telemetry
 
-          double highPos = 2786 * 0.75;
-          bronto.move_to_position_and_hold(bronto.frontArm ,.3, (int)highPos);
+
           telemetry.addData("Arm Position", "Cycle");
           telemetry.update();
 
 
           // Drive to pole, then rotate
-          drive.followTrajectory(TC.startToCyclePole(drive, startPos));
+          drive.followTrajectory(TC.RIGHT_startToCyclePole(drive, startPos));
           drive.turn(Math.toRadians(90));
 
           //Change state
@@ -95,7 +98,7 @@ public class auton extends LinearOpMode {
           telemetry.update();
 
           // Run Move to Stack Trajectory
-          TC.poleToStack(drive, TC.startToCyclePole(drive, startPos).end().plus(new Pose2d(0, 0, Math.toRadians(90))));
+          TC.RIGHT_poleToStack(drive, TC.RIGHT_startToCyclePole(drive, startPos).end().plus(new Pose2d(0, 0, Math.toRadians(90))));
 
           if (!drive.isBusy()) {
             state = HWC.autonStates.PICKING_UP_CONE;
@@ -127,4 +130,3 @@ public class auton extends LinearOpMode {
     }
   }
 }
-// I teo cannot write good code without stealing it from the internet

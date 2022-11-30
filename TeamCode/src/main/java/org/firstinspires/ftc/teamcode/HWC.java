@@ -177,7 +177,7 @@ public class HWC {
         motor.setTargetPosition(position);
         motor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         motor.setPower(power);
-       /* while (motor.isBusy()){
+/*        while (motor.isBusy()){
             telemetry.addData(motor +" Moving", "TRUE"); */
 
     }
