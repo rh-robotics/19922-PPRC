@@ -17,10 +17,6 @@ public class autonRight extends LinearOpMode {
   int cycleCount = 0;
   int parkingZone = 0;
 
-
-
-  // Variables for CV
-
   @Override
   public void runOpMode() throws InterruptedException {
     // Tell driver bronto is initializing
@@ -63,7 +59,8 @@ public class autonRight extends LinearOpMode {
           drive.setPoseEstimate(startPos);
 
           // Move arms to cycle pos & update telemetry
-
+          bronto.move_to_position_and_hold(bronto.frontArm, .5, bronto.highPolePos);
+          bronto.move_to_position_and_hold(bronto.backArm, .5, bronto.intakePos);
 
           telemetry.addData("Arm Position", "Cycle");
           telemetry.update();
