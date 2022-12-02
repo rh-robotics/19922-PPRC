@@ -60,15 +60,30 @@ public class HWC {
     //We should both be using these in all our code. Makes it much easier to tune as only one person has to
     //BS numbers but I needed something
     int armRestingPos = 0;
-    int intakePos = 2346;
-    int lowPolePos = 2346;
-    int medPolePos = 600;
-    int highPolePos = 900;
-    int transferPos = 1100;
+    int intakePos = -1653;
+    int lowPolePos = -2560;
+    int medPolePos = -4079;
+    int highPolePos = -4079;
+    int transferPos = -4079;
     int elbowRestingPos = 0;
-    int elbowIntakePos = 300;
-    int elbowTransferPos = elbowRestingPos;
-    int elbowDeliveryPos = 250;
+    int elbowIntakePos = 423;
+    int elbowTransferPos =  -150;
+    int elbowDeliveryPosLow = 942;
+    int elbowDeliveryPosMed = 1254;
+    int elbowDeliveryPosHigh = 686;
+
+    int backArmRestingPos = 0;
+    int backIntakePos = -1325;
+    int backLowPolePos = -3646;
+    int backMedPolePos = -4838;
+    int backHighPolePos = -4838;
+    int backDeliveryPos = -4838;
+    int backElbowRestingPos = 0;
+    int backElbowIntakePos = 319;
+    int backElbowTransferPos = 235;
+    int backElbowDeliveryPosLow = 1679;
+    int backElbowDeliveryPosMed = 1365;
+    int backElbowDeliveryPosHigh = 980;
 
 
     public HWC(@NonNull HardwareMap hardwareMap, Telemetry telemetry) {
@@ -235,7 +250,7 @@ public class HWC {
                 break;
             case LOW_POLE:
                 move_to_position_and_hold(frontArm,1, lowPolePos);
-                move_to_position_and_hold(frontElbow,0.5, elbowDeliveryPos);
+                move_to_position_and_hold(frontElbow,0.5, elbowDeliveryPosLow);
                 break;
             case MED_POLE:
                 move_to_position_and_hold(frontArm,1, medPolePos);
@@ -244,7 +259,7 @@ public class HWC {
             case HIGH_POLE:
                 move_to_position_and_hold(frontArm,1, highPolePos);
                 move_to_position_and_hold(frontElbow,1, elbowTransferPos);
-                if (frontArm.getCurrentPosition() == highPolePos) move_to_position_and_hold(frontElbow, 0.5, elbowDeliveryPos);
+                if (frontArm.getCurrentPosition() == highPolePos) move_to_position_and_hold(frontElbow, 0.5, elbowDeliveryPosHigh);
                 break;
             case TRANSFER:
                 move_to_position_and_hold(frontElbow,1, elbowTransferPos);
