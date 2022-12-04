@@ -20,10 +20,12 @@ public class testingOp extends OpMode
     /** Declare OpMode members. */
     HWC bronto;
     private ElapsedTime runtime = new ElapsedTime();
+    String color;
 
     @Override
     public void init() {
         bronto = new HWC(hardwareMap, telemetry);
+
 
         telemetry.addData("Status", "Initializing");
         bronto.frontElbow.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -59,6 +61,11 @@ public class testingOp extends OpMode
     bronto.frontElbow.setPower(-gamepad1.right_stick_y);
     bronto.backArm.setPower(-gamepad2.left_stick_y);
     bronto.backElbow.setPower(-gamepad2.right_stick_y);
+    if (gamepad1.a){
+         color = bronto.returnColor();
+
+    }
+    else  color = " ";
 
     /*bronto.frontIntakeL.setPower(gamepad2.left_stick_y);
     bronto.frontIntakeR.setPower(gamepad2.left_stick_y);
@@ -73,6 +80,7 @@ public class testingOp extends OpMode
         telemetry.addData("frontElbow", bronto.frontElbow.getCurrentPosition());
         telemetry.addData("backArm", bronto.backArm.getCurrentPosition());
         telemetry.addData("backElbow", bronto.backElbow.getCurrentPosition());
+        telemetry.addData("color", color);
        telemetry.addData("Arms", "front Arm , front elbow " ,bronto.frontArm.getCurrentPosition(), bronto.frontElbow.getCurrentPosition());
         telemetry.update();
     }
