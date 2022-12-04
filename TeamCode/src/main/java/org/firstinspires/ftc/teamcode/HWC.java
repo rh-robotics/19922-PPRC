@@ -4,6 +4,10 @@ import static com.qualcomm.robotcore.hardware.DcMotor.RunMode.RUN_TO_POSITION;
 import static com.qualcomm.robotcore.hardware.DcMotor.RunMode.RUN_WITHOUT_ENCODER;
 import static com.qualcomm.robotcore.hardware.DcMotor.RunMode.STOP_AND_RESET_ENCODER;
 
+import static com.qualcomm.robotcore.hardware.DcMotor.RunMode.RUN_TO_POSITION;
+
+import com.acmerobotics.roadrunner.geometry.Pose2d;
+import com.qualcomm.robotcore.hardware.ColorSensor;
 import androidx.annotation.NonNull;
 
 import com.qualcomm.robotcore.hardware.CRServo;
@@ -16,6 +20,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 import com.arcrobotics.ftclib.controller.PIDController;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
+import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 import org.openftc.easyopencv.OpenCvCamera;
 
 public class HWC {
@@ -33,6 +38,17 @@ public class HWC {
     // Declare other variables to be used here
     Telemetry telemetry;
     ElapsedTime time = new ElapsedTime();
+
+    // Other auton variables
+    public int cycleCount = 0;
+    public int parkingZone = 0;
+
+    // Roadrunner start positions
+    public final Pose2d START_POS_RIGHT = new Pose2d(35, -60, Math.toRadians(90));
+    public final Pose2d START_POS_LEFT = new Pose2d(35, -60, Math.toRadians(90)); // TODO: Change Coords
+
+    // Roadrunner drive
+    public SampleMecanumDrive drive;
 
     // Code variables
     public static final double ONE_CM_IN_PPR = 7.9;
@@ -206,6 +222,8 @@ public class HWC {
         backElbow.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
 
         int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
+
+        drive = new SampleMecanumDrive(hardwareMap);
     }
 
     // Functions Below Because Function Class is Hard and Annoying
@@ -248,9 +266,8 @@ public class HWC {
         motor.setTargetPosition(position);
         motor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         motor.setPower(power);
-       /* while (motor.isBusy()){
+/*        while (motor.isBusy()){
             telemetry.addData(motor +" Moving", "TRUE"); */
-
     }
 
     // drive method is used to drive using encoder positions. This is currently deprecated
