@@ -6,6 +6,7 @@ import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.util.Range;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import org.firstinspires.ftc.teamcode.HWC;
@@ -33,6 +34,8 @@ public class testingOp extends OpMode
         bronto.frontArm.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
         bronto.backElbow.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
         bronto.backArm.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
+        bronto.backIntakeL.setDirection(DcMotorSimple.Direction.REVERSE);
+        bronto.frontIntakeL.setDirection(DcMotorSimple.Direction.REVERSE);
 
         telemetry.addData("Status", "Initialized");
     }
@@ -54,8 +57,15 @@ public class testingOp extends OpMode
     public void loop() {
     bronto.frontArm.setPower(-gamepad1.left_stick_y);
     bronto.frontElbow.setPower(-gamepad1.right_stick_y);
-    bronto.backArm.setPower(-gamepad1.left_stick_y);
-    bronto.backElbow.setPower(-gamepad1.right_stick_y);
+    bronto.backArm.setPower(-gamepad2.left_stick_y);
+    bronto.backElbow.setPower(-gamepad2.right_stick_y);
+
+    /*bronto.frontIntakeL.setPower(gamepad2.left_stick_y);
+    bronto.frontIntakeR.setPower(gamepad2.left_stick_y);
+    bronto.backIntakeL.setPower(gamepad2.left_stick_y);
+    bronto.backIntakeR.setPower(gamepad2.left_stick_y);
+
+    */
 
 
 
