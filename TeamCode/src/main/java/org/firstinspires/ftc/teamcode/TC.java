@@ -17,4 +17,9 @@ public class TC {
                 .forward(10)
                 .build();
     }
+
+    public static Trajectory RIGHT_stackToPole(SampleMecanumDrive drive, Pose2d pos) {
+        // TODO: Write trajectory
+        return null;
+    }
 }
