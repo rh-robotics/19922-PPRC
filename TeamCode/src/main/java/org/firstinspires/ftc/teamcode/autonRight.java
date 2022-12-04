@@ -57,11 +57,7 @@ public class autonRight extends LinearOpMode {
         case MOVING_TO_POLE:
 
           if (bronto.cycleCount < 1) {
-            // Move arms to cycle pos & update armPositions
-            bronto.move_to_position_and_hold(bronto.frontElbow, .5, bronto.elbowIntakePos);
-            bronto.move_to_position_and_hold(bronto.backElbow, .5, bronto.elbowIntakePos);
-            bronto.move_to_position_and_hold(bronto.frontArm, .5, bronto.highPolePos);
-            bronto.move_to_position_and_hold(bronto.backArm, .5, bronto.intakePos);
+            // TODO: Move arms to cycle pos & update armPositions state
 
             frontArmPosition = HWC.armPositions.HIGH_POLE;
             backArmPosition = HWC.armPositions.INTAKE;
@@ -73,8 +69,7 @@ public class autonRight extends LinearOpMode {
             //Change state
           } else {
             // Run stack to pole trajectory
-            TC.RIGHT_stackToPole(bronto.drive, TC.RIGHT_startToCyclePole(bronto.drive, bronto.START_POS_RIGHT).end().plus(new Pose2d(0, 0, Math.toRadians(90)))).end();
-
+            bronto.drive.followTrajectory(TC.RIGHT_stackToPole(bronto.drive, TC.RIGHT_poleToStack(bronto.drive, TC.RIGHT_startToCyclePole(bronto.drive, bronto.START_POS_RIGHT).end().plus(new Pose2d(0, 0, Math.toRadians(90)))).end()));
             // TODO: Transfer cone, then move arms to cycle position
 
             // Change State
@@ -107,7 +102,7 @@ public class autonRight extends LinearOpMode {
           telemetry.update();
 
           // If cycleCount is less than 1 run startToPole trajectory, and then change states
-          TC.RIGHT_poleToStack(bronto.drive, TC.RIGHT_startToCyclePole(bronto.drive, bronto.START_POS_RIGHT).end().plus(new Pose2d(0, 0, Math.toRadians(90))));
+          bronto.drive.followTrajectory(TC.RIGHT_poleToStack(bronto.drive, TC.RIGHT_startToCyclePole(bronto.drive, bronto.START_POS_RIGHT).end().plus(new Pose2d(0, 0, Math.toRadians(90)))));
 
           // Change state
           state = HWC.autonStates.PICKING_UP_CONE;
