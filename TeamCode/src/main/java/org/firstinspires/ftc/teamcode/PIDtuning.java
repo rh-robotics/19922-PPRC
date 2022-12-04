@@ -11,12 +11,11 @@ import com.qualcomm.robotcore.hardware.DcMotorEx;
 @Config
 @TeleOp(name="PID Tuning Op", group="Iterative Opmode")
 
-public class PIDtuning extends OpMode
-{
+public class PIDtuning extends OpMode {
     private PIDController controller;
     public static double p = 0, i = 0, d = 0, f = 0;
     public static int target = 0;
-    private final double ticks_in_degrees = 384.5/360; //435 rpm has 384.5 PPR, 145.1 for 60rpm
+    private final double TICKS_IN_DEGREES = 384.5/360; //435 rpm has 384.5 PPR, 145.1 for 60rpm
 
     private DcMotorEx arm_motor;
     @Override
@@ -36,7 +35,7 @@ public class PIDtuning extends OpMode
         controller.setPID (p,i,d);
         int armPos = arm_motor.getCurrentPosition();
         double pid = controller.calculate(armPos, target);
-        double ff = Math.cos(Math.toRadians(target / ticks_in_degrees)) * f;
+        double ff = Math.cos(Math.toRadians(target / TICKS_IN_DEGREES)) * f;
 
         double power = pid + ff;
 
@@ -53,6 +52,4 @@ public class PIDtuning extends OpMode
         telemetry.update();
 
     }
-
-
-        }
+}
