@@ -1,19 +1,26 @@
 package org.firstinspires.ftc.teamcode;
 
+import static com.qualcomm.robotcore.hardware.DcMotor.RunMode.RUN_TO_POSITION;
 import static com.qualcomm.robotcore.hardware.DcMotor.RunMode.RUN_WITHOUT_ENCODER;
 import static com.qualcomm.robotcore.hardware.DcMotor.RunMode.STOP_AND_RESET_ENCODER;
+
 import static com.qualcomm.robotcore.hardware.DcMotor.RunMode.RUN_TO_POSITION;
+
+import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import androidx.annotation.NonNull;
 
 import com.qualcomm.robotcore.hardware.CRServo;
+import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
+import com.arcrobotics.ftclib.controller.PIDController;
+
 import org.firstinspires.ftc.robotcore.external.Telemetry;
+import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 import org.openftc.easyopencv.OpenCvCamera;
 
 public class HWC {
@@ -31,6 +38,17 @@ public class HWC {
     // Declare other variables to be used here
     Telemetry telemetry;
     ElapsedTime time = new ElapsedTime();
+
+    // Other auton variables
+    public int cycleCount = 0;
+    public int parkingZone = 0;
+
+    // Roadrunner start positions
+    public final Pose2d START_POS_RIGHT = new Pose2d(35, -60, Math.toRadians(90));
+    public final Pose2d START_POS_LEFT = new Pose2d(35, -60, Math.toRadians(90)); // TODO: Change Coords
+
+    // Roadrunner drive
+    public SampleMecanumDrive drive;
 
     // Code variables
     public static final double ONE_CM_IN_PPR = 7.9;
@@ -57,6 +75,50 @@ public class HWC {
         TRANSFER,
         UNKNOWN
     }
+
+    // robot components
+    public class RobotComponents {
+
+        private final DcMotorEx motor;
+        private final double ticks_in_degrees;
+        private final double p, i, d, f;
+        private PIDController controller;
+
+        RobotComponents (DcMotorEx motor, double ticks_in_degrees, double p, double i, double d, double f) {
+            this.motor = motor;
+            this.ticks_in_degrees = ticks_in_degrees;
+            this.p = p;
+            this.i = i;
+            this.d = d;
+            this.f = f;
+
+            controller = new PIDController (p,i,d);
+        }
+
+        public void moveUsingPID (int target) {
+            motor.setMode(DcMotorEx.RunMode.RUN_WITHOUT_ENCODER);
+            int armPos = motor.getCurrentPosition();
+            double pid = controller.calculate(armPos, target);
+            double ff = Math.cos(Math.toRadians(target / ticks_in_degrees)) * f;
+
+            double power = pid + ff;
+
+            motor.setPower(power);
+
+        }
+        /*
+        public double[] pidf() {
+            return [p, i, d, f];
+        }
+
+         */
+    }
+
+    public boolean closeEnough (int current, int target, int range) {
+        if ((target - range <= current) && (target + range >= current)) return true;
+        return false;
+    }
+
     //We should both be using these in all our code. Makes it much easier to tune as only one person has to
     //BS numbers but I needed something
     int armRestingPos = 0;
@@ -85,6 +147,10 @@ public class HWC {
     int backElbowDeliveryPosMed = 1365;
     int backElbowDeliveryPosHigh = 980;
 
+    public RobotComponents frontArmComponent;
+    public RobotComponents backArmComponent;
+    public RobotComponents frontElbowComponent;
+    public RobotComponents backElbowComponent;
 
     public HWC(@NonNull HardwareMap hardwareMap, Telemetry telemetry) {
         this.telemetry = telemetry;
@@ -98,6 +164,12 @@ public class HWC {
         frontElbow = hardwareMap.get(DcMotorEx.class, "frontElbow");
         backArm = hardwareMap.get(DcMotorEx.class, "backArm");
         backElbow = hardwareMap.get(DcMotorEx.class, "backElbow");
+
+        //declare all arm components with PID stuff, 435rpm motors have 354.5 ppr, 60rpm has 145.1 ppr multiplied by gear ratio
+        frontElbowComponent = new RobotComponents (frontElbow, 145.1, 0.03, 0.3, 0.0006, 0.05);
+        backElbowComponent = new RobotComponents (backElbow, 145.1, 0.018, 0.2, 0.001, 0.05);
+        frontArmComponent = new RobotComponents (frontArm, 384.5 * 24, 0.024, .4, 0.0005, 0);
+        backArmComponent = new RobotComponents (backArm, 384.5 * 28, 0.2, 0, 0, 0);
 
         // Declare servos
         frontIntakeL = hardwareMap.get(CRServo.class, "intakeL");
@@ -139,10 +211,10 @@ public class HWC {
         rightFront.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
         leftRear.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
         rightRear.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
-        frontArm.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
-        frontElbow.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
-        backArm.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        backElbow.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        frontArm.setMode(DcMotorEx.RunMode.RUN_WITHOUT_ENCODER); //changed to without
+        frontElbow.setMode(DcMotorEx.RunMode.RUN_WITHOUT_ENCODER);
+        backArm.setMode(DcMotorEx.RunMode.RUN_WITHOUT_ENCODER);
+        backElbow.setMode(DcMotorEx.RunMode.RUN_WITHOUT_ENCODER);
         // Resets encoder position to zero
         frontArm.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
         frontElbow.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
@@ -150,6 +222,8 @@ public class HWC {
         backElbow.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
 
         int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
+
+        drive = new SampleMecanumDrive(hardwareMap);
     }
 
     // Functions Below Because Function Class is Hard and Annoying
@@ -192,10 +266,10 @@ public class HWC {
         motor.setTargetPosition(position);
         motor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         motor.setPower(power);
-       /* while (motor.isBusy()){
+/*        while (motor.isBusy()){
             telemetry.addData(motor +" Moving", "TRUE"); */
-
     }
+
     // drive method is used to drive using encoder positions. This is currently deprecated
     // since it is last year's code and values. If RR usage goes ary I will use it however.
     public void drive(double distanceInCm, double wheelRPower, double wheelLPower) {
