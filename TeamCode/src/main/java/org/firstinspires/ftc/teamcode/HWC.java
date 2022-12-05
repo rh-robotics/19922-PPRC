@@ -76,44 +76,6 @@ public class HWC {
         UNKNOWN
     }
 
-    // robot components
-    public class RobotComponents {
-
-        private final DcMotorEx motor;
-        private final double ticks_in_degrees;
-        private final double p, i, d, f;
-        private PIDController controller;
-
-        RobotComponents (DcMotorEx motor, double ticks_in_degrees, double p, double i, double d, double f) {
-            this.motor = motor;
-            this.ticks_in_degrees = ticks_in_degrees;
-            this.p = p;
-            this.i = i;
-            this.d = d;
-            this.f = f;
-
-            controller = new PIDController (p,i,d);
-        }
-
-        public void moveUsingPID (int target) {
-            motor.setMode(DcMotorEx.RunMode.RUN_WITHOUT_ENCODER);
-            int armPos = motor.getCurrentPosition();
-            double pid = controller.calculate(armPos, target);
-            double ff = Math.cos(Math.toRadians(target / ticks_in_degrees)) * f;
-
-            double power = pid + ff;
-
-            motor.setPower(power);
-
-        }
-        /*
-        public double[] pidf() {
-            return [p, i, d, f];
-        }
-
-         */
-    }
-
     public boolean closeEnough (int current, int target, int range) {
         if ((target - range <= current) && (target + range >= current)) return true;
         return false;
@@ -311,7 +273,6 @@ public class HWC {
         rightRear.setPower(0);
     }
 
-
     public void smartMove(armPositions pos){
         switch (pos){
             case INTAKE:
@@ -376,55 +337,4 @@ public class HWC {
             leftRear.setVelocity(wheelVelocity);
         }
     }
-
-    // TODO: Finish Function and replace runToPosition (used above)
-//    public void moveArm(HWC.armPositions state) {
-//        int wheelCounts = 0;
-//        int targetPos = 0;
-//
-//        brontoscorus.leftFront.setMode(STOP_AND_RESET_ENCODER);
-//        brontoscorus.rightFront.setMode(STOP_AND_RESET_ENCODER);
-//        brontoscorus.leftRear.setMode(STOP_AND_RESET_ENCODER);
-//        brontoscorus.rightRear.setMode(STOP_AND_RESET_ENCODER);
-//
-//        brontoscorus.leftFront.setMode(RUN_WITHOUT_ENCODER);
-//        brontoscorus.rightFront.setMode(RUN_WITHOUT_ENCODER);
-//        brontoscorus.leftRear.setMode(RUN_WITHOUT_ENCODER);
-//        brontoscorus.rightRear.setMode(RUN_WITHOUT_ENCODER);
-//
-//        brontoscorus.time.reset();
-//
-//        switch(state) {
-//            case HANDOFF:
-//                brontoscorus.telemetry.addData("armPosition", "HANDOFF");
-//                brontoscorus.telemetry.update();
-//                targetPos = 2786/2;
-//            case CYCLE:
-//                brontoscorus.telemetry.addData("armPosition", "CYCLE");
-//                brontoscorus.telemetry.update();
-//        }
-//
-//        while(Math.abs(wheelCounts) < targetPos) {
-//            wheelCounts = brontoscorus.leftFront.getCurrentPosition();
-//
-//            if(Math.abs(wheelCounts) < targetPos){
-//                brontoscorus.leftFront.setPower(wheelLPower);
-//                brontoscorus.leftRear.setPower(wheelLPower);
-//                brontoscorus.rightFront.setPower(wheelRPower);
-//                brontoscorus.rightRear.setPower(wheelRPower);
-//
-//            }
-//            else {
-//                brontoscorus.leftFront.setPower(0);
-//                brontoscorus.leftRear.setPower(0);
-//                brontoscorus.rightFront.setPower(0);
-//                brontoscorus.rightRear.setPower(0);
-//            }
-//        }
-//
-//        brontoscorus.leftFront.setPower(0);
-//        brontoscorus.leftRear.setPower(0);
-//        brontoscorus.rightFront.setPower(0);
-//        brontoscorus.rightRear.setPower(0);
-//    }
 }
