@@ -34,6 +34,7 @@ public class SleeveDetection extends OpenCvPipeline {
         RIGHT
     }
 
+
     // TOPLEFT anchor point for the bounding box
     private static Point SLEEVE_TOPLEFT_ANCHOR_POINT = new Point(X,Y);
 
@@ -69,7 +70,7 @@ public class SleeveDetection extends OpenCvPipeline {
             SLEEVE_TOPLEFT_ANCHOR_POINT.y + REGION_HEIGHT);
 
     // Running variable storing the parking position
-    private volatile ParkingPosition position = ParkingPosition.LEFT;
+    int position = 0;
 
     @Override
     public Mat processFrame(Mat input) {
@@ -97,7 +98,7 @@ public class SleeveDetection extends OpenCvPipeline {
         // Checks all percentages, will highlight bounding box in camera preview
         // based on what color is being detected
         if (maxPercent == whiPercent) {
-            position = ParkingPosition.CENTER;
+            position = 2;
             Imgproc.rectangle(
                     input,
                     sleeve_pointA,
@@ -106,7 +107,7 @@ public class SleeveDetection extends OpenCvPipeline {
                     2
             );
         } else if (maxPercent == blaPercent) {
-            position = ParkingPosition.LEFT;
+            position = 1;
             Imgproc.rectangle(
                     input,
                     sleeve_pointA,
@@ -115,7 +116,7 @@ public class SleeveDetection extends OpenCvPipeline {
                     2
             );
         } else if (maxPercent == grePercent) {
-            position = ParkingPosition.RIGHT;
+            position = 3;
             Imgproc.rectangle(
                     input,
                     sleeve_pointA,
@@ -136,7 +137,7 @@ public class SleeveDetection extends OpenCvPipeline {
 
 
     // Returns an enum being the current position where the robot will park
-    public ParkingPosition getPosition() {
+    public int getPosition() {
         return position;
     }
 }
