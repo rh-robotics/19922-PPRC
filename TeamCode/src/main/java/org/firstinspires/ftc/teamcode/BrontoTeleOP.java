@@ -131,34 +131,8 @@ public class BrontoTeleOP extends OpMode
           } else if (gamepad2.right_stick_y != 0) {
               backArmTarget += (gamepad2.right_stick_y * 100);
           }
-          /*else if (gamepad2.left_stick_y < 0) {
-              bronto.frontElbow.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-              frontElbowPow = -gamepad2.left_stick_y;
-              bronto.frontElbow.setTargetPosition(bronto.frontElbow.getCurrentPosition());
-
-          } else {
-              bronto.frontElbow.setTargetPosition(bronto.frontElbow.getCurrentPosition());
-              bronto.frontElbow.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-              if (bronto.frontElbow.getCurrentPosition() - bronto.frontElbow.getTargetPosition() > 10 || bronto.frontElbow.getCurrentPosition() - bronto.frontElbow.getTargetPosition() < 10){
-              frontElbowPow = 0.6;}
-              else {frontElbowPow = 0.45;}
-          }
-          */
 
 
-    //      bronto.frontElbow.setMode(manualMode ? DcMotor.RunMode.RUN_USING_ENCODER : DcMotor.RunMode.RUN_TO_POSITION);
-/*
-            if (manualMode) {
-                frontElbowPow = 0;
-            } else {
-                if (bronto.frontElbow.getTargetPosition() - 10 < bronto.frontElbow.getCurrentPosition() && bronto.frontElbow.getTargetPosition() + 10 > bronto.frontElbow.getCurrentPosition())
-                    frontElbowPow = 0.75;
-                else {
-                    frontElbowPow = 1;
-                }
-            }
-
-*/
                 if (drive != 0 || turn != 0) {
                     leftFPower = Range.clip(drive + turn, -1.0, 1.0);
                     rightFPower = Range.clip(drive - turn, -1.0, 1.0);
@@ -229,8 +203,8 @@ public class BrontoTeleOP extends OpMode
                         telemetry.addData("Arm Position", "High Pole");
                         //TODO: MAKE OUTTAKE pwr
                         intakePow = -1;
-                        //TODO: if (cone color sensor gets tripped i.e. cone was outtaked)
-                        intakePow = 0;
+                      if  (bronto.returnColor(bronto.backIntakeSensor) == "unknown"){
+                        intakePow = 0;}
                         state = TeleOpStates.UNKNOWN;
 
                         break;
@@ -238,8 +212,8 @@ public class BrontoTeleOP extends OpMode
                         telemetry.addData("Arm Position", "Intake");
                         //TODO: MAKE INTAKE PWR
                         intakePow = 1;
-                        //if (cone color sensor gets tripped i.e. cone was intaked)
-                            intakePow = 0;
+                        if (bronto.returnColor(bronto.frontIntakeSensor) != "unknown"){
+                            intakePow = 0;}
                             state = TeleOpStates.UNKNOWN;
                         break;
                     case MOVING:
@@ -255,10 +229,10 @@ public class BrontoTeleOP extends OpMode
                         break;
                     case TRANSFER:
                         telemetry.addData("Arm Position", "Transfer");
-                        //TODO: if (color sensor detects other side)
-                        intakePow = 1;
-                            //TODO: if (cone color sensor gets tripped i.e. cone got to other side)
-                            intakePow = 0;
+                        if (bronto.returnColor(bronto.transferSensor) != "unknown"){
+                        intakePow = 1;}
+                        if (bronto.returnColor(bronto.backIntakeSensor) != "unknown"){
+                            intakePow = 0;}
                             state = TeleOpStates.UNKNOWN;
                         break;
                     case UNKNOWN:
