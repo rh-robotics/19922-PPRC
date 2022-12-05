@@ -149,7 +149,7 @@ public class HWC {
         backArm = hardwareMap.get(DcMotorEx.class, "backArm");
         backElbow = hardwareMap.get(DcMotorEx.class, "backElbow");
 
-        //declare all arm components with PID stuff, 435rpm motors have 354.5 ppr, 60rpm has 145.1 ppr multiplied by gear ratio
+        //declare all arm components with PID values, 435rpm motors have 354.5 ppr, 60rpm has 145.1 ppr multiplied by gear ratio
         frontElbowComponent = new RobotComponents (frontElbow, 145.1, 0.03, 0.3, 0.0006, 0.05);
         backElbowComponent = new RobotComponents (backElbow, 145.1, 0.018, 0.2, 0.001, 0.05);
         frontArmComponent = new RobotComponents (frontArm, 384.5 * 24, 0.024, .4, 0.0005, 0);
