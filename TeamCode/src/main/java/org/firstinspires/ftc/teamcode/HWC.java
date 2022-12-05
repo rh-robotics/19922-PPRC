@@ -211,12 +211,12 @@ public class HWC {
         int blue = colorSensor1.blue();
         String color;
 
-        if (red > green && red > blue && blue < 100 && green < 100) {
+        if (red > green && red > blue && blue < 150 && green < 150) {
             color = "red";
-        } else if (blue > green && red < blue && red < 100 && green < 100) {
+        } else if (blue > green && red < blue && red < 150 && green < 150) {
             color = "blue";
-        } else if (red < green && green > blue && blue < 100 && red < 100) {
-            color = "red";
+      //  } else if (red < green && green > blue && blue < 150 && red < 150) {
+        //    color = "green";
         } else {
             color = "unknown";}
         return color;
