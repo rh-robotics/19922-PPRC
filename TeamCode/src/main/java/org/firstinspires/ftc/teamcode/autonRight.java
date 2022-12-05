@@ -13,6 +13,9 @@ public class autonRight extends LinearOpMode {
   HWC.armPositions backArmPosition = HWC.armPositions.RESTING;
   ElapsedTime timer = new ElapsedTime();
 
+  // Target Pos
+  int frontArmTarget, frontElbowTarget, backArmTarget, backElbowTarget;
+
   @Override
   public void runOpMode() throws InterruptedException {
     // Tell driver bronto is initializing
@@ -34,8 +37,8 @@ public class autonRight extends LinearOpMode {
     while (!isStarted()) {
       telemetry.addData("ROTATION: ", bronto.sleeveDetection.getPosition());
       telemetry.update();
-      // TODO: Waiting for jack to change cv to return an int instead of enum
-//      bronto.parkingZone = bronto.sleeveDetection.getPosition();
+
+      bronto.parkingZone = bronto.sleeveDetection.getPosition();
     }
 
     waitForStart();
@@ -55,29 +58,89 @@ public class autonRight extends LinearOpMode {
       // State Machine
       switch(state) {
         case MOVING_TO_POLE:
-
           if (bronto.cycleCount < 1) {
-            // TODO: Move arms to cycle pos & update armPositions state
+            // Set target positions for arm components
+            frontArmTarget = bronto.intakePos;
+            frontElbowTarget = bronto.elbowIntakePos;
+            backArmTarget = bronto.backHighPolePos;
+            backElbowTarget = bronto.backElbowDeliveryPosHigh;
+
+            // TODO: Check range values
+            while (!bronto.closeEnough(bronto.frontArm.getCurrentPosition(), frontArmTarget, 15)
+                    && !bronto.closeEnough(bronto.frontElbow.getCurrentPosition(), frontElbowTarget, 2)
+                    && !bronto.closeEnough(bronto.backArm.getCurrentPosition(), backArmTarget, 15)
+                    && !bronto.closeEnough(bronto.backElbow.getCurrentPosition(), backElbowTarget, 2)) {
+              bronto.frontArmComponent.moveUsingPID(frontArmTarget);
+              bronto.backArmComponent.moveUsingPID(backArmTarget);
+              bronto.frontElbowComponent.moveUsingPID(frontElbowTarget);
+              bronto.backElbowComponent.moveUsingPID(backElbowTarget);
+            }
 
             frontArmPosition = HWC.armPositions.HIGH_POLE;
             backArmPosition = HWC.armPositions.INTAKE;
+
+            telemetry.addData("Front Arm Position", frontArmPosition);
+            telemetry.addData("Back Arm Position", backArmPosition);
+            telemetry.update();
 
             // Run startToPole trajectory
             bronto.drive.followTrajectory(TC.RIGHT_startToCyclePole(bronto.drive, bronto.START_POS_RIGHT));
             bronto.drive.turn(Math.toRadians(90));
 
-            //Change state
           } else {
+            // Move arms to transfer position
+            frontArmTarget = bronto.transferPos;
+            frontElbowTarget = bronto.elbowTransferPos;
+            backArmTarget = bronto.backHighPolePos;
+            backElbowTarget = bronto.backElbowTransferPos;
+
+
+            // TODO: Check range values
+            while (!bronto.closeEnough(bronto.frontArm.getCurrentPosition(), frontArmTarget, 15)
+                    && !bronto.closeEnough(bronto.frontElbow.getCurrentPosition(), frontElbowTarget, 2)
+                    && !bronto.closeEnough(bronto.backArm.getCurrentPosition(), backArmTarget, 15)
+                    && !bronto.closeEnough(bronto.backElbow.getCurrentPosition(), backElbowTarget, 2)) {
+                bronto.frontArmComponent.moveUsingPID(frontArmTarget);
+                bronto.backArmComponent.moveUsingPID(backArmTarget);
+                bronto.frontElbowComponent.moveUsingPID(frontElbowTarget);
+                bronto.backElbowComponent.moveUsingPID(backElbowTarget);
+            }
+
+            // Run servos to transfer cone
+            // TODO: Check power values for directionality
+            bronto.runIntakeServo('R', -.3);
+            bronto.runIntakeServo('F', .3);
+            sleep(1000);
+            bronto.runIntakeServo('R', 0);
+            bronto.runIntakeServo('F', 0);
+
+            // Move arms to delivery/intake pos
+            frontArmTarget = bronto.intakePos;
+            frontElbowTarget = bronto.elbowIntakePos;
+            backArmTarget = bronto.backHighPolePos;
+            backElbowTarget = bronto.backElbowDeliveryPosHigh;
+
+            // TODO: Check range values
+            while (!bronto.closeEnough(bronto.frontArm.getCurrentPosition(), frontArmTarget, 15)
+                    && !bronto.closeEnough(bronto.frontElbow.getCurrentPosition(), frontElbowTarget, 2)
+                    && !bronto.closeEnough(bronto.backArm.getCurrentPosition(), backArmTarget, 15)
+                    && !bronto.closeEnough(bronto.backElbow.getCurrentPosition(), backElbowTarget, 2)) {
+                bronto.frontArmComponent.moveUsingPID(frontArmTarget);
+                bronto.backArmComponent.moveUsingPID(backArmTarget);
+                bronto.frontElbowComponent.moveUsingPID(frontElbowTarget);
+                bronto.backElbowComponent.moveUsingPID(backElbowTarget);
+            }
+
             // Run stack to pole trajectory
             bronto.drive.followTrajectory(TC.RIGHT_stackToPole(bronto.drive, TC.RIGHT_poleToStack(bronto.drive, TC.RIGHT_startToCyclePole(bronto.drive, bronto.START_POS_RIGHT).end().plus(new Pose2d(0, 0, Math.toRadians(90)))).end()));
-            // TODO: Transfer cone, then move arms to cycle position
-
-            // Change State
           }
+
+          //Change state
           state = HWC.autonStates.DELIVERING_CONE;
 
         case DELIVERING_CONE:
           // Run Gecko Wheel Servos to deposit cone
+          // TODO: Check power values for directionality
           bronto.runIntakeServo('R',-.3);
           sleep(2000);
           bronto.runIntakeServo('R', 0);
@@ -136,6 +199,14 @@ public class autonRight extends LinearOpMode {
           telemetry.update();
 
           // TODO: Check int to see which zone we go to
+          switch(bronto.parkingZone) {
+            case 1:
+              // Run trajectory to zone 1
+            case 2:
+              // Run trajectory to zone 2
+            case 3:
+              // Run trajectory to zone 3
+          }
       }
 
       if (timer.milliseconds() >= 20000) {
