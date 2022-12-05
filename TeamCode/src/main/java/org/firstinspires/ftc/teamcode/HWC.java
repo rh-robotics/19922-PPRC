@@ -4,6 +4,10 @@ import static com.qualcomm.robotcore.hardware.DcMotor.RunMode.RUN_TO_POSITION;
 import static com.qualcomm.robotcore.hardware.DcMotor.RunMode.RUN_WITHOUT_ENCODER;
 import static com.qualcomm.robotcore.hardware.DcMotor.RunMode.STOP_AND_RESET_ENCODER;
 
+import static com.qualcomm.robotcore.hardware.DcMotor.RunMode.RUN_TO_POSITION;
+
+import com.acmerobotics.roadrunner.geometry.Pose2d;
+import com.qualcomm.robotcore.hardware.ColorSensor;
 import androidx.annotation.NonNull;
 
 import com.qualcomm.robotcore.hardware.CRServo;
@@ -16,13 +20,14 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 import com.arcrobotics.ftclib.controller.PIDController;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
+import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 import org.openftc.easyopencv.OpenCvCamera;
 
 public class HWC {
     // Declare empty variables for robot hardware
     public DcMotorEx leftFront, rightFront, leftRear, rightRear, frontArm, frontElbow, backArm, backElbow;
     public CRServo frontIntakeL, frontIntakeR, backIntakeR, backIntakeL;
-    public ColorSensor colorSensor1;
+    public ColorSensor frontIntakeSensor, backIntakeSensor, transferSensor;
     public int cameraMonitorViewId;
 
     // CV vars
@@ -33,6 +38,17 @@ public class HWC {
     // Declare other variables to be used here
     Telemetry telemetry;
     ElapsedTime time = new ElapsedTime();
+
+    // Other auton variables
+    public int cycleCount = 0;
+    public int parkingZone = 0;
+
+    // Roadrunner start positions
+    public final Pose2d START_POS_RIGHT = new Pose2d(35, -60, Math.toRadians(90));
+    public final Pose2d START_POS_LEFT = new Pose2d(35, -60, Math.toRadians(90)); // TODO: Change Coords
+
+    // Roadrunner drive
+    public SampleMecanumDrive drive;
 
     // Code variables
     public static final double ONE_CM_IN_PPR = 7.9;
@@ -58,44 +74,6 @@ public class HWC {
         HIGH_POLE,
         TRANSFER,
         UNKNOWN
-    }
-
-    // robot components
-    public class RobotComponents {
-
-        private final DcMotorEx motor;
-        private final double ticks_in_degrees;
-        private final double p, i, d, f;
-        private PIDController controller;
-
-        RobotComponents (DcMotorEx motor, double ticks_in_degrees, double p, double i, double d, double f) {
-            this.motor = motor;
-            this.ticks_in_degrees = ticks_in_degrees;
-            this.p = p;
-            this.i = i;
-            this.d = d;
-            this.f = f;
-
-            controller = new PIDController (p,i,d);
-        }
-
-        public void moveUsingPID (int target) {
-            motor.setMode(DcMotorEx.RunMode.RUN_WITHOUT_ENCODER);
-            int armPos = motor.getCurrentPosition();
-            double pid = controller.calculate(armPos, target);
-            double ff = Math.cos(Math.toRadians(target / ticks_in_degrees)) * f;
-
-            double power = pid + ff;
-
-            motor.setPower(power);
-
-        }
-        /*
-        public double[] pidf() {
-            return [p, i, d, f];
-        }
-
-         */
     }
 
     public boolean closeEnough (int current, int target, int range) {
@@ -162,7 +140,9 @@ public class HWC {
         backIntakeR = hardwareMap.get(CRServo.class, "BackIntakeR");
 
         //declare sensors
-        colorSensor1 = hardwareMap.get(ColorSensor.class, "CS1");
+        frontIntakeSensor = hardwareMap.get(ColorSensor.class, "CS_F");
+        backIntakeSensor = hardwareMap.get(ColorSensor.class, "CS_B");
+        transferSensor = hardwareMap.get(ColorSensor.class, "CS_T");
 
         // Camera
         cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
@@ -206,6 +186,8 @@ public class HWC {
         backElbow.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
 
         int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
+
+        drive = new SampleMecanumDrive(hardwareMap);
     }
 
     // Functions Below Because Function Class is Hard and Annoying
@@ -225,18 +207,18 @@ public class HWC {
         }
     }
 
-    public String returnColor() {
-        int red = colorSensor1.red();
-        int green = colorSensor1.green();
-        int blue = colorSensor1.blue();
+    public String returnColor(ColorSensor CS) {
+        int red = CS.red();
+        int green = CS.green();
+        int blue = CS.blue();
         String color;
 
-        if (red > green && red > blue && blue < 100 && green < 100) {
+        if (red > green && red > blue && blue < 150 && green < 150) {
             color = "red";
-        } else if (blue > green && red < blue && red < 100 && green < 100) {
+        } else if (blue > green && red < blue && red < 150 && green < 150) {
             color = "blue";
-        } else if (red < green && green > blue && blue < 100 && red < 100) {
-            color = "red";
+      //  } else if (red < green && green > blue && blue < 150 && red < 150) {
+        //    color = "green";
         } else {
             color = "unknown";}
         return color;
@@ -248,9 +230,8 @@ public class HWC {
         motor.setTargetPosition(position);
         motor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         motor.setPower(power);
-       /* while (motor.isBusy()){
+/*        while (motor.isBusy()){
             telemetry.addData(motor +" Moving", "TRUE"); */
-
     }
 
     // drive method is used to drive using encoder positions. This is currently deprecated
@@ -293,7 +274,6 @@ public class HWC {
         rightFront.setPower(0);
         rightRear.setPower(0);
     }
-
 
     public void smartMove(armPositions pos){
         switch (pos){
@@ -359,55 +339,4 @@ public class HWC {
             leftRear.setVelocity(wheelVelocity);
         }
     }
-
-    // TODO: Finish Function and replace runToPosition (used above)
-//    public void moveArm(HWC.armPositions state) {
-//        int wheelCounts = 0;
-//        int targetPos = 0;
-//
-//        brontoscorus.leftFront.setMode(STOP_AND_RESET_ENCODER);
-//        brontoscorus.rightFront.setMode(STOP_AND_RESET_ENCODER);
-//        brontoscorus.leftRear.setMode(STOP_AND_RESET_ENCODER);
-//        brontoscorus.rightRear.setMode(STOP_AND_RESET_ENCODER);
-//
-//        brontoscorus.leftFront.setMode(RUN_WITHOUT_ENCODER);
-//        brontoscorus.rightFront.setMode(RUN_WITHOUT_ENCODER);
-//        brontoscorus.leftRear.setMode(RUN_WITHOUT_ENCODER);
-//        brontoscorus.rightRear.setMode(RUN_WITHOUT_ENCODER);
-//
-//        brontoscorus.time.reset();
-//
-//        switch(state) {
-//            case HANDOFF:
-//                brontoscorus.telemetry.addData("armPosition", "HANDOFF");
-//                brontoscorus.telemetry.update();
-//                targetPos = 2786/2;
-//            case CYCLE:
-//                brontoscorus.telemetry.addData("armPosition", "CYCLE");
-//                brontoscorus.telemetry.update();
-//        }
-//
-//        while(Math.abs(wheelCounts) < targetPos) {
-//            wheelCounts = brontoscorus.leftFront.getCurrentPosition();
-//
-//            if(Math.abs(wheelCounts) < targetPos){
-//                brontoscorus.leftFront.setPower(wheelLPower);
-//                brontoscorus.leftRear.setPower(wheelLPower);
-//                brontoscorus.rightFront.setPower(wheelRPower);
-//                brontoscorus.rightRear.setPower(wheelRPower);
-//
-//            }
-//            else {
-//                brontoscorus.leftFront.setPower(0);
-//                brontoscorus.leftRear.setPower(0);
-//                brontoscorus.rightFront.setPower(0);
-//                brontoscorus.rightRear.setPower(0);
-//            }
-//        }
-//
-//        brontoscorus.leftFront.setPower(0);
-//        brontoscorus.leftRear.setPower(0);
-//        brontoscorus.rightFront.setPower(0);
-//        brontoscorus.rightRear.setPower(0);
-//    }
 }

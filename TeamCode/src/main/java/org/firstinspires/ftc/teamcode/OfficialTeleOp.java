@@ -3,7 +3,6 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.util.Range;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
@@ -159,11 +158,12 @@ public class OfficialTeleOp extends OpMode
         }
 
         else if (gamepad1.x) {
-            bronto.move_to_position_and_hold(bronto.frontArm, 1, bronto.highPolePos);
+
             bronto.move_to_position_and_hold(bronto.backArm,1, bronto.backHighPolePos);
             //while(bronto.frontArm.getCurrentPosition() != bronto.frontArm.getTargetPosition()){telemetry.addData("moving", "true");}
                 bronto.move_to_position_and_hold(bronto.frontElbow, 1, bronto.elbowDeliveryPosHigh);
                 bronto.move_to_position_and_hold(bronto.backElbow, 1, bronto.backElbowDeliveryPosHigh);
+                bronto.move_to_position_and_hold(bronto.frontArm, -1, bronto.highPolePos);
                 state = TeleOpStates.HIGH_POLE;}
 
          else if (gamepad1.b) {
