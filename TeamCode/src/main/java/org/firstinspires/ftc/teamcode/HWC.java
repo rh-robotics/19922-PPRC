@@ -27,7 +27,7 @@ public class HWC {
     // Declare empty variables for robot hardware
     public DcMotorEx leftFront, rightFront, leftRear, rightRear, frontArm, frontElbow, backArm, backElbow;
     public CRServo frontIntakeL, frontIntakeR, backIntakeR, backIntakeL;
-    public ColorSensor colorSensor1;
+    public ColorSensor frontIntakeSensor, backIntakeSensor, transferSensor;
     public int cameraMonitorViewId;
 
     // CV vars
@@ -140,7 +140,9 @@ public class HWC {
         backIntakeR = hardwareMap.get(CRServo.class, "BackIntakeR");
 
         //declare sensors
-        colorSensor1 = hardwareMap.get(ColorSensor.class, "CS1");
+        frontIntakeSensor = hardwareMap.get(ColorSensor.class, "CS_F");
+        backIntakeSensor = hardwareMap.get(ColorSensor.class, "CS_B");
+        transferSensor = hardwareMap.get(ColorSensor.class, "CS_T");
 
         // Camera
         cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
@@ -205,10 +207,10 @@ public class HWC {
         }
     }
 
-    public String returnColor() {
-        int red = colorSensor1.red();
-        int green = colorSensor1.green();
-        int blue = colorSensor1.blue();
+    public String returnColor(ColorSensor CS) {
+        int red = CS.red();
+        int green = CS.green();
+        int blue = CS.blue();
         String color;
 
         if (red > green && red > blue && blue < 150 && green < 150) {

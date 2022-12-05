@@ -62,8 +62,7 @@ public class testingOp extends OpMode
     bronto.backArm.setPower(-gamepad2.left_stick_y);
     bronto.backElbow.setPower(-gamepad2.right_stick_y);
     if (gamepad1.a){
-         color = bronto.returnColor();
-
+         color = bronto.returnColor(bronto.intakeSensor);
     }
     else  color = " ";
 
