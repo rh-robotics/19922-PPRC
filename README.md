@@ -1,5 +1,7 @@
 # 19922-PPRC
 
+[![Android CI](https://github.com/rh-robotics/19922-PPRC/actions/workflows/android.yml/badge.svg)](https://github.com/rh-robotics/19922-PPRC/actions/workflows/android.yml)
+
 Welcome to the 19922-PPRC Github repository for the Iron Lions FTC Robotics Team. This repository is used to store code for the team's robot for the 2022 Powerplay season.
 
 ## Table of Contents
