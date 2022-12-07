@@ -23,7 +23,7 @@ public class PIDtuning extends OpMode {
         controller = new PIDController (p,i,d);
         telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
 
-        arm_motor= hardwareMap.get(DcMotorEx.class, "frontArm");
+        arm_motor= hardwareMap.get(DcMotorEx.class, "backArm");
         arm_motor.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
         arm_motor.setMode(DcMotorEx.RunMode.RUN_WITHOUT_ENCODER);
 
