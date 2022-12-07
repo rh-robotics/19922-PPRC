@@ -72,9 +72,7 @@ public class BrontoBrain {
     }
 
     public void cv() {
-        bronto.camera = OpenCvCameraFactory.getInstance().createWebcam(hardwareMap.get(WebcamName.class, bronto.webcamName), bronto.cameraMonitorViewId);
         bronto.camera.setPipeline(bronto.sleeveDetection);
-
         bronto.camera.openCameraDeviceAsync(new OpenCvCamera.AsyncCameraOpenListener() {
             @Override
             public void onOpened() {
