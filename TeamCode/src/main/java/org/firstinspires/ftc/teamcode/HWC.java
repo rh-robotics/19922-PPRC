@@ -6,6 +6,8 @@ import static com.qualcomm.robotcore.hardware.DcMotor.RunMode.STOP_AND_RESET_ENC
 
 import static com.qualcomm.robotcore.hardware.DcMotor.RunMode.RUN_TO_POSITION;
 
+import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.hardwareMap;
+
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import androidx.annotation.NonNull;
@@ -20,8 +22,10 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 import com.arcrobotics.ftclib.controller.PIDController;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
+import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 import org.openftc.easyopencv.OpenCvCamera;
+import org.openftc.easyopencv.OpenCvCameraFactory;
 
 public class HWC {
     // Declare empty variables for robot hardware
@@ -76,10 +80,6 @@ public class HWC {
         UNKNOWN
     }
 
-    public boolean closeEnough (int current, int target, int range) {
-        if ((target - range <= current) && (target + range >= current)) return true;
-        return false;
-    }
 
     //We should both be using these in all our code. Makes it much easier to tune as only one person has to
     //BS numbers but I needed something
@@ -146,6 +146,7 @@ public class HWC {
 
         // Camera
         cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
+        camera = OpenCvCameraFactory.getInstance().createWebcam(hardwareMap.get(WebcamName.class, bronto.webcamName), bronto.cameraMonitorViewId);
 
         // Set the direction of all our motors
         leftFront.setDirection(DcMotorEx.Direction.FORWARD);
@@ -192,6 +193,12 @@ public class HWC {
 
     // Functions Below Because Function Class is Hard and Annoying
 
+    public boolean closeEnough (int current, int target, int range) {
+        if ((target - range <= current) && (target + range >= current)) return true;
+        return false;
+    }
+
+
     // Function to run intake set of servos to intake a cone/transfer to other arm
     public void runIntakeServo(char servo, double power) {
         if (servo == 'F') {
@@ -221,7 +228,15 @@ public class HWC {
         //    color = "green";
         } else {
             color = "unknown";}
+
         return color;
+    }
+
+    public boolean betterSleep(int milliseconds){
+        time.reset();
+        while (time.milliseconds() > milliseconds){}
+        return true;
+
     }
 
 
@@ -275,7 +290,7 @@ public class HWC {
         rightRear.setPower(0);
     }
 
-    public void smartMove(armPositions pos){
+    /*public void smartMove(armPositions pos){
         switch (pos){
             case INTAKE:
                 move_to_position_and_hold(frontArm,1, intakePos);
@@ -307,7 +322,7 @@ public class HWC {
                 telemetry.update();
         }
     }
-
+*/
     public void turn(double directionInDegrees, double wheelVelocity) {
 //      384.5(PPR) = ~50cm = ~20in
 //      7.9(PPR) = 1cm
