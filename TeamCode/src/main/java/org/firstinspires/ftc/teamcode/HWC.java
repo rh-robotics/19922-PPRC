@@ -76,10 +76,6 @@ public class HWC {
         UNKNOWN
     }
 
-    public boolean closeEnough (int current, int target, int range) {
-        if ((target - range <= current) && (target + range >= current)) return true;
-        return false;
-    }
 
     //We should both be using these in all our code. Makes it much easier to tune as only one person has to
     //BS numbers but I needed something
@@ -192,6 +188,12 @@ public class HWC {
 
     // Functions Below Because Function Class is Hard and Annoying
 
+    public boolean closeEnough (int current, int target, int range) {
+        if ((target - range <= current) && (target + range >= current)) return true;
+        return false;
+    }
+
+
     // Function to run intake set of servos to intake a cone/transfer to other arm
     public void runIntakeServo(char servo, double power) {
         if (servo == 'F') {
@@ -221,7 +223,15 @@ public class HWC {
         //    color = "green";
         } else {
             color = "unknown";}
+
         return color;
+    }
+
+    public boolean betterSleep(int milliseconds){
+        time.reset();
+        while (time.milliseconds() > milliseconds){}
+        return true;
+
     }
 
 
@@ -275,7 +285,7 @@ public class HWC {
         rightRear.setPower(0);
     }
 
-    public void smartMove(armPositions pos){
+    /*public void smartMove(armPositions pos){
         switch (pos){
             case INTAKE:
                 move_to_position_and_hold(frontArm,1, intakePos);
@@ -307,7 +317,7 @@ public class HWC {
                 telemetry.update();
         }
     }
-
+*/
     public void turn(double directionInDegrees, double wheelVelocity) {
 //      384.5(PPR) = ~50cm = ~20in
 //      7.9(PPR) = 1cm
