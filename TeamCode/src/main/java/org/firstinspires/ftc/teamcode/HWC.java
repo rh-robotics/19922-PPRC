@@ -4,22 +4,15 @@ import static com.qualcomm.robotcore.hardware.DcMotor.RunMode.RUN_TO_POSITION;
 import static com.qualcomm.robotcore.hardware.DcMotor.RunMode.RUN_WITHOUT_ENCODER;
 import static com.qualcomm.robotcore.hardware.DcMotor.RunMode.STOP_AND_RESET_ENCODER;
 
-import static com.qualcomm.robotcore.hardware.DcMotor.RunMode.RUN_TO_POSITION;
-
-import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.hardwareMap;
-
-import com.acmerobotics.roadrunner.geometry.Pose2d;
-import com.qualcomm.robotcore.hardware.ColorSensor;
 import androidx.annotation.NonNull;
 
+import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.util.ElapsedTime;
-
-import com.arcrobotics.ftclib.controller.PIDController;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
@@ -131,7 +124,7 @@ public class HWC {
         frontElbowComponent = new RobotComponents (frontElbow, 145.1, 0.03, 0.3, 0.0006, 0.05);
         backElbowComponent = new RobotComponents (backElbow, 145.1, 0.018, 0.2, 0.001, 0.05);
         frontArmComponent = new RobotComponents (frontArm, 384.5 * 24, 0.024, .4, 0.0005, 0);
-        backArmComponent = new RobotComponents (backArm, 384.5 * 28, 0.2, 0, 0, 0);
+        backArmComponent = new RobotComponents (backArm, 384.5 * 28, 0.03, 0, 0.0004, 0);
 
         // Declare servos
         frontIntakeL = hardwareMap.get(CRServo.class, "intakeL");
@@ -146,7 +139,7 @@ public class HWC {
 
         // Camera
         cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
-        camera = OpenCvCameraFactory.getInstance().createWebcam(hardwareMap.get(WebcamName.class, bronto.webcamName), bronto.cameraMonitorViewId);
+        camera = OpenCvCameraFactory.getInstance().createWebcam(hardwareMap.get(WebcamName.class, webcamName), cameraMonitorViewId);
 
         // Set the direction of all our motors
         leftFront.setDirection(DcMotorEx.Direction.FORWARD);
