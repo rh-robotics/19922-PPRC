@@ -41,7 +41,6 @@ public class BrontoTeleOP extends OpMode
         bronto = new HWC(hardwareMap, telemetry);
          brain = new BrontoBrain(bronto);
         telemetry.addData("Status", "Initializing");
-     //   bronto.frontElbow.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         bronto.frontElbow.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
         bronto.frontArm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         bronto.backElbow.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -49,9 +48,9 @@ public class BrontoTeleOP extends OpMode
         //bronto.frontElbow.setTargetPosition(0);
      //   bronto.frontArm.setTargetPosition(0);
        // bronto.backElbow.setTargetPosition(0);
-        //bronto.backArm.setTargetPosition(0);
+     //   bronto.backArm.setTargetPosition(0);
      //   bronto.frontElbow.setPower(0.2);
-        //bronto.frontArm.setPower(0.2);
+      //  bronto.frontArm.setPower(0.2);
     //    bronto.backElbow.setPower(0.2);
     //    bronto.backArm.setPower(0.2);
 
@@ -69,7 +68,7 @@ public class BrontoTeleOP extends OpMode
     @Override
     public void start(){
     runtime.reset();
-    ;
+    backArmTarget = bronto.backHighPolePos; //set back arm to back high pole immediately for power draw issues
     }
 
     @Override
@@ -184,13 +183,29 @@ public class BrontoTeleOP extends OpMode
                      */
 
                 } else if (gamepad1.b) {
+                    state = TeleOpStates.MOVING;
+                    nextState = TeleOpStates.DELIVERING;
+                    frontElbowTarget = bronto.elbowIntakePos;
+                    backElbowTarget = bronto.backElbowDeliveryPosMed;
+                    frontArmTarget = bronto.intakePos;
+                    backArmTarget = bronto.backMedPolePos;
+                    /*
                     bronto.move_to_position_and_hold(bronto.frontArm, 1, bronto.medPolePos);
                     bronto.move_to_position_and_hold(bronto.frontElbow, 0.5, bronto.elbowDeliveryPosMed);
                     state = TeleOpStates.DELIVERING;
-                } else if (gamepad1.dpad_down) {
+                     */
+                } else if (gamepad1.a) {
+                    state = TeleOpStates.MOVING;
+                    nextState = TeleOpStates.DELIVERING;
+                    frontElbowTarget = bronto.elbowIntakePos;
+                    backElbowTarget = bronto.backElbowDeliveryPosLow;
+                    frontArmTarget = bronto.intakePos;
+                    backArmTarget = bronto.backLowPolePos;
+                    /*
                     bronto.move_to_position_and_hold(bronto.frontArm, 1, bronto.lowPolePos);
                     bronto.move_to_position_and_hold(bronto.frontElbow, 0.5, bronto.elbowDeliveryPosLow);
                     state = TeleOpStates.DELIVERING;
+                     */
                 }
 
                 //setting next state

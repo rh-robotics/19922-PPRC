@@ -77,14 +77,14 @@ public class HWC {
     //We should both be using these in all our code. Makes it much easier to tune as only one person has to
     //BS numbers but I needed something
     int armRestingPos = 0;
-    int intakePos = -1653;
+    int intakePos = 2164;
     int lowPolePos = -2560;
     int medPolePos = -4079;
-    int highPolePos = -4079;
-    int transferPos = -4079;
+    int highPolePos = 4942;
+    int transferPos = 4942;
     int elbowRestingPos = 0;
-    int elbowIntakePos = 423;
-    int elbowTransferPos =  -150;
+    int elbowIntakePos = -893;
+    int elbowTransferPos =  -233;
     int elbowDeliveryPosLow = 942;
     int elbowDeliveryPosMed = 1254;
     int elbowDeliveryPosHigh = 686;
@@ -97,7 +97,7 @@ public class HWC {
     int backDeliveryPos = -4838;
     int backElbowRestingPos = 0;
     int backElbowIntakePos = 319;
-    int backElbowTransferPos = 235;
+    int backElbowTransferPos = 370;
     int backElbowDeliveryPosLow = 1679;
     int backElbowDeliveryPosMed = 1365;
     int backElbowDeliveryPosHigh = 980;
@@ -147,10 +147,12 @@ public class HWC {
         rightFront.setDirection(DcMotorEx.Direction.REVERSE);
         rightRear.setDirection(DcMotorEx.Direction.REVERSE);
 
+        /*
         frontArm.setDirection(DcMotorEx.Direction.FORWARD);
         frontElbow.setDirection(DcMotorEx.Direction.FORWARD);
         backElbow.setDirection(DcMotorEx.Direction.REVERSE);
         backArm.setDirection(DcMotorEx.Direction.REVERSE);
+         */
 
         //Sets the wheels to break on zero power
         leftFront.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
