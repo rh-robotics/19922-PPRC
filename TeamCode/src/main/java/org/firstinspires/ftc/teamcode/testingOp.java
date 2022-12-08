@@ -73,8 +73,6 @@ public class testingOp extends OpMode
 
     */
 
-
-
         telemetry.addData("frontArm", bronto.frontArm.getCurrentPosition());
         telemetry.addData("frontElbow", bronto.frontElbow.getCurrentPosition());
         telemetry.addData("backArm", bronto.backArm.getCurrentPosition());

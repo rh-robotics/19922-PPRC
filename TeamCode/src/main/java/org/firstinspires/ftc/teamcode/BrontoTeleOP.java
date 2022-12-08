@@ -68,7 +68,7 @@ public class BrontoTeleOP extends OpMode
     @Override
     public void start(){
     runtime.reset();
-    backArmTarget = bronto.backHighPolePos; //set back arm to back high pole immediately for power draw issues
+   // backArmTarget = bronto.backHighPolePos; //set back arm to back high pole immediately for power draw issues
     }
 
     @Override
@@ -93,15 +93,15 @@ public class BrontoTeleOP extends OpMode
         if (gamepad1.left_bumper && gamepad1.right_bumper && gamepad1.left_stick_button){
             bronto.frontArm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);}
 
-        /* if (-gamepad2.right_stick_y > 0) { intakePow = gamepad2.right_stick_y;}
+         if (-gamepad2.right_stick_y > 0) { intakePow = gamepad2.right_stick_y;}
         else if (gamepad2.right_stick_y > 0) {intakePow = gamepad2.right_stick_y;}
         else {intakePow = 0;}
 
-
+    /*
         if (gamepad2.right_stick_button){
             manualMode = !manualMode;
         }
-         */
+
 
         /*
         if (frontArmUp > 0) {
@@ -277,9 +277,14 @@ public class BrontoTeleOP extends OpMode
                 bronto.frontElbowComponent.moveUsingPID(frontElbowTarget);
                 bronto.backElbowComponent.moveUsingPID(backElbowTarget);
 
-                telemetry.addData("Motors", "front left (%.2f), front right (%.2f), back left (%.2f), back right (%.2f), front arm (%.2f), front elbow (%.2f),  ", leftFPower, rightFPower, leftBPower, rightBPower, bronto.frontArm.getPower(), bronto.frontElbow.getPower());
-                telemetry.update();
 
+        telemetry.addData("frontArm", bronto.frontArm.getCurrentPosition());
+        telemetry.addData("frontElbow", bronto.frontElbow.getCurrentPosition());
+        telemetry.addData("backArm", bronto.backArm.getCurrentPosition());
+        telemetry.addData("backElbow", bronto.backElbow.getCurrentPosition());
+                telemetry.addData("Positions", "front Arm %d, Back Arm %d, Front Elbow %d, Back Elbow %d", bronto.frontArm.getCurrentPosition(), bronto.backArm.getCurrentPosition(), bronto.frontElbow.getCurrentPosition(), bronto.backElbow.getCurrentPosition());
+               // telemetry.addData("Motors", "front left (%.2f), front right (%.2f), back left (%.2f), back right (%.2f), front arm (%.2f), front elbow (%.2f),  ", bronto.leftFront, bronto.rightFront, bronto.leftRear, bronto.rightRear, bronto.frontArm.getPower(), bronto.frontElbow.getPower());
+                telemetry.update();
             }
 
             /** Code to run ONCE after the driver hits STOP. */
