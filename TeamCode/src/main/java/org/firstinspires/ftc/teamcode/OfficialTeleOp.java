@@ -175,7 +175,7 @@ public class OfficialTeleOp extends OpMode
     telemetry.addData("color", "Yellow Detected!");
 }*/
         if (gamepad1.y) {
-            bronto.move_to_position_and_hold(bronto.frontArm, 1, bronto.transferPos);
+            bronto.move_to_position_and_hold(bronto.frontArm, -1, -bronto.transferPos);
             if (bronto.frontButton.getValue() > 0.9 && bronto.frontArm.getCurrentPosition() > 500){
                 bronto.highPolePos = bronto.frontArm.getCurrentPosition();
                 bronto.transferPos = bronto.frontArm.getCurrentPosition();
