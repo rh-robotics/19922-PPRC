@@ -1,7 +1,7 @@
 package org.firstinspires.ftc.teamcode;
 
 import static com.qualcomm.robotcore.hardware.DcMotor.RunMode.RUN_TO_POSITION;
-import static com.qualcomm.robotcore.hardware.DcMotor.RunMode.RUN_WITHOUT_ENCODER;
+import static com.qualcomm.robotcore.hardware.DcMotor.RunMode.RUN_USING_ENCODER;
 import static com.qualcomm.robotcore.hardware.DcMotor.RunMode.STOP_AND_RESET_ENCODER;
 
 import androidx.annotation.NonNull;
@@ -26,6 +26,7 @@ public class HWC {
     public CRServo frontIntakeL, frontIntakeR, backIntakeR, backIntakeL;
     public ColorSensor frontIntakeSensor, backIntakeSensor, transferSensor;
     public int cameraMonitorViewId;
+    public TouchSensor frontButton, rearButton;
 
     // CV vars
     OpenCvCamera camera;
@@ -136,6 +137,8 @@ public class HWC {
         frontIntakeSensor = hardwareMap.get(ColorSensor.class, "CS_F");
         backIntakeSensor = hardwareMap.get(ColorSensor.class, "CS_B");
         transferSensor = hardwareMap.get(ColorSensor.class, "CS_T");
+        frontButton = hardwareMap.get(TouchSensor.class, "F_Button")
+        rearButton = hardwareMap.get(TouchSensor.class, "R_Button")
 
         // Camera
         cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
@@ -171,10 +174,10 @@ public class HWC {
         rightFront.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
         leftRear.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
         rightRear.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
-        frontArm.setMode(DcMotorEx.RunMode.RUN_WITHOUT_ENCODER); //changed to without
-        frontElbow.setMode(DcMotorEx.RunMode.RUN_WITHOUT_ENCODER);
-        backArm.setMode(DcMotorEx.RunMode.RUN_WITHOUT_ENCODER);
-        backElbow.setMode(DcMotorEx.RunMode.RUN_WITHOUT_ENCODER);
+        frontArm.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER); //changed to without
+        frontElbow.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
+        backArm.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
+        backElbow.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
         // Resets encoder position to zero
         frontArm.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
         frontElbow.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
