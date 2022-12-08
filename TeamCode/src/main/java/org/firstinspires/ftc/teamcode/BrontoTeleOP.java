@@ -132,23 +132,23 @@ public class BrontoTeleOP extends OpMode
           }
 
 
-                if (drive != 0 || turn != 0) {
-                    leftFPower = Range.clip(drive + turn, -1.0, 1.0);
-                    rightFPower = Range.clip(drive - turn, -1.0, 1.0);
-                    leftBPower = Range.clip(drive + turn, -1.0, 1.0);
-                    rightBPower = Range.clip(drive - turn, -1.0, 1.0);
-                } else if (strafe != 0) {
-                    /* Strafing */
-                    leftFPower = -strafe;
-                    rightFPower = strafe;
-                    leftBPower = strafe;
-                    rightBPower = -strafe;
-                } else {
-                    leftFPower = 0;
-                    rightFPower = 0;
-                    leftBPower = 0;
-                    rightBPower = 0;
-                }
+          if (drive != 0 || turn != 0) {
+              leftFPower = Range.clip(drive + turn, -1.0, 1.0);
+              rightFPower = Range.clip(drive - turn, -1.0, 1.0);
+              leftBPower = Range.clip(drive + turn, -1.0, 1.0);
+              rightBPower = Range.clip(drive - turn, -1.0, 1.0);
+          } else if (strafe != 0) {
+              /* Strafing */
+              leftFPower = -strafe;
+              rightFPower = strafe;
+              leftBPower = strafe;
+              rightBPower = -strafe;
+          } else {
+              leftFPower = 0;
+              rightFPower = 0;
+              leftBPower = 0;
+              rightBPower = 0;
+          }
 
 /*if(colorSensor.green() > 138 && colorSensor.red() > 138 && colorSensor.green() >colorSensor.red()){
     telemetry.addData("color", "Yellow Detected!");
@@ -235,8 +235,8 @@ public class BrontoTeleOP extends OpMode
                         telemetry.addData("Arm Position", "Moving");
                         if (bronto.closeEnough (bronto.frontElbow.getCurrentPosition(), frontElbowTarget, 2) &&
                                 bronto.closeEnough (bronto.backElbow.getCurrentPosition(), backElbowTarget, 2) &&
-                                bronto.closeEnough (bronto.frontArm.getCurrentPosition(), frontArmTarget, 15) &&
-                                bronto.closeEnough (bronto.backArm.getCurrentPosition(), backArmTarget, 15)) {
+                                bronto.closeEnough (bronto.frontArm.getCurrentPosition(), frontArmTarget, 5) &&
+                                bronto.closeEnough (bronto.backArm.getCurrentPosition(), backArmTarget, 5)) {
                             state = nextState;
                             nextState = TeleOpStates.UNKNOWN;
                         }
