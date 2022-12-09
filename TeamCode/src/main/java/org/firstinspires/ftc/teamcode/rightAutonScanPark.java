@@ -50,15 +50,18 @@ public class rightAutonScanPark extends LinearOpMode {
         bronto.drive.setPoseEstimate(bronto.START_POS_RIGHT);
         if (bronto.parkingZone != 0) {
             drive.followTrajectory(TC.SCANPARK_forward(drive, bronto.START_POS_RIGHT));
+            telemetry.addData("Motors", "front left (%.2f), front right (%.2f), back left (%.2f), back right (%.2f)", bronto.leftFront.getPower(), bronto.rightFront.getPower(), bronto.leftRear.getPower(), bronto.rightRear.getPower());
+            telemetry.update();
+
         } else {
             telemetry.addData("ParkingZone", "ERROR");
             telemetry.update();
-        }
+        }}}
 
-        if (bronto.parkingZone == 1) {
+    /*    if (bronto.parkingZone == 1) {
             drive.followTrajectory(TC.SCANPARK_strafeLeft(drive, TC.SCANPARK_forward(drive, bronto.START_POS_RIGHT).end()));
         } else if (bronto.parkingZone == 3) {
             drive.followTrajectory(TC.SCANPARK_strafeRight(drive, TC.SCANPARK_forward(drive, bronto.START_POS_RIGHT).end()));
         }
     }
-}
+}*/
