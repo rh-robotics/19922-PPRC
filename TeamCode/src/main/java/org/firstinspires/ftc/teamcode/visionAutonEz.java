@@ -38,7 +38,7 @@ public class visionAutonEz extends LinearOpMode {
         bronto.rightFront.setDirection(DcMotorEx.Direction.REVERSE);
         bronto.rightRear.setDirection(DcMotorEx.Direction.REVERSE);
 
-        waitForStart();
+
 
 
         // Tell driver bronto is ready and waiting for start
@@ -63,20 +63,43 @@ public class visionAutonEz extends LinearOpMode {
         sleep(500);
         bronto.frontArm.setPower(0);
         bronto.backArm.setPower(0);*/
-        bronto.move_to_position_and_hold(bronto.frontElbow, 0.5, bronto.frontElbow.getCurrentPosition());
-        bronto.move_to_position_and_hold(bronto.backElbow, 0.5, bronto.backElbow.getCurrentPosition());
+      //  bronto.move_to_position_and_hold(bronto.frontElbow, 0.5, bronto.frontElbow.getCurrentPosition());
+        //bronto.move_to_position_and_hold(bronto.backElbow, 0.5, bronto.backElbow.getCurrentPosition());
+        if (bronto.parkingZone == 3) {
+            bronto.leftFront.setPower(1);
+            bronto.leftRear.setPower(-1);
+            bronto.rightFront.setPower(-1);
+            bronto.rightRear.setPower(1);
+            sleep(1300);
+            bronto.leftFront.setPower(0);
+            bronto.leftRear.setPower(0);
+            bronto.rightFront.setPower(0);
+            bronto.rightRear.setPower(0);
 
-
+        } else if (bronto.parkingZone == 1) {
+            bronto.leftFront.setPower(-1);
+            bronto.leftRear.setPower(1);
+            bronto.rightFront.setPower(1);
+            bronto.rightRear.setPower(-1);
+            sleep(1100);
+            bronto.leftFront.setPower(0);
+            bronto.leftRear.setPower(0);
+            bronto.rightFront.setPower(0);
+            bronto.rightRear.setPower(0);
+        }
+        sleep(3000);
         if (bronto.parkingZone != 0) {
             bronto.leftFront.setPower(0.5);
             bronto.leftRear.setPower(0.5);
             bronto.rightFront.setPower(0.5);
             bronto.rightRear.setPower(0.5);
-            sleep(1200);
+            sleep(1300);
             bronto.leftFront.setPower(0);
             bronto.leftRear.setPower(0);
             bronto.rightFront.setPower(0);
             bronto.rightRear.setPower(0);
+
+
             telemetry.addData("Motors", "front left (%.2f), front right (%.2f), back left (%.2f), back right (%.2f)", bronto.leftFront.getPower(), bronto.rightFront.getPower(), bronto.leftRear.getPower(), bronto.rightRear.getPower());
             telemetry.update();
 
@@ -85,7 +108,7 @@ public class visionAutonEz extends LinearOpMode {
             bronto.leftRear.setPower(0.5);
             bronto.rightFront.setPower(0.5);
             bronto.rightRear.setPower(0.5);
-            sleep(1200);
+            sleep(1300);
             bronto.leftFront.setPower(0);
             bronto.leftRear.setPower(0);
             bronto.rightFront.setPower(0);
@@ -94,34 +117,7 @@ public class visionAutonEz extends LinearOpMode {
             telemetry.update();
 
 
-            if (bronto.parkingZone == 1) {
-                bronto.leftFront.setTargetPosition(300);
-                bronto.leftRear.setTargetPosition(-300);
-                bronto.rightFront.setTargetPosition(-300);
-                bronto.rightRear.setTargetPosition(300);
-                bronto.leftFront.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-                bronto.leftRear.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-                bronto.rightFront.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-                bronto.rightRear.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-                bronto.leftFront.setPower(0.5);
-                bronto.leftRear.setPower(0.5);
-                bronto.rightFront.setPower(0.5);
-                bronto.rightRear.setPower(0.5);
 
-            } else if (bronto.parkingZone == 3) {
-                bronto.leftFront.setTargetPosition(-300);
-                bronto.leftRear.setTargetPosition(300);
-                bronto.rightFront.setTargetPosition(300);
-                bronto.rightRear.setTargetPosition(-300);
-                bronto.leftFront.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-                bronto.leftRear.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-                bronto.rightFront.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-                bronto.rightRear.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-                bronto.leftFront.setPower(0.5);
-                bronto.leftRear.setPower(0.5);
-                bronto.rightFront.setPower(0.5);
-                bronto.rightRear.setPower(0.5);
-            }
         }
     }
 }

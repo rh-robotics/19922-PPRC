@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.util.Range;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
@@ -39,6 +40,10 @@ public class OfficialTeleOp extends OpMode
         bronto.frontArm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         bronto.backElbow.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         bronto.backArm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        bronto.leftFront.setDirection(DcMotorEx.Direction.FORWARD);
+        bronto.leftRear.setDirection(DcMotorEx.Direction.REVERSE);
+        bronto.rightFront.setDirection(DcMotorEx.Direction.REVERSE);
+        bronto.rightRear.setDirection(DcMotorEx.Direction.REVERSE);
         bronto.frontElbow.setTargetPosition(0);
         bronto.frontArm.setTargetPosition(0);
         bronto.backElbow.setTargetPosition(0);
