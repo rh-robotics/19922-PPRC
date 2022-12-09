@@ -22,4 +22,22 @@ public class TC {
         // TODO: Write trajectory
         return null;
     }
+
+    public static Trajectory SCANPARK_forward(SampleMecanumDrive drive, Pose2d pos) {
+        return drive.trajectoryBuilder(pos)
+                .forward(24)
+                .build();
+    }
+
+    public static Trajectory SCANPARK_strafeLeft(SampleMecanumDrive drive, Pose2d pos) {
+        return drive.trajectoryBuilder(pos)
+                .strafeLeft(24)
+                .build();
+    }
+
+    public static Trajectory SCANPARK_strafeRight(SampleMecanumDrive drive, Pose2d pos) {
+        return drive.trajectoryBuilder(pos)
+                .strafeRight(24)
+                .build();
+    }
 }

@@ -65,10 +65,9 @@ public class autonRight extends LinearOpMode {
             backArmTarget = bronto.backHighPolePos;
             backElbowTarget = bronto.backElbowDeliveryPosHigh;
 
-            // TODO: Check range values
-            while (!bronto.closeEnough(bronto.frontArm.getCurrentPosition(), frontArmTarget, 15)
+            while (!bronto.closeEnough(bronto.frontArm.getCurrentPosition(), frontArmTarget, 5)
                     && !bronto.closeEnough(bronto.frontElbow.getCurrentPosition(), frontElbowTarget, 2)
-                    && !bronto.closeEnough(bronto.backArm.getCurrentPosition(), backArmTarget, 15)
+                    && !bronto.closeEnough(bronto.backArm.getCurrentPosition(), backArmTarget, 5)
                     && !bronto.closeEnough(bronto.backElbow.getCurrentPosition(), backElbowTarget, 2)) {
               bronto.frontArmComponent.moveUsingPID(frontArmTarget);
               bronto.backArmComponent.moveUsingPID(backArmTarget);
@@ -94,11 +93,9 @@ public class autonRight extends LinearOpMode {
             backArmTarget = bronto.backHighPolePos;
             backElbowTarget = bronto.backElbowTransferPos;
 
-
-            // TODO: Check range values
-            while (!bronto.closeEnough(bronto.frontArm.getCurrentPosition(), frontArmTarget, 15)
+            while (!bronto.closeEnough(bronto.frontArm.getCurrentPosition(), frontArmTarget, 5)
                     && !bronto.closeEnough(bronto.frontElbow.getCurrentPosition(), frontElbowTarget, 2)
-                    && !bronto.closeEnough(bronto.backArm.getCurrentPosition(), backArmTarget, 15)
+                    && !bronto.closeEnough(bronto.backArm.getCurrentPosition(), backArmTarget, 5)
                     && !bronto.closeEnough(bronto.backElbow.getCurrentPosition(), backElbowTarget, 2)) {
                 bronto.frontArmComponent.moveUsingPID(frontArmTarget);
                 bronto.backArmComponent.moveUsingPID(backArmTarget);
@@ -120,10 +117,9 @@ public class autonRight extends LinearOpMode {
             backArmTarget = bronto.backHighPolePos;
             backElbowTarget = bronto.backElbowDeliveryPosHigh;
 
-            // TODO: Check range values
-            while (!bronto.closeEnough(bronto.frontArm.getCurrentPosition(), frontArmTarget, 15)
+            while (!bronto.closeEnough(bronto.frontArm.getCurrentPosition(), frontArmTarget, 5)
                     && !bronto.closeEnough(bronto.frontElbow.getCurrentPosition(), frontElbowTarget, 2)
-                    && !bronto.closeEnough(bronto.backArm.getCurrentPosition(), backArmTarget, 15)
+                    && !bronto.closeEnough(bronto.backArm.getCurrentPosition(), backArmTarget, 5)
                     && !bronto.closeEnough(bronto.backElbow.getCurrentPosition(), backElbowTarget, 2)) {
                 bronto.frontArmComponent.moveUsingPID(frontArmTarget);
                 bronto.backArmComponent.moveUsingPID(backArmTarget);
