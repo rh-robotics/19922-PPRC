@@ -37,6 +37,12 @@ public class visionAutonEz extends LinearOpMode {
         bronto.leftRear.setDirection(DcMotorEx.Direction.REVERSE);
         bronto.rightFront.setDirection(DcMotorEx.Direction.REVERSE);
         bronto.rightRear.setDirection(DcMotorEx.Direction.REVERSE);
+        bronto.frontElbow.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
+        bronto.backElbow.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
+        bronto.frontElbow.setTargetPosition(0);
+        bronto.backElbow.setTargetPosition(0);
+        bronto.frontElbow.setPower(0.5);
+        bronto.backElbow.setPower(0.5);
 
 
 
@@ -65,6 +71,11 @@ public class visionAutonEz extends LinearOpMode {
         bronto.backArm.setPower(0);*/
       //  bronto.move_to_position_and_hold(bronto.frontElbow, 0.5, bronto.frontElbow.getCurrentPosition());
         //bronto.move_to_position_and_hold(bronto.backElbow, 0.5, bronto.backElbow.getCurrentPosition());
+        bronto.frontElbow.setTargetPosition(0);
+        bronto.backElbow.setTargetPosition(0);
+        bronto.frontElbow.setPower(0.5);
+        bronto.backElbow.setPower(0.5);
+
         if (bronto.parkingZone == 3) {
             bronto.leftFront.setPower(1);
             bronto.leftRear.setPower(-1);
@@ -87,7 +98,9 @@ public class visionAutonEz extends LinearOpMode {
             bronto.rightFront.setPower(0);
             bronto.rightRear.setPower(0);
         }
-        sleep(3000);
+
+        sleep(2000);
+
         if (bronto.parkingZone != 0) {
             bronto.leftFront.setPower(0.5);
             bronto.leftRear.setPower(0.5);
