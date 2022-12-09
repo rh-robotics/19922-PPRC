@@ -47,9 +47,13 @@ public class visionAutonEz extends LinearOpMode {
         }
 
         waitForStart();
-
-        bronto.move_to_position_and_hold(bronto.frontElbow, 0.5, 300);
-        bronto.move_to_position_and_hold(bronto.backElbow, 0.5, -300);
+        bronto.frontArm.setPower(1);
+        bronto.backArm.setPower(1);
+        sleep(200);
+        bronto.frontArm.setPower(0);
+        bronto.backArm.setPower(0);
+        bronto.move_to_position_and_hold(bronto.frontElbow, 0.5, bronto.frontElbow.getCurrentPosition());
+        bronto.move_to_position_and_hold(bronto.backElbow, 0.5, bronto.backElbow.getCurrentPosition());
         telemetry.addData("Status", "Running");
         telemetry.update();
         if (bronto.parkingZone != 0) {
