@@ -56,12 +56,12 @@ public class rightAutonScanPark extends LinearOpMode {
         } else {
             telemetry.addData("ParkingZone", "ERROR");
             telemetry.update();
-        }}}
+        }
 
-    /*    if (bronto.parkingZone == 1) {
+        if (bronto.parkingZone == 1) {
             drive.followTrajectory(TC.SCANPARK_strafeLeft(drive, TC.SCANPARK_forward(drive, bronto.START_POS_RIGHT).end()));
         } else if (bronto.parkingZone == 3) {
             drive.followTrajectory(TC.SCANPARK_strafeRight(drive, TC.SCANPARK_forward(drive, bronto.START_POS_RIGHT).end()));
         }
     }
-}*/
+}
