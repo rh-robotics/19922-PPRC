@@ -106,7 +106,7 @@ public class visionAutonEz extends LinearOpMode {
             bronto.leftRear.setPower(0.5);
             bronto.rightFront.setPower(0.5);
             bronto.rightRear.setPower(0.5);
-            sleep(1300);
+            sleep(1500);
             bronto.leftFront.setPower(0);
             bronto.leftRear.setPower(0);
             bronto.rightFront.setPower(0);
@@ -121,7 +121,7 @@ public class visionAutonEz extends LinearOpMode {
             bronto.leftRear.setPower(0.5);
             bronto.rightFront.setPower(0.5);
             bronto.rightRear.setPower(0.5);
-            sleep(1300);
+            sleep(1500);
             bronto.leftFront.setPower(0);
             bronto.leftRear.setPower(0);
             bronto.rightFront.setPower(0);

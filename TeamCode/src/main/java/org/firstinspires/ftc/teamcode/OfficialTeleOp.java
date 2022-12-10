@@ -134,11 +134,12 @@ public class OfficialTeleOp extends OpMode
             frontElbowPow = gamepad2.right_stick_y;
             bronto.frontElbow.setTargetPosition(bronto.frontElbow.getCurrentPosition());
 
-        } else {
+        } else {bronto.frontElbow.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             if (bronto.frontElbow.getCurrentPosition() - bronto.frontElbow.getTargetPosition() > 10 || bronto.frontElbow.getCurrentPosition() - bronto.frontElbow.getTargetPosition() < 5){
                    frontElbowPow = 0.6;}
                 else {
                  frontElbowPow = 0.45;}
+
         }
 
         if (gamepad2.left_stick_y > 0) {
