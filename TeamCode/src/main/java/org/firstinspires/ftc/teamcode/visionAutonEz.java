@@ -37,12 +37,9 @@ public class visionAutonEz extends LinearOpMode {
         bronto.leftRear.setDirection(DcMotorEx.Direction.REVERSE);
         bronto.rightFront.setDirection(DcMotorEx.Direction.REVERSE);
         bronto.rightRear.setDirection(DcMotorEx.Direction.REVERSE);
-        bronto.frontElbow.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
-        bronto.backElbow.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
-        bronto.frontElbow.setTargetPosition(0);
-        bronto.backElbow.setTargetPosition(0);
-        bronto.frontElbow.setPower(0.5);
-        bronto.backElbow.setPower(0.5);
+        bronto.frontElbow.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
+        bronto.backElbow.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
+
 
 
 
@@ -71,17 +68,21 @@ public class visionAutonEz extends LinearOpMode {
         bronto.backArm.setPower(0);*/
       //  bronto.move_to_position_and_hold(bronto.frontElbow, 0.5, bronto.frontElbow.getCurrentPosition());
         //bronto.move_to_position_and_hold(bronto.backElbow, 0.5, bronto.backElbow.getCurrentPosition());
-        bronto.frontElbow.setTargetPosition(0);
-        bronto.backElbow.setTargetPosition(0);
-        bronto.frontElbow.setPower(0.5);
-        bronto.backElbow.setPower(0.5);
+        sleep(12000);
+        bronto.frontElbow.setPower(-0.15);
+        bronto.backElbow.setPower(0.15);
+        sleep(1000);
+        bronto.frontElbow.setPower(-0.5);
+        bronto.backElbow.setPower(0.05);
+
+
 
         if (bronto.parkingZone == 3) {
             bronto.leftFront.setPower(1);
             bronto.leftRear.setPower(-1);
             bronto.rightFront.setPower(-1);
             bronto.rightRear.setPower(1);
-            sleep(1300);
+            sleep(1800);
             bronto.leftFront.setPower(0);
             bronto.leftRear.setPower(0);
             bronto.rightFront.setPower(0);
@@ -92,7 +93,7 @@ public class visionAutonEz extends LinearOpMode {
             bronto.leftRear.setPower(1);
             bronto.rightFront.setPower(1);
             bronto.rightRear.setPower(-1);
-            sleep(1100);
+            sleep(1800);
             bronto.leftFront.setPower(0);
             bronto.leftRear.setPower(0);
             bronto.rightFront.setPower(0);
