@@ -86,8 +86,8 @@ public class OfficialTeleOp extends OpMode
         double turn  =  gamepad1.left_stick_x * 0.6;
         double strafe = -gamepad1.right_stick_x * 0.8;
         boolean frontArmUp = gamepad2.right_bumper;
-        double frontArmDown = -gamepad2.right_trigger;
-        boolean backArmUp = gamepad2.left_bumper;
+        boolean frontArmDown = gamepad2.left_bumper;
+        double backArmUp = gamepad2.right_trigger;
         double backArmDown = -gamepad2.left_trigger;
 
         boolean elbowFOn = false;
@@ -103,16 +103,16 @@ public class OfficialTeleOp extends OpMode
         if (frontArmUp) {
             bronto.frontArm.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
             frontArmPow = 1;
-        } else if (frontArmDown < 0) {
+        } else if (frontArmDown) {
             bronto.frontArm.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-            frontArmPow = frontArmDown;}
+            frontArmPow = -1;}
         else{
             frontArmPow = 0;}
 
-        if (backArmUp) {
+        if (backArmUp > 1) {
             bronto.backArm.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-            backArmPow = 1;
-        } else if (backArmDown < 0) {
+            backArmPow = backArmUp;
+        } else if (backArmDown != 0) {
             bronto.backArm.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
             backArmPow = backArmDown;
         }
