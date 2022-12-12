@@ -19,7 +19,7 @@ First, make sure you have the latest version of [Android Studio](https://develop
 
 Next, clone this repository to your computer by running the following command:
 ```
-git clone https://github.com/IronLionsFTC/19922-PPRC.git
+git clone https://github.com/rh-robotics/19922-PPRC.git
 ```
 
 ## Setting Up Android Studio
