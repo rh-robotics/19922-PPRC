@@ -1,12 +1,13 @@
 package org.firstinspires.ftc.teamcode;
 
 import static com.qualcomm.robotcore.hardware.DcMotor.RunMode.RUN_TO_POSITION;
-import static com.qualcomm.robotcore.hardware.DcMotor.RunMode.RUN_USING_ENCODER;
-import static com.qualcomm.robotcore.hardware.DcMotor.RunMode.STOP_AND_RESET_ENCODER;
 import static com.qualcomm.robotcore.hardware.DcMotor.RunMode.RUN_WITHOUT_ENCODER;
+import static com.qualcomm.robotcore.hardware.DcMotor.RunMode.STOP_AND_RESET_ENCODER;
+
 import androidx.annotation.NonNull;
 
 import com.acmerobotics.roadrunner.geometry.Pose2d;
+import com.arcrobotics.ftclib.controller.PIDController;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -20,10 +21,6 @@ import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 import org.openftc.easyopencv.OpenCvCamera;
 import org.openftc.easyopencv.OpenCvCameraFactory;
-import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorEx;
-import com.qualcomm.robotcore.util.Range;
-import com.qualcomm.robotcore.util.ElapsedTime;
 
 public class HWC {
     // Declare empty variables for robot hardware
@@ -113,6 +110,14 @@ public class HWC {
     public RobotComponents frontElbowComponent;
     public RobotComponents backElbowComponent;
 
+    //second try
+    public PIDController frontElbowPID;
+    public PIDController backElbowPID;
+    public PIDController frontArmPID;
+    public PIDController backArmPID;
+    public final double F = .05; //f value is same for both front and back elbow, this keeps it steady
+    public final double TICKS_IN_DEGREES = 145.1/360; //also same for both elbows, helps calculate holding power
+
     public HWC(@NonNull HardwareMap hardwareMap, Telemetry telemetry) {
         this.telemetry = telemetry;
 
@@ -129,8 +134,14 @@ public class HWC {
         //declare all arm components with PID values, 435rpm motors have 354.5 ppr, 60rpm has 145.1 ppr multiplied by gear ratio
         frontElbowComponent = new RobotComponents (frontElbow, 145.1, 0.03, 0.3, 0.0006, 0.05);
         backElbowComponent = new RobotComponents (backElbow, 145.1, 0.018, 0.2, 0.001, 0.05);
-        frontArmComponent = new RobotComponents (frontArm, 384.5 * 24, 0.024, .4, 0.0005, 0);
+        frontArmComponent = new RobotComponents (frontArm, 384.5 * 24, 0.024, 0.4, 0.0005, 0);
         backArmComponent = new RobotComponents (backArm, 384.5 * 28, 0.03, 0, 0.0004, 0);
+
+        //second try
+        frontElbowPID = new PIDController(.03, .3, .0006);
+        backElbowPID = new PIDController(.018, .2, .001);
+        frontArmPID = new PIDController(.024, .4, .0005);
+        backArmPID = new PIDController(.03, 0, .0004);
 
         // Declare servos
         frontIntakeL = hardwareMap.get(CRServo.class, "intakeL");
