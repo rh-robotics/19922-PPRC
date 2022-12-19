@@ -128,15 +128,15 @@ public class BrontoTeleOP extends OpMode
          */
 
           if (gamepad2.left_stick_x != 0) { //manual control just changes target, large numbers b/c large ticks needed
-              frontElbowTarget += (gamepad2.left_stick_x * 50);
+              frontElbowTarget += (gamepad2.left_stick_x * 10);
           } else if (gamepad2.left_stick_y != 0) {
-              backElbowTarget += (gamepad2.left_stick_y * 50);
+              backElbowTarget += (gamepad2.left_stick_y * 10);
           }
 
           if (gamepad2.right_stick_x != 0) {
-              frontArmTarget += (gamepad2.right_stick_x * 500);
+              frontArmTarget += (gamepad2.right_stick_x * 50);
           } else if (gamepad2.right_stick_y != 0) {
-              backArmTarget += (gamepad2.right_stick_y * 500);
+              backArmTarget += (gamepad2.right_stick_y * 50);
           }
 
 
@@ -276,7 +276,7 @@ public class BrontoTeleOP extends OpMode
                 bronto.frontIntakeL.setPower(intakePow);
                 bronto.frontIntakeR.setPower(intakePow);
                 //if arm motors are close enough, set to 0 b/c power draw and worm gear already holds it
-        /*
+
                 if (bronto.closeEnough(bronto.frontArm.getCurrentPosition(), frontArmTarget, 5)) {
                     bronto.frontArm.setPower(0);
                 } else {bronto.frontArmComponent.moveUsingPID(frontArmTarget);}
@@ -286,8 +286,8 @@ public class BrontoTeleOP extends OpMode
                 bronto.frontElbowComponent.moveUsingPID(frontElbowTarget);
                 bronto.backElbowComponent.moveUsingPID(backElbowTarget);
 
-         */
 
+/*
                 //recalculate all PID and set power
                 if (bronto.closeEnough(bronto.frontArm.getCurrentPosition(), frontArmTarget, 15)) {
                     bronto.frontArm.setPower(0);
@@ -312,6 +312,7 @@ public class BrontoTeleOP extends OpMode
                 ff = Math.cos(Math.toRadians(backElbowTarget / bronto.TICKS_IN_DEGREES)) * bronto.F;
                 power = pid + ff;
                 bronto.backElbow.setPower(power);
+                */
 
 
         telemetry.addData("frontArm Pos", bronto.frontArm.getCurrentPosition());

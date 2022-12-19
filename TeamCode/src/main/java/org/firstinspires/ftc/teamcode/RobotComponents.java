@@ -20,7 +20,7 @@ public class RobotComponents {
 
     public void moveUsingPID (int target) {
 
-
+        controller.reset();
         motor.setMode(DcMotorEx.RunMode.RUN_WITHOUT_ENCODER);
         int armPos = motor.getCurrentPosition();
         double pid = controller.calculate(armPos, target);

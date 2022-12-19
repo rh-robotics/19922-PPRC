@@ -86,8 +86,8 @@ public class HWC {
     int highPolePos = 4942;
     int transferPos = 4942;
     int elbowRestingPos = 0;
-    int elbowIntakePos = -893;
-    int elbowTransferPos =  -233;
+    int elbowIntakePos = 601;
+    int elbowTransferPos =  524;
     int elbowDeliveryPosLow = 942;
     int elbowDeliveryPosMed = 1254;
     int elbowDeliveryPosHigh = 686;
@@ -96,14 +96,14 @@ public class HWC {
     int backIntakePos = -1325;
     int backLowPolePos = -3646;
     int backMedPolePos = -4838;
-    int backHighPolePos = -4838;
+    int backHighPolePos = -5683;
     int backDeliveryPos = -4838;
     int backElbowRestingPos = 0;
     int backElbowIntakePos = 319;
-    int backElbowTransferPos = 370;
+    int backElbowTransferPos = -417;
     int backElbowDeliveryPosLow = 1679;
     int backElbowDeliveryPosMed = 1365;
-    int backElbowDeliveryPosHigh = 980;
+    int backElbowDeliveryPosHigh = 1788;
 
     public RobotComponents frontArmComponent;
     public RobotComponents backArmComponent;
