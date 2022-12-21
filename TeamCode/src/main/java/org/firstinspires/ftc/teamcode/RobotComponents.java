@@ -31,6 +31,12 @@ public class RobotComponents {
         motor.setPower(power);
 
     }
+
+    public boolean closeEnough (int target, int range) {
+        if ((target - range <= motor.getCurrentPosition()) && (target + range >= motor.getCurrentPosition())) return true;
+        return false;
+    }
+
         /*
         public double[] pidf() {
             return [p, i, d, f];

@@ -191,7 +191,7 @@ public class OfficialTeleOp extends OpMode
             }
             bronto.backArm.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
             bronto.backArm.setPower(1);
-            if (bronto.rearButton.getValue() > 0.9 && bronto.backArm.getCurrentPosition() > 500 || bronto.backArm.getCurrentPosition() > 4000){
+            if (bronto.backButton.getValue() > 0.9 && bronto.backArm.getCurrentPosition() > 500 || bronto.backArm.getCurrentPosition() > 4000){
                 bronto.move_to_position_and_hold(bronto.backArm,1, bronto.backArm.getCurrentPosition());
                 bronto.backHighPolePos = bronto.backArm.getCurrentPosition();
             }
@@ -212,7 +212,7 @@ public class OfficialTeleOp extends OpMode
                 bronto.move_to_position_and_hold(bronto.frontArm, 1 , bronto.frontArm.getCurrentPosition());
             }
             bronto.move_to_position_and_hold(bronto.backArm,1, bronto.backHighPolePos);
-            if (bronto.rearButton.getValue() > 0.9 && bronto.backArm.getCurrentPosition() > 500){
+            if (bronto.backButton.getValue() > 0.9 && bronto.backArm.getCurrentPosition() > 500){
                 bronto.move_to_position_and_hold(bronto.backArm,1, bronto.backArm.getCurrentPosition());
                 bronto.backHighPolePos = bronto.backArm.getCurrentPosition();
             }
@@ -222,7 +222,7 @@ public class OfficialTeleOp extends OpMode
                 state = TeleOpStates.HIGH_POLE;}
           else if (gamepad1.x){
             bronto.move_to_position_and_hold(bronto.backArm,1, bronto.backHighPolePos);
-            if (bronto.rearButton.getValue() > 0.9 && bronto.backArm.getCurrentPosition() > 500){
+            if (bronto.backButton.getValue() > 0.9 && bronto.backArm.getCurrentPosition() > 500){
                 bronto.move_to_position_and_hold(bronto.backArm,1, bronto.backArm.getCurrentPosition());
                 bronto.backHighPolePos = bronto.backArm.getCurrentPosition();
             }

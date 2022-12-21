@@ -31,7 +31,7 @@ public class HWC {
     public ColorSensor frontIntakeSensor, backIntakeSensor, transferSensor;
     public DistanceSensor frontDistanceSensor, backDistanceSensor;
     public int cameraMonitorViewId;
-    public TouchSensor frontButton, rearButton;
+    public TouchSensor frontButton, backButton;
 
     // CV vars
     OpenCvCamera camera;
@@ -151,7 +151,7 @@ public class HWC {
         backIntakeSensor = hardwareMap.get(ColorSensor.class, "CS_B");
         transferSensor = hardwareMap.get(ColorSensor.class, "CS_T");
         frontButton = hardwareMap.get(TouchSensor.class, "F_Button");
-        rearButton = hardwareMap.get(TouchSensor.class, "R_Button");
+        backButton = hardwareMap.get(TouchSensor.class, "B_Button");
         frontDistanceSensor = hardwareMap.get(DistanceSensor.class, "F_Dist");
         backDistanceSensor = hardwareMap.get(DistanceSensor.class, "B_Dist");
 
