@@ -204,13 +204,6 @@ public class HWC {
         drive = new SampleMecanumDrive(hardwareMap);
     }
 
-    // Functions Below Because Function Class is Hard and Annoying
-
-    public boolean closeEnough (int current, int target, int range) {
-        if ((target - range <= current) && (target + range >= current)) return true;
-        return false;
-    }
-
     //all this does is check how far off it is from a target then returns an int to adjust encoder target
     public int moveByDistance (DistanceSensor sensor, int target) {
         if ((int) sensor.getDistance(DistanceUnit.CM) - target < 0) {
@@ -260,7 +253,6 @@ public class HWC {
         return true;
 
     }
-
 
     // Function used to move any motor to different positions and hold it.
     public void move_to_position_and_hold(DcMotorEx motor, double power, int position){

@@ -238,14 +238,16 @@ public class BrontoTeleOP extends OpMode
 
         /*if arm motors are close enough, set to 0 b/c power draw and worm gear already holds it
         now also checking if buttons are pressed,
-        this could be a || ONLY IF THE BUTTON PRESSES TRACK WHERE IT IS OR BOX POSITION TRIGGER IS TAKEN OFF
-        Otherwise, it could turn off the motor while still in box pos b/c button is triggered
-        Could possibly also check that state isn't resting instead
+        ok this is an OR that will set power to 0 if position is close enough OR
+        button is pressed when state is not resting, this might be really bad but idk
+        TODO: TEST THIS CRAP
          */
-        if (bronto.frontArmComponent.closeEnough(frontArmTarget, 5) && bronto.frontButton.isPressed()) {
+        if (bronto.frontArmComponent.closeEnough(frontArmTarget, 5) ||
+                (bronto.frontButton.isPressed() && state != TeleOpStates.RESTING)) {
             bronto.frontArm.setPower(0);
         } else {bronto.frontArmComponent.moveUsingPID(frontArmTarget);}
-        if (bronto.backArmComponent.closeEnough(backArmTarget, 5) && bronto.backButton.isPressed()) {
+        if (bronto.backArmComponent.closeEnough(backArmTarget, 5) ||
+                bronto.backButton.isPressed() && state != TeleOpStates.RESTING) {
             bronto.backArm.setPower(0);
         } else {bronto.backArmComponent.moveUsingPID(backArmTarget);}
         bronto.frontElbowComponent.moveUsingPID(frontElbowTarget);
