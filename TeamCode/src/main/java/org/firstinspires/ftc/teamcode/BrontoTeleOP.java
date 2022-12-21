@@ -224,6 +224,8 @@ public class BrontoTeleOP extends OpMode
                         break;
                     case DELIVERING:
                         telemetry.addData("Arm State", "High Pole");
+                        //TODO: check if should be -= and adjust target
+                        backElbowTarget += bronto.moveByDistance(bronto.backDistanceSensor, 150);
                         //TODO: MAKE OUTTAKE pwr
                         intakePow = -1;
                       if  (bronto.returnColor(bronto.backIntakeSensor) == "unknown"){
@@ -233,6 +235,12 @@ public class BrontoTeleOP extends OpMode
                         break;
                     case INTAKE:
                         telemetry.addData("Arm State", "Intake");
+                        /*
+                        basically this should add to the target some small value once it is intaking to fine tune its
+                        distance from the ground
+                        TODO: check if should be -= and adjust target
+                         */
+                        frontElbowTarget += bronto.moveByDistance(bronto.frontDistanceSensor, 7);
                         //TODO: MAKE INTAKE PWR
                         intakePow = 1;
                         if (bronto.returnColor(bronto.frontIntakeSensor) != "unknown"){
@@ -252,6 +260,10 @@ public class BrontoTeleOP extends OpMode
                         break;
                     case TRANSFER:
                         telemetry.addData("Arm State", "Transfer");
+                        //TODO: check if should be -= and adjust target
+                        //thus both should be at the same height and aligned
+                        frontElbowTarget += bronto.moveByDistance(bronto.frontDistanceSensor, 50);
+                        backElbowTarget += bronto.moveByDistance(bronto.backDistanceSensor, 50);
                         if (bronto.returnColor(bronto.transferSensor) != "unknown"){
                         intakePow = 1;}
                         if (bronto.returnColor(bronto.backIntakeSensor) != "unknown"){

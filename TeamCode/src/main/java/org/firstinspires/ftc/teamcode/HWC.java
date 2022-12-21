@@ -12,12 +12,14 @@ import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
+import com.qualcomm.robotcore.hardware.DistanceSensor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.TouchSensor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
+import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 import org.openftc.easyopencv.OpenCvCamera;
 import org.openftc.easyopencv.OpenCvCameraFactory;
@@ -27,6 +29,7 @@ public class HWC {
     public DcMotorEx leftFront, rightFront, leftRear, rightRear, frontArm, frontElbow, backArm, backElbow;
     public CRServo frontIntakeL, frontIntakeR, backIntakeR, backIntakeL;
     public ColorSensor frontIntakeSensor, backIntakeSensor, transferSensor;
+    public DistanceSensor frontDistanceSensor, backDistanceSensor;
     public int cameraMonitorViewId;
     public TouchSensor frontButton, rearButton;
 
@@ -137,12 +140,6 @@ public class HWC {
         frontArmComponent = new RobotComponents (frontArm, 384.5 * 24, 0.024, 0.4, 0.0005, 0);
         backArmComponent = new RobotComponents (backArm, 384.5 * 28, 0.03, 0, 0.0004, 0);
 
-        //second try
-        frontElbowPID = new PIDController(.03, .3, .0006);
-        backElbowPID = new PIDController(.018, .2, .001);
-        frontArmPID = new PIDController(.024, .4, .0005);
-        backArmPID = new PIDController(.03, 0, .0004);
-
         // Declare servos
         frontIntakeL = hardwareMap.get(CRServo.class, "intakeL");
         frontIntakeR = hardwareMap.get(CRServo.class, "intakeR");
@@ -155,6 +152,8 @@ public class HWC {
         transferSensor = hardwareMap.get(ColorSensor.class, "CS_T");
         frontButton = hardwareMap.get(TouchSensor.class, "F_Button");
         rearButton = hardwareMap.get(TouchSensor.class, "R_Button");
+        frontDistanceSensor = hardwareMap.get(DistanceSensor.class, "F_Dist");
+        backDistanceSensor = hardwareMap.get(DistanceSensor.class, "B_Dist");
 
         // Camera
         cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
@@ -212,6 +211,15 @@ public class HWC {
         return false;
     }
 
+    //all this does is check how far off it is from a target then returns an int to adjust encoder target
+    public int moveByDistance (DistanceSensor sensor, int target) {
+        if ((int) sensor.getDistance(DistanceUnit.CM) - target < 0) {
+            return 5;
+        } else if ((int) sensor.getDistance(DistanceUnit.CM) - target > 0) {
+            return -5; //TODO: these negatives are random and should be checked (they dont really matter tho cuz each motor will be diff)
+        }
+        return 0;
+    }
 
     // Function to run intake set of servos to intake a cone/transfer to other arm
     public void runIntakeServo(char servo, double power) {
