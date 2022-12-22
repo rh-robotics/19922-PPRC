@@ -7,7 +7,6 @@ import static com.qualcomm.robotcore.hardware.DcMotor.RunMode.STOP_AND_RESET_ENC
 import androidx.annotation.NonNull;
 
 import com.acmerobotics.roadrunner.geometry.Pose2d;
-import com.arcrobotics.ftclib.controller.PIDController;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -83,43 +82,35 @@ public class HWC {
     //We should both be using these in all our code. Makes it much easier to tune as only one person has to
     //BS numbers but I needed something
     int armRestingPos = 0;
-    int intakePos = 2164;
-    int lowPolePos = -2560;
-    int medPolePos = -4079;
-    int highPolePos = 4942;
-    int transferPos = 4942;
-    int elbowRestingPos = 0;
-    int elbowIntakePos = 601;
-    int elbowTransferPos =  524;
-    int elbowDeliveryPosLow = 942;
-    int elbowDeliveryPosMed = 1254;
-    int elbowDeliveryPosHigh = 686;
+    int frontArmIntakePos = 2164;
+    int frontArmLowPos = -2560;
+    int frontArmMedPos = -4079;
+    int frontArmHighPos = 4942;
+    int frontArmTransPos = frontArmHighPos;
+    int frontElbowRestPos = 0;
+    int frontElbowIntakePos = 601;
+    int frontElbowTransPos =  524;
+    int frontElbowLowPos = 942;
+    int frontElbowMedPos = 1254;
+    int frontElbowHighPos = 686;
 
-    int backArmRestingPos = 0;
-    int backIntakePos = -1325;
-    int backLowPolePos = -3646;
-    int backMedPolePos = -4838;
-    int backHighPolePos = -5683;
-    int backDeliveryPos = -4838;
-    int backElbowRestingPos = 0;
+    int backArmRestPos = 0;
+    int backArmIntakePos = -1325;
+    int backArmLowPos = -3646;
+    int backArmMedPos = -4838;
+    int backArmHighPos = -5683;
+    int backArmTransPos = backArmHighPos; //same
+    int backElbowRestPos = 0;
     int backElbowIntakePos = 319;
-    int backElbowTransferPos = -417;
-    int backElbowDeliveryPosLow = 1679;
-    int backElbowDeliveryPosMed = 1365;
-    int backElbowDeliveryPosHigh = 1788;
+    int backElbowTransPos = -417;
+    int backElbowLowPos = 1679;
+    int backElbowMedPos = 1365;
+    int backElbowHighPos = 1788;
 
     public RobotComponents frontArmComponent;
     public RobotComponents backArmComponent;
     public RobotComponents frontElbowComponent;
     public RobotComponents backElbowComponent;
-
-    //second try
-    public PIDController frontElbowPID;
-    public PIDController backElbowPID;
-    public PIDController frontArmPID;
-    public PIDController backArmPID;
-    public final double F = .05; //f value is same for both front and back elbow, this keeps it steady
-    public final double TICKS_IN_DEGREES = 145.1/360; //also same for both elbows, helps calculate holding power
 
     public HWC(@NonNull HardwareMap hardwareMap, Telemetry telemetry) {
         this.telemetry = telemetry;

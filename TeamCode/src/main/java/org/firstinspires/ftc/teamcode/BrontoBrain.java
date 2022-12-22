@@ -1,19 +1,9 @@
 package org.firstinspires.ftc.teamcode;
 
 
-import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.hardwareMap;
-import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.telemetry;
-
-import android.annotation.SuppressLint;
-
-import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.util.ElapsedTime;
-import androidx.annotation.NonNull;
 
-import org.firstinspires.ftc.robotcore.external.Telemetry;
-import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.openftc.easyopencv.OpenCvCamera;
-import org.openftc.easyopencv.OpenCvCameraFactory;
 import org.openftc.easyopencv.OpenCvCameraRotation;
 
 public class BrontoBrain {
@@ -28,25 +18,25 @@ public class BrontoBrain {
 
     public void mainCycle(int cycles){
         for (int i = 0; i < cycles; i++) {
-            bronto.frontArmComponent.moveUsingPID(bronto.intakePos);
-            bronto.frontElbowComponent.moveUsingPID(bronto.elbowIntakePos);
+            bronto.frontArmComponent.moveUsingPID(bronto.frontArmIntakePos);
+            bronto.frontElbowComponent.moveUsingPID(bronto.frontElbowIntakePos);
             bronto.runIntakeServo('F', 1);
             timer.reset();
             while(timer.milliseconds() < 2000){
                 // no sleep functions in teleOp. Probably for the best
                 }
             bronto.runIntakeServo('F', 0);
-            bronto.frontArmComponent.moveUsingPID(bronto.transferPos);
-            bronto.backArmComponent.moveUsingPID(bronto.backHighPolePos);
-            bronto.backElbowComponent.moveUsingPID(bronto.backElbowTransferPos);
-            bronto.frontElbowComponent.moveUsingPID(bronto.elbowTransferPos);
+            bronto.frontArmComponent.moveUsingPID(bronto.frontArmTransPos);
+            bronto.backArmComponent.moveUsingPID(bronto.backArmHighPos);
+            bronto.backElbowComponent.moveUsingPID(bronto.backElbowTransPos);
+            bronto.frontElbowComponent.moveUsingPID(bronto.frontElbowTransPos);
             bronto.runIntakeServo('A', 1);
             timer.reset();
             while(timer.milliseconds() < 2000){
                 // no sleep functions in teleOp. Probably for the best
             }
             bronto.runIntakeServo('A', 0);
-            bronto.backElbowComponent.moveUsingPID(bronto.backElbowDeliveryPosHigh);
+            bronto.backElbowComponent.moveUsingPID(bronto.backElbowHighPos);
             bronto.runIntakeServo('R', 1);
             timer.reset();
             while(timer.milliseconds() < 2000){
