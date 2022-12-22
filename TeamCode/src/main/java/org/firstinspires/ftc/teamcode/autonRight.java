@@ -65,10 +65,10 @@ public class autonRight extends LinearOpMode {
             backArmTarget = bronto.backHighPolePos;
             backElbowTarget = bronto.backElbowDeliveryPosHigh;
 
-            while (!bronto.closeEnough(bronto.frontArm.getCurrentPosition(), frontArmTarget, 5)
-                    && !bronto.closeEnough(bronto.frontElbow.getCurrentPosition(), frontElbowTarget, 2)
-                    && !bronto.closeEnough(bronto.backArm.getCurrentPosition(), backArmTarget, 5)
-                    && !bronto.closeEnough(bronto.backElbow.getCurrentPosition(), backElbowTarget, 2)) {
+            while (!bronto.frontArmComponent.closeEnough( frontArmTarget, 5)
+                    && !bronto.frontElbowComponent.closeEnough(frontElbowTarget, 2)
+                    && !bronto.backArmComponent.closeEnough(backArmTarget, 5)
+                    && !bronto.backElbowComponent.closeEnough(backElbowTarget, 2)) {
               bronto.frontArmComponent.moveUsingPID(frontArmTarget);
               bronto.backArmComponent.moveUsingPID(backArmTarget);
               bronto.frontElbowComponent.moveUsingPID(frontElbowTarget);
@@ -93,10 +93,10 @@ public class autonRight extends LinearOpMode {
             backArmTarget = bronto.backHighPolePos;
             backElbowTarget = bronto.backElbowTransferPos;
 
-            while (!bronto.closeEnough(bronto.frontArm.getCurrentPosition(), frontArmTarget, 5)
-                    && !bronto.closeEnough(bronto.frontElbow.getCurrentPosition(), frontElbowTarget, 2)
-                    && !bronto.closeEnough(bronto.backArm.getCurrentPosition(), backArmTarget, 5)
-                    && !bronto.closeEnough(bronto.backElbow.getCurrentPosition(), backElbowTarget, 2)) {
+            while (!bronto.frontArmComponent.closeEnough( frontArmTarget, 5)
+                    && !bronto.frontElbowComponent.closeEnough(frontElbowTarget, 2)
+                    && !bronto.backArmComponent.closeEnough(backArmTarget, 5)
+                    && !bronto.backElbowComponent.closeEnough(backElbowTarget, 2)) {
                 bronto.frontArmComponent.moveUsingPID(frontArmTarget);
                 bronto.backArmComponent.moveUsingPID(backArmTarget);
                 bronto.frontElbowComponent.moveUsingPID(frontElbowTarget);
@@ -117,10 +117,10 @@ public class autonRight extends LinearOpMode {
             backArmTarget = bronto.backHighPolePos;
             backElbowTarget = bronto.backElbowDeliveryPosHigh;
 
-            while (!bronto.closeEnough(bronto.frontArm.getCurrentPosition(), frontArmTarget, 5)
-                    && !bronto.closeEnough(bronto.frontElbow.getCurrentPosition(), frontElbowTarget, 2)
-                    && !bronto.closeEnough(bronto.backArm.getCurrentPosition(), backArmTarget, 5)
-                    && !bronto.closeEnough(bronto.backElbow.getCurrentPosition(), backElbowTarget, 2)) {
+            while (!bronto.frontArmComponent.closeEnough( frontArmTarget, 5)
+                    && !bronto.frontElbowComponent.closeEnough(frontElbowTarget, 2)
+                    && !bronto.backArmComponent.closeEnough(backArmTarget, 5)
+                    && !bronto.backElbowComponent.closeEnough(backElbowTarget, 2)) {
                 bronto.frontArmComponent.moveUsingPID(frontArmTarget);
                 bronto.backArmComponent.moveUsingPID(backArmTarget);
                 bronto.frontElbowComponent.moveUsingPID(frontElbowTarget);
