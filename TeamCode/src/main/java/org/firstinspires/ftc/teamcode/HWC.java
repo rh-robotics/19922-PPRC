@@ -1,9 +1,9 @@
 package org.firstinspires.ftc.teamcode;
 
 import static com.qualcomm.robotcore.hardware.DcMotor.RunMode.RUN_TO_POSITION;
-import static com.qualcomm.robotcore.hardware.DcMotor.RunMode.RUN_USING_ENCODER;
-import static com.qualcomm.robotcore.hardware.DcMotor.RunMode.STOP_AND_RESET_ENCODER;
 import static com.qualcomm.robotcore.hardware.DcMotor.RunMode.RUN_WITHOUT_ENCODER;
+import static com.qualcomm.robotcore.hardware.DcMotor.RunMode.STOP_AND_RESET_ENCODER;
+
 import androidx.annotation.NonNull;
 
 import com.acmerobotics.roadrunner.geometry.Pose2d;
@@ -11,27 +11,26 @@ import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
+import com.qualcomm.robotcore.hardware.DistanceSensor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.TouchSensor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
+import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 import org.openftc.easyopencv.OpenCvCamera;
 import org.openftc.easyopencv.OpenCvCameraFactory;
-import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorEx;
-import com.qualcomm.robotcore.util.Range;
-import com.qualcomm.robotcore.util.ElapsedTime;
 
 public class HWC {
     // Declare empty variables for robot hardware
     public DcMotorEx leftFront, rightFront, leftRear, rightRear, frontArm, frontElbow, backArm, backElbow;
     public CRServo frontIntakeL, frontIntakeR, backIntakeR, backIntakeL;
     public ColorSensor frontIntakeSensor, backIntakeSensor, transferSensor;
+    public DistanceSensor frontDistanceSensor, backDistanceSensor;
     public int cameraMonitorViewId;
-    public TouchSensor frontButton, rearButton;
+    public TouchSensor frontButton, backButton;
 
     // CV vars
     OpenCvCamera camera;
@@ -83,30 +82,30 @@ public class HWC {
     //We should both be using these in all our code. Makes it much easier to tune as only one person has to
     //BS numbers but I needed something
     int armRestingPos = 0;
-    int intakePos = 2164;
-    int lowPolePos = -2560;
-    int medPolePos = -4079;
-    int highPolePos = 4942;
-    int transferPos = 4942;
-    int elbowRestingPos = 0;
-    int elbowIntakePos = -893;
-    int elbowTransferPos =  -233;
-    int elbowDeliveryPosLow = 942;
-    int elbowDeliveryPosMed = 1254;
-    int elbowDeliveryPosHigh = 686;
+    int frontArmIntakePos = 2164;
+    int frontArmLowPos = -2560;
+    int frontArmMedPos = -4079;
+    int frontArmHighPos = 4942;
+    int frontArmTransPos = frontArmHighPos;
+    int frontElbowRestPos = 0;
+    int frontElbowIntakePos = 601;
+    int frontElbowTransPos =  524;
+    int frontElbowLowPos = 942;
+    int frontElbowMedPos = 1254;
+    int frontElbowHighPos = 686;
 
-    int backArmRestingPos = 0;
-    int backIntakePos = -1325;
-    int backLowPolePos = -3646;
-    int backMedPolePos = -4838;
-    int backHighPolePos = -4838;
-    int backDeliveryPos = -4838;
-    int backElbowRestingPos = 0;
+    int backArmRestPos = 0;
+    int backArmIntakePos = -1325;
+    int backArmLowPos = -3646;
+    int backArmMedPos = -4838;
+    int backArmHighPos = -5683;
+    int backArmTransPos = backArmHighPos; //same
+    int backElbowRestPos = 0;
     int backElbowIntakePos = 319;
-    int backElbowTransferPos = 370;
-    int backElbowDeliveryPosLow = 1679;
-    int backElbowDeliveryPosMed = 1365;
-    int backElbowDeliveryPosHigh = 980;
+    int backElbowTransPos = -417;
+    int backElbowLowPos = 1679;
+    int backElbowMedPos = 1365;
+    int backElbowHighPos = 1788;
 
     public RobotComponents frontArmComponent;
     public RobotComponents backArmComponent;
@@ -129,7 +128,7 @@ public class HWC {
         //declare all arm components with PID values, 435rpm motors have 354.5 ppr, 60rpm has 145.1 ppr multiplied by gear ratio
         frontElbowComponent = new RobotComponents (frontElbow, 145.1, 0.03, 0.3, 0.0006, 0.05);
         backElbowComponent = new RobotComponents (backElbow, 145.1, 0.018, 0.2, 0.001, 0.05);
-        frontArmComponent = new RobotComponents (frontArm, 384.5 * 24, 0.024, .4, 0.0005, 0);
+        frontArmComponent = new RobotComponents (frontArm, 384.5 * 24, 0.024, 0.4, 0.0005, 0);
         backArmComponent = new RobotComponents (backArm, 384.5 * 28, 0.03, 0, 0.0004, 0);
 
         // Declare servos
@@ -143,7 +142,9 @@ public class HWC {
         backIntakeSensor = hardwareMap.get(ColorSensor.class, "CS_B");
         transferSensor = hardwareMap.get(ColorSensor.class, "CS_T");
         frontButton = hardwareMap.get(TouchSensor.class, "F_Button");
-        rearButton = hardwareMap.get(TouchSensor.class, "R_Button");
+        backButton = hardwareMap.get(TouchSensor.class, "B_Button");
+        frontDistanceSensor = hardwareMap.get(DistanceSensor.class, "F_Dist");
+        backDistanceSensor = hardwareMap.get(DistanceSensor.class, "B_Dist");
 
         // Camera
         cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
@@ -194,13 +195,15 @@ public class HWC {
         drive = new SampleMecanumDrive(hardwareMap);
     }
 
-    // Functions Below Because Function Class is Hard and Annoying
-
-    public boolean closeEnough (int current, int target, int range) {
-        if ((target - range <= current) && (target + range >= current)) return true;
-        return false;
+    //all this does is check how far off it is from a target then returns an int to adjust encoder target
+    public int moveByDistance (DistanceSensor sensor, int target) {
+        if ((int) sensor.getDistance(DistanceUnit.CM) - target < 0) {
+            return 5;
+        } else if ((int) sensor.getDistance(DistanceUnit.CM) - target > 0) {
+            return -5; //TODO: these negatives are random and should be checked (they dont really matter tho cuz each motor will be diff)
+        }
+        return 0;
     }
-
 
     // Function to run intake set of servos to intake a cone/transfer to other arm
     public void runIntakeServo(char servo, double power) {
@@ -241,7 +244,6 @@ public class HWC {
         return true;
 
     }
-
 
     // Function used to move any motor to different positions and hold it.
     public void move_to_position_and_hold(DcMotorEx motor, double power, int position){

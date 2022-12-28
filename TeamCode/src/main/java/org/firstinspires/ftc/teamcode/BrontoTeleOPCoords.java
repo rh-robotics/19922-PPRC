@@ -6,10 +6,11 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
+
 //@Disabled
 @TeleOp(name="Bronto's TeleOp", group="Iterative Opmode")
 
-public class BrontoTeleOP extends OpMode
+public class BrontoTeleOPCoords extends OpMode
 {
     /** Declare OpMode members. */
     HWC bronto;
@@ -32,6 +33,10 @@ public class BrontoTeleOP extends OpMode
     int backArmTarget = 0;
     int frontElbowTarget = 0;
     int backElbowTarget = 0;
+    double frontX = bronto.frontElbowComponent.elbowLength; //instance doesnt actually matter
+    double frontY = - bronto.frontArmComponent.armLength;
+    double backX = bronto.backElbowComponent.elbowLength; //instance doesnt actually matter
+    double backY = - bronto.backArmComponent.armLength;
 
     TeleOpStates state = TeleOpStates.RESTING;
     TeleOpStates nextState = TeleOpStates.UNKNOWN; //determines when a moving state completes and will go to
@@ -50,7 +55,7 @@ public class BrontoTeleOP extends OpMode
         bronto.backElbow.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         bronto.backArm.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
-        backArmTarget = bronto.backArmHighPos; //set back arm to back high pole immediately for power draw issues
+        //backArmTarget = bronto.backArmHighPos; //set back arm to back high pole immediately for power draw issues
 
         telemetry.addData("Status", "Initialized");
     }
@@ -104,15 +109,15 @@ public class BrontoTeleOP extends OpMode
 
         //manual arm control
         if (gamepad2.left_stick_x != 0) { //manual control just changes target, large numbers b/c large ticks needed
-            frontElbowTarget += (gamepad2.left_stick_x * 10);
+            backX += (gamepad2.left_stick_x);
         } else if (gamepad2.left_stick_y != 0) {
-            backElbowTarget += (gamepad2.left_stick_y * 10);
+            backY += (gamepad2.left_stick_y);
         }
 
         if (gamepad2.right_stick_x != 0) {
-            frontArmTarget += (gamepad2.right_stick_x * 50);
+            frontX += (gamepad2.right_stick_x);
         } else if (gamepad2.right_stick_y != 0) {
-            backArmTarget += (gamepad2.right_stick_y * 50);
+            frontY += (gamepad2.right_stick_y);
         }
 
         //calculate drive pwr
@@ -134,7 +139,8 @@ public class BrontoTeleOP extends OpMode
             rightBPower = 0;
         }
 
-        if (gamepad2.y) {
+
+        /*if (gamepad2.y) {
             state = TeleOpStates.MOVING;
             nextState = TeleOpStates.TRANSFER;
             frontElbowTarget = bronto.frontElbowTransPos;
@@ -182,11 +188,11 @@ public class BrontoTeleOP extends OpMode
                 break;
             case INTAKE:
                 telemetry.addData("Arm State", "Intake");
-                        /*
+                        *//*
                         basically this should add to the target some small value once it is intaking to fine tune its
                         distance from the ground
                         TODO: check if should be -= and adjust target
-                         */
+                         *//*
                 frontElbowTarget += bronto.moveByDistance(bronto.frontDistanceSensor, 7);
                 intakePow = 1;
                 if (bronto.returnColor(bronto.frontIntakeSensor) != "unknown"){
@@ -224,7 +230,7 @@ public class BrontoTeleOP extends OpMode
                 state = TeleOpStates.UNKNOWN;
                 telemetry.addData("Arm Position", "Unknown");
 
-        }
+        }*/
 
 
         bronto.leftFront.setPower(leftFPower);
@@ -235,6 +241,11 @@ public class BrontoTeleOP extends OpMode
         bronto.frontIntakeR.setPower(intakePow);
         bronto.backIntakeL.setPower(outakePow);
         bronto.backIntakeR.setPower(outakePow);
+
+        frontArmTarget = bronto.frontArmComponent.armTicksUsingCoords(frontX, frontY);
+        frontElbowTarget = bronto.frontElbowComponent.elbowTicksUsingCoords(frontX, frontY);
+        backArmTarget = bronto.backArmComponent.armTicksUsingCoords(backX, backY);
+        backElbowTarget = bronto.backElbowComponent.elbowTicksUsingCoords(backX, backY);
 
         /*if arm motors are close enough, set to 0 b/c power draw and worm gear already holds it
         now also checking if buttons are pressed,

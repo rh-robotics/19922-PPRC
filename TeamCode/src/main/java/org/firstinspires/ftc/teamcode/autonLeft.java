@@ -4,8 +4,6 @@ import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
-
 public class autonLeft extends LinearOpMode {
     // Variables
     HWC.autonStates state = HWC.autonStates.SCANNING_FOR_SIGNAL;
@@ -53,10 +51,10 @@ public class autonLeft extends LinearOpMode {
                     bronto.drive.setPoseEstimate(bronto.START_POS_LEFT);
 
                     // Move arms to cycle pos & update telemetry
-                    bronto.move_to_position_and_hold(bronto.frontElbow, .5, bronto.elbowIntakePos);
-                    bronto.move_to_position_and_hold(bronto.backElbow, .5, bronto.elbowIntakePos);
-                    bronto.move_to_position_and_hold(bronto.frontArm, .5, bronto.intakePos);
-                    bronto.move_to_position_and_hold(bronto.backArm, .5, bronto.highPolePos);
+                    bronto.move_to_position_and_hold(bronto.frontElbow, .5, bronto.frontElbowIntakePos);
+                    bronto.move_to_position_and_hold(bronto.backElbow, .5, bronto.frontElbowIntakePos);
+                    bronto.move_to_position_and_hold(bronto.frontArm, .5, bronto.frontArmIntakePos);
+                    bronto.move_to_position_and_hold(bronto.backArm, .5, bronto.frontArmHighPos);
 
                     telemetry.addData("Arm Position", "Cycle");
                     telemetry.update();

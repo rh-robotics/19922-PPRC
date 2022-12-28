@@ -60,10 +60,10 @@ public class autonRight extends LinearOpMode {
         case MOVING_TO_POLE:
           if (bronto.cycleCount < 1) {
             // Set target positions for arm components
-            frontArmTarget = bronto.intakePos;
-            frontElbowTarget = bronto.elbowIntakePos;
-            backArmTarget = bronto.backHighPolePos;
-            backElbowTarget = bronto.backElbowDeliveryPosHigh;
+            frontArmTarget = bronto.frontArmIntakePos;
+            frontElbowTarget = bronto.frontElbowIntakePos;
+            backArmTarget = bronto.backArmHighPos;
+            backElbowTarget = bronto.backElbowHighPos;
 
             while (!bronto.closeEnough(bronto.frontArm.getCurrentPosition(), frontArmTarget, 5)
                     && !bronto.closeEnough(bronto.frontElbow.getCurrentPosition(), frontElbowTarget, 2)
@@ -88,10 +88,10 @@ public class autonRight extends LinearOpMode {
 
           } else {
             // Move arms to transfer position
-            frontArmTarget = bronto.transferPos;
-            frontElbowTarget = bronto.elbowTransferPos;
-            backArmTarget = bronto.backHighPolePos;
-            backElbowTarget = bronto.backElbowTransferPos;
+            frontArmTarget = bronto.frontArmTransPos;
+            frontElbowTarget = bronto.frontElbowTransPos;
+            backArmTarget = bronto.backArmHighPos;
+            backElbowTarget = bronto.backElbowTransPos;
 
             while (!bronto.closeEnough(bronto.frontArm.getCurrentPosition(), frontArmTarget, 5)
                     && !bronto.closeEnough(bronto.frontElbow.getCurrentPosition(), frontElbowTarget, 2)
@@ -112,10 +112,10 @@ public class autonRight extends LinearOpMode {
             bronto.runIntakeServo('F', 0);
 
             // Move arms to delivery/intake pos
-            frontArmTarget = bronto.intakePos;
-            frontElbowTarget = bronto.elbowIntakePos;
-            backArmTarget = bronto.backHighPolePos;
-            backElbowTarget = bronto.backElbowDeliveryPosHigh;
+            frontArmTarget = bronto.frontArmIntakePos;
+            frontElbowTarget = bronto.frontElbowIntakePos;
+            backArmTarget = bronto.backArmHighPos;
+            backElbowTarget = bronto.backElbowHighPos;
 
             while (!bronto.closeEnough(bronto.frontArm.getCurrentPosition(), frontArmTarget, 5)
                     && !bronto.closeEnough(bronto.frontElbow.getCurrentPosition(), frontElbowTarget, 2)
