@@ -61,11 +61,4 @@ public class RobotComponents {
     private double lawOfCosines (double a, double b, double c) { //return angle given side lengths using law of cosines
         return Math.acos((a*a + b*b - c*c) / (2 * a * b));
     }
-
-        /*
-        public double[] pidf() {
-            return [p, i, d, f];
-        }
-
-         */
 }
